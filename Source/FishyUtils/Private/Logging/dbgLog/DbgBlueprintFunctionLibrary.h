@@ -23,7 +23,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 
 // Relative path is assumed, must update if you move the files around.
-#include "../dbgLog.h"
+#include "./dbgLog.h"
 /*#include "DbgBlueprintFunctionLibrary.generated.h"
 
 

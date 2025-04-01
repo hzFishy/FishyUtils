@@ -22,7 +22,7 @@
 
 #include "Framework/Notifications/NotificationManager.h"
 
-#include "Private/LLog.h"
+#include "FishyUtils/Private/Logging/dbgLog/LLog.h"
 #include "VisualLogger/VisualLogger.h"
 #include "Misc/EngineVersionComparison.h"
 
@@ -266,7 +266,7 @@ namespace DBG::Log
 	struct DbgLogArgs
 	{
 		
-	//private:
+	private:
 		enum struct EDbgVisualLogShape : uint8
 		{
 			None,
@@ -531,7 +531,7 @@ namespace DBG::Log
 			bool bDrawWireframe = false,
 			bool bOnlyLogVisually = true);
 
-	//private:
+	private:
 		static inline FName DefaultLogCategoryName = FName{"Log"};
 		
 		UWorld* WCOResultValue						= nullptr;
@@ -597,7 +597,8 @@ namespace DBG::Log
 				*/
 				
 
-		FLogCategory<ELogVerbosity::Log, ELogVerbosity::Log> LogCategory = FLogCategory<ELogVerbosity::Type::Log, ELogVerbosity::Type::Log>(Category.GetCategoryName());
+		FLogCategory<ELogVerbosity::Log, ELogVerbosity::Log> LogCategory =
+			FLogCategory<ELogVerbosity::Type::Log, ELogVerbosity::Type::Log>(Category.GetCategoryName());
 				
 
 		
@@ -642,10 +643,16 @@ namespace DBG::Log
 		// make it a little nicer to read.
 		static auto SourceLocationToStr = [](std::source_location& L) -> FString
 		{
-			FString FuncName(L.function_name());
+			/*FString FuncName(L.function_name());
 			FuncName.ReplaceInline( TEXT(" __cdecl"), TEXT(""));
 			return FString::Format( TEXT("File: {0} ({1}), {2} :"),
 				{ FPaths::GetCleanFilename( StringCast<wchar_t>(L.file_name()).Get() ), L.line(), FuncName } );
+				*/
+
+			FString FuncName(L.function_name());
+			FuncName.ReplaceInline( TEXT(" __cdecl"), TEXT(""));
+			return FString::Format( TEXT("[{2}] :"),
+				{ FuncName } );
 		};
 
 
