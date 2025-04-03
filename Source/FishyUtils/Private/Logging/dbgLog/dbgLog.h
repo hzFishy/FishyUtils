@@ -1,3 +1,5 @@
+// edited by hzFishy
+
 // Copyright ©  Jack Holland.
 //
 // DbgLOG is free software. It comes without any warranty, to the extent permitted
@@ -290,6 +292,10 @@ namespace DBG::Log
 		
 		DbgLogArgs() = default;
 
+		ThisClass& SetFunctionName(const FString& FunctionName) { FunctionNameValue = FunctionName; return *this; }
+		
+		ThisClass& SetObjectDetailedName(const FString& DetailedObjectName) { DetailedObjectNameValue = DetailedObjectName; return *this; }
+
 		// The log category, can be anything you want but `dbg` is appended due to possible naming conflicts with existing categories (which can cause an asset).
 		ThisClass& Category(FName CategoryName) { CategoryNameValue = CategoryName; return *this; }
 		
@@ -534,6 +540,10 @@ namespace DBG::Log
 	private:
 		static inline FName DefaultLogCategoryName = FName{"Log"};
 		
+		FString FunctionNameValue							= {};
+		FString DetailedObjectNameValue							= {};
+
+		
 		UWorld* WCOResultValue						= nullptr;
 		UObject* VisualLoggerOwnerValue				= nullptr;
 		TStringView<TCHAR> DateTimeFormat			= nullptr;
@@ -651,10 +661,9 @@ namespace DBG::Log
 
 			FString FuncName(L.function_name());
 			FuncName.ReplaceInline( TEXT(" __cdecl"), TEXT(""));
-			return FString::Format( TEXT("[{2}] :"),
+			return FString::Format( TEXT("[{0}] :"),
 				{ FuncName } );
 		};
-
 
 		
 		if (LogArgs.PrefixValue.IsEmpty() == false)
@@ -703,6 +712,10 @@ namespace DBG::Log
 		{
 			Message = FString::Format(TEXT("{0} {1}"), { SourceLocationToStr(Location),  Message } );
 		}
+		else if (!LogArgs.FunctionNameValue.IsEmpty())
+		{
+			Message = FString::Format(TEXT("[{0}] {1}"), { LogArgs.FunctionNameValue,  Message } );
+		}
 
 		
 		if ( LogArgs.bLogDateAndTime )
@@ -717,6 +730,11 @@ namespace DBG::Log
 			}
 		}
 
+
+		if (!LogArgs.DetailedObjectNameValue.IsEmpty())
+		{
+			Message = FString::Format(TEXT("[{0}] {1}"), { LogArgs.DetailedObjectNameValue,  Message } );
+		}
 		
 		
 #if ENABLE_VISUAL_LOG

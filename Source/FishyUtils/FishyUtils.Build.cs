@@ -23,6 +23,7 @@ public class FishyUtils : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"GameplayTags"
 			}
 		);
 	}

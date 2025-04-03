@@ -3,42 +3,81 @@
 #pragma once
 
 #include "FishyUtils/Private/Logging/dbgLog/dbgLog.h"
+#include "Utility/FUUtilities.h"
 
 
-/*
-#define BPG_LOG_Object(CATEGORY, VERBOSITY, THIS, FORMAT, ...) \
-	UE_LOG(CATEGORY, VERBOSITY, TEXT("%s%s " FORMAT), *BPG_Logging::GetFunctionName(__FUNCTIONW__), *BPG_Logging::GetObjectDetailedName(THIS), ##__VA_ARGS__);
-	*/
+#define FU_WITH_LOGGING KEEP_DBG_LOG
+
 
 	/*----------------------------------------------------------------------------
 		REQUIREMENTS
 
 		You must give the Log verbosity to default and compile time level, example: DECLARE_LOG_CATEGORY_EXTERN(LogBPGValidator, Log, Log);
 	----------------------------------------------------------------------------*/
-	
+
+#if FU_WITH_LOGGING
+
+	/*----------------------------------------------------------------------------
+		  Suffixs explained:
+			  - _D -> Display     // Has custom color in log window, see _FU_LOG_SET_DISPLAY_COLOR
+			  - _W -> Warning
+			  - _E -> Error
+			  - _S -> Success     // Has custom color in log window, see _FU_LOG_SET_SUCCESS_COLOR
+	  ----------------------------------------------------------------------------*/
 
 	/*----------------------------------------------------------------------------
 	   Core macros
 	----------------------------------------------------------------------------*/
 
-/*
-#define _FU_LOG_Static(CATEGORY, VERBOSITY, FORMAT, ...) \
-	UE_LOG(CATEGORY, VERBOSITY, TEXT("%s" FORMAT), *BPG_Logging::GetFunctionName(__FUNCTIONW__), ##__VA_ARGS__);
-	*/
+// Change the value to change color for display logs in window
+#define _FU_LOG_SET_DISPLAY_COLOR SET_WARN_COLOR(COLOR_CYAN);
+#define _FU_LOG_SET_SUCCESS_COLOR SET_WARN_COLOR(COLOR_GREEN);
 
-#define _FU_LOG_Static(CATEGORY, VERBOSITY, FORMAT, ...) do\
+
+#define _FU_LOG_OBJECT(CATEGORY, VERBOSITY, FORMAT, ...) do\
 {\
-	DBG::Log::Log(__COUNTER__, std::source_location::current(), CATEGORY, DBG::Log::DbgLogArgs{}.Verbosity(VERBOSITY).LogSourceLoc(), TEXT(FORMAT) __VA_OPT__(,) __VA_ARGS__);\
-}while(false)
+	DBG::Log::Log(__COUNTER__, std::source_location::current(), CATEGORY, DBG::Log::DbgLogArgs{}.Verbosity(ELogVerbosity::VERBOSITY).SetFunctionName(__FUNCTIONW__).SetObjectDetailedName(FU_Utilities::GetObjectDetailedName(this)), TEXT(FORMAT) __VA_OPT__(,) __VA_ARGS__);\
+}while(false);
+
+#define _FU_LOG_OBJECT_D(CATEGORY, FORMAT, ...) _FU_LOG_SET_DISPLAY_COLOR _FU_LOG_OBJECT(CATEGORY, Display, FORMAT, ##__VA_ARGS__)	CLEAR_WARN_COLOR()
+#define _FU_LOG_OBJECT_W(CATEGORY, FORMAT, ...)								 _FU_LOG_OBJECT(CATEGORY, Warning, FORMAT, ##__VA_ARGS__)
+#define _FU_LOG_OBJECT_E(CATEGORY, FORMAT, ...)							  	 _FU_LOG_OBJECT(CATEGORY, Error, FORMAT, ##__VA_ARGS__)
+#define _FU_LOG_OBJECT_S(CATEGORY, FORMAT, ...) _FU_LOG_SET_SUCCESS_COLOR _FU_LOG_OBJECT(CATEGORY, Display, FORMAT, ##__VA_ARGS__)	CLEAR_WARN_COLOR()
+
+
+#define _FU_LOG_STATIC(CATEGORY, VERBOSITY, FORMAT, ...) do\
+{\
+	DBG::Log::Log(__COUNTER__, std::source_location::current(), CATEGORY, DBG::Log::DbgLogArgs{}.Verbosity(ELogVerbosity::VERBOSITY).SetFunctionName(__FUNCTIONW__), TEXT(FORMAT) __VA_OPT__(,) __VA_ARGS__);\
+}while(false);
+
+#define _FU_LOG_STATIC_D(CATEGORY, FORMAT, ...) _FU_LOG_SET_DISPLAY_COLOR _FU_LOG_STATIC(CATEGORY, Display, FORMAT, ##__VA_ARGS__)	CLEAR_WARN_COLOR();
+#define _FU_LOG_STATIC_W(CATEGORY, FORMAT, ...)								 _FU_LOG_STATIC(CATEGORY, Warning, FORMAT, ##__VA_ARGS__)
+#define _FU_LOG_STATIC_E(CATEGORY, FORMAT, ...)							  	 _FU_LOG_STATIC(CATEGORY, Error, FORMAT, ##__VA_ARGS__)
+#define _FU_LOG_STATIC_S(CATEGORY, FORMAT, ...) _FU_LOG_SET_SUCCESS_COLOR _FU_LOG_STATIC(CATEGORY, Display, FORMAT, ##__VA_ARGS__)	CLEAR_WARN_COLOR();
+
+
+	/*----------------------------------------------------------------------------
+	   Temporary logging
+	----------------------------------------------------------------------------*/
+#define FU_LOG_Temp_D(FORMAT, ...)				_FU_LOG_OBJECT_D(LogTemp, FORMAT, ##__VA_ARGS__)
+#define FU_LOG_Temp_W(FORMAT, ...)				_FU_LOG_OBJECT_W(LogTemp, FORMAT, ##__VA_ARGS__)
+#define FU_LOG_STemp_D(FORMAT, ...)				_FU_LOG_STATIC_D(LogTemp, FORMAT, ##__VA_ARGS__)
+#define FU_LOG_STemp_W(FORMAT, ...)				_FU_LOG_STATIC_W(LogTemp, FORMAT, ##__VA_ARGS__)
 
 
 	/*----------------------------------------------------------------------------
 	   Validation logging
 	----------------------------------------------------------------------------*/
-//#define FU_LOG_Validator_E(VERBOSITY, FORMAT, ...) BPG_LOG_Object(VERBOSITY, Error, this, FORMAT, ##__VA_ARGS__)
-// static version
-#define FU_LOG_SValidator_E(CATEGORY, FORMAT, ...) _FU_LOG_Static(CATEGORY, ELogVerbosity::Error, FORMAT, ##__VA_ARGS__)
+#define FU_LOG_Validator_E(CATEGORY, FORMAT, ...)				_FU_LOG_OBJECT_E(CATEGORY, FORMAT, ##__VA_ARGS__)
+#define FU_LOG_SValidator_E(CATEGORY, FORMAT, ...)				_FU_LOG_STATIC_E(CATEGORY, FORMAT, ##__VA_ARGS__)
 
+
+#else
+
+#define _FU_LOG_OBJECT(CATEGORY, VERBOSITY, FORMAT, ...) {}
+#define _FU_LOG_STATIC(CATEGORY, VERBOSITY, FORMAT, ...) {}
+
+#endif
 
 namespace FU_Logging
 {
