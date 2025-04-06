@@ -5,6 +5,8 @@
 #include "FishyUtils/Private/Logging/dbgLog/dbgLog.h"
 #include "Utility/FUUtilities.h"
 
+FISHYUTILS_API DECLARE_LOG_CATEGORY_EXTERN(LogFUTemp, Log, Log);
+
 
 #define FU_WITH_LOGGING KEEP_DBG_LOG
 
@@ -59,10 +61,10 @@
 	/*----------------------------------------------------------------------------
 	   Temporary logging
 	----------------------------------------------------------------------------*/
-#define FU_LOG_Temp_D(FORMAT, ...)				_FU_LOG_OBJECT_D(LogTemp, FORMAT, ##__VA_ARGS__)
-#define FU_LOG_Temp_W(FORMAT, ...)				_FU_LOG_OBJECT_W(LogTemp, FORMAT, ##__VA_ARGS__)
-#define FU_LOG_STemp_D(FORMAT, ...)				_FU_LOG_STATIC_D(LogTemp, FORMAT, ##__VA_ARGS__)
-#define FU_LOG_STemp_W(FORMAT, ...)				_FU_LOG_STATIC_W(LogTemp, FORMAT, ##__VA_ARGS__)
+#define FU_LOG_Temp_D(FORMAT, ...)				_FU_LOG_OBJECT_D(LogFUTemp, FORMAT, ##__VA_ARGS__)
+#define FU_LOG_Temp_W(FORMAT, ...)				_FU_LOG_OBJECT_W(LogFUTemp, FORMAT, ##__VA_ARGS__)
+#define FU_LOG_STemp_D(FORMAT, ...)				_FU_LOG_STATIC_D(LogFUTemp, FORMAT, ##__VA_ARGS__)
+#define FU_LOG_STemp_W(FORMAT, ...)				_FU_LOG_STATIC_W(LogFUTemp, FORMAT, ##__VA_ARGS__)
 
 
 	/*----------------------------------------------------------------------------

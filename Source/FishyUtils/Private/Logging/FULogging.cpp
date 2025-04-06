@@ -4,6 +4,9 @@
 #include "Logging/FULogging.h"
 
 
+DEFINE_LOG_CATEGORY(LogFUTemp);
+
+
 namespace FU_Logging
 {
 	

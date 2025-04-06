@@ -609,8 +609,7 @@ namespace DBG::Log
 
 		FLogCategory<ELogVerbosity::Log, ELogVerbosity::Log> LogCategory =
 			FLogCategory<ELogVerbosity::Type::Log, ELogVerbosity::Type::Log>(Category.GetCategoryName());
-				
-
+			
 		
 		// Format the actual log provided from the user.
 		FString Message = FormatMessage(std::move(Format), std::forward<A>(Args)...);
