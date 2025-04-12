@@ -5,6 +5,15 @@
 #include "Algo/Count.h"
 
 
+void FU_Utilities::RemoveRuntimeInstanceComponent(UActorComponent* ActorComponent)
+{
+	if (IsValid(ActorComponent))
+	{
+		ActorComponent->GetOwner()->RemoveInstanceComponent(ActorComponent);
+		ActorComponent->UnregisterComponent();
+	}
+}
+
 FString FU_Utilities::PrintBool(bool bValue)
 {
 	return bValue ? "true" : "false";

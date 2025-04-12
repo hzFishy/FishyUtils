@@ -8,6 +8,25 @@
 
 namespace FU_Utilities
 {
+	template<class T>
+	T* AddRuntimeInstanceComponent(AActor* Actor, TSubclassOf<T> ComponentClass) 
+	{
+		if (!IsValid(Actor) || !IsValid(ComponentClass)) { return nullptr; }
+	
+		EObjectFlags Flags = RF_Transient;
+		Flags &= ~RF_Transactional; // unset flag
+	
+		T* NewComponent = NewObject<T>(Actor, ComponentClass, NAME_None, Flags);
+		if (!IsValid(NewComponent)) { return nullptr; }
+	
+		NewComponent->RegisterComponent();
+		Actor->AddInstanceComponent(NewComponent);
+		
+		return NewComponent;
+	}
+
+	FISHYUTILS_API void RemoveRuntimeInstanceComponent(UActorComponent* ActorComponent);
+
 	/**
 	 * @return "true" or "false"
 	 */
