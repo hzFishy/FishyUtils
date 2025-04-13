@@ -3,13 +3,13 @@
 
 #include "Draw/FUDraw.h"
 
-void FU_Draw::DrawDebugSphere(UWorld* World, const FVector& Location, float Radius, FColor Color, float Time, float Thickness)
+void FU_Draw::DrawDebugSphere(UWorld* World, const FVector& Location, float Radius, FColor Color, float Time, float Thickness, uint8 DepthPriority)
 {
-	DrawDebugSphere(World, Location, Radius, 10, Color, false, Time, 0, Thickness);
+	DrawDebugSphere(World, Location, Radius, 10, Color, false, Time, DepthPriority, Thickness);
 }
-void FU_Draw::DrawDebugSphereFrame(UWorld* World, const FVector& Location, float Radius, FColor Color, float Thickness)
+void FU_Draw::DrawDebugSphereFrame(UWorld* World, const FVector& Location, float Radius, FColor Color, float Thickness, uint8 DepthPriority)
 {
-	FU_Draw::DrawDebugSphere(World, Location, Radius, Color, 0, Thickness);
+	FU_Draw::DrawDebugSphere(World, Location, Radius, Color, 0, Thickness, DepthPriority);
 }
 
 void FU_Draw::DrawDebugBox(UWorld* World, const FVector& Location, const FVector& Extent, const FRotator& Rotation, FColor Color, float Time, float Thickness, uint8 DepthPriority)

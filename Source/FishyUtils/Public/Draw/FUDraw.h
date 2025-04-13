@@ -5,8 +5,8 @@
 
 namespace FU_Draw
 {
-	FISHYUTILS_API void DrawDebugSphere(UWorld* World, const FVector& Location, float Radius, FColor Color, float Time, float Thickness = 2);
-	FISHYUTILS_API void DrawDebugSphereFrame(UWorld* World, const FVector& Location, float Radius, FColor Color, float Thickness = 2);
+	FISHYUTILS_API void DrawDebugSphere(UWorld* World, const FVector& Location, float Radius, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0);
+	FISHYUTILS_API void DrawDebugSphereFrame(UWorld* World, const FVector& Location, float Radius, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
 
 	FISHYUTILS_API void DrawDebugBox(UWorld* World, const FVector& Location, const FVector& Extent, const FRotator& Rotation, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0);
 	FISHYUTILS_API void DrawDebugBoxFrame(UWorld* World, const FVector& Location, const FVector& Extent, const FRotator& Rotation, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
