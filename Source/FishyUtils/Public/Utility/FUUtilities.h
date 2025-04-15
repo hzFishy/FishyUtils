@@ -9,7 +9,7 @@
 namespace FU_Utilities
 {
 	template<class T>
-	T* AddRuntimeInstanceComponent(AActor* Actor, TSubclassOf<T> ComponentClass) 
+	T* AddRuntimeInstanceComponent(AActor* Actor, TSubclassOf<T> ComponentClass = T::StaticClass()) 
 	{
 		if (!IsValid(Actor) || !IsValid(ComponentClass)) { return nullptr; }
 	
