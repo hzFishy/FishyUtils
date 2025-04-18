@@ -32,6 +32,7 @@ FISHYUTILS_API DECLARE_LOG_CATEGORY_EXTERN(LogFUTemp, Log, Log);
 	----------------------------------------------------------------------------*/
 
 // Change the value to change color for display logs in window
+#define _FU_LOG_CLEAR_WARN_COLOR CLEAR_WARN_COLOR()
 #define _FU_LOG_SET_DISPLAY_COLOR SET_WARN_COLOR(COLOR_CYAN);
 #define _FU_LOG_SET_SUCCESS_COLOR SET_WARN_COLOR(COLOR_GREEN);
 
@@ -41,45 +42,43 @@ FISHYUTILS_API DECLARE_LOG_CATEGORY_EXTERN(LogFUTemp, Log, Log);
 	DBG::Log::Log(__COUNTER__, std::source_location::current(), CATEGORY, DBG::Log::DbgLogArgs{}.Verbosity(ELogVerbosity::VERBOSITY).SetFunctionName(__FUNCTIONW__).SetObjectDetailedName(FU_Utilities::GetObjectDetailedName(this)), TEXT(FORMAT) __VA_OPT__(,) __VA_ARGS__);\
 }while(false);
 
-#define _FU_LOG_OBJECT_D(CATEGORY, FORMAT, ...) _FU_LOG_SET_DISPLAY_COLOR _FU_LOG_OBJECT(CATEGORY, Display, FORMAT, ##__VA_ARGS__)	CLEAR_WARN_COLOR()
-#define _FU_LOG_OBJECT_W(CATEGORY, FORMAT, ...)								 _FU_LOG_OBJECT(CATEGORY, Warning, FORMAT, ##__VA_ARGS__)
-#define _FU_LOG_OBJECT_E(CATEGORY, FORMAT, ...)							  	 _FU_LOG_OBJECT(CATEGORY, Error, FORMAT, ##__VA_ARGS__)
-#define _FU_LOG_OBJECT_S(CATEGORY, FORMAT, ...) _FU_LOG_SET_SUCCESS_COLOR _FU_LOG_OBJECT(CATEGORY, Display, FORMAT, ##__VA_ARGS__)	CLEAR_WARN_COLOR()
-
-
 #define _FU_LOG_STATIC(CATEGORY, VERBOSITY, FORMAT, ...) do\
 {\
 	DBG::Log::Log(__COUNTER__, std::source_location::current(), CATEGORY, DBG::Log::DbgLogArgs{}.Verbosity(ELogVerbosity::VERBOSITY).SetFunctionName(__FUNCTIONW__), TEXT(FORMAT) __VA_OPT__(,) __VA_ARGS__);\
 }while(false);
 
-#define _FU_LOG_STATIC_D(CATEGORY, FORMAT, ...) _FU_LOG_SET_DISPLAY_COLOR _FU_LOG_STATIC(CATEGORY, Display, FORMAT, ##__VA_ARGS__)	CLEAR_WARN_COLOR();
-#define _FU_LOG_STATIC_W(CATEGORY, FORMAT, ...)								 _FU_LOG_STATIC(CATEGORY, Warning, FORMAT, ##__VA_ARGS__)
-#define _FU_LOG_STATIC_E(CATEGORY, FORMAT, ...)							  	 _FU_LOG_STATIC(CATEGORY, Error, FORMAT, ##__VA_ARGS__)
-#define _FU_LOG_STATIC_S(CATEGORY, FORMAT, ...) _FU_LOG_SET_SUCCESS_COLOR _FU_LOG_STATIC(CATEGORY, Display, FORMAT, ##__VA_ARGS__)	CLEAR_WARN_COLOR();
-
-
-	/*----------------------------------------------------------------------------
-	   Temporary logging
-	----------------------------------------------------------------------------*/
-#define FU_LOG_Temp_D(FORMAT, ...)				_FU_LOG_OBJECT_D(LogFUTemp, FORMAT, ##__VA_ARGS__)
-#define FU_LOG_Temp_W(FORMAT, ...)				_FU_LOG_OBJECT_W(LogFUTemp, FORMAT, ##__VA_ARGS__)
-#define FU_LOG_STemp_D(FORMAT, ...)				_FU_LOG_STATIC_D(LogFUTemp, FORMAT, ##__VA_ARGS__)
-#define FU_LOG_STemp_W(FORMAT, ...)				_FU_LOG_STATIC_W(LogFUTemp, FORMAT, ##__VA_ARGS__)
-
-
-	/*----------------------------------------------------------------------------
-	   Validation logging
-	----------------------------------------------------------------------------*/
-#define FU_LOG_Validator_E(CATEGORY, FORMAT, ...)				_FU_LOG_OBJECT_E(CATEGORY, FORMAT, ##__VA_ARGS__)
-#define FU_LOG_SValidator_E(CATEGORY, FORMAT, ...)				_FU_LOG_STATIC_E(CATEGORY, FORMAT, ##__VA_ARGS__)
-
-
 #else
 
-#define _FU_LOG_OBJECT(CATEGORY, VERBOSITY, FORMAT, ...) {}
-#define _FU_LOG_STATIC(CATEGORY, VERBOSITY, FORMAT, ...) {}
+#define _FU_LOG_CLEAR_WARN_COLOR 
+#define _FU_LOG_SET_DISPLAY_COLOR 
+#define _FU_LOG_SET_SUCCESS_COLOR 
+
+
+#define _FU_LOG_OBJECT(CATEGORY, VERBOSITY, FORMAT, ...) 
+#define _FU_LOG_STATIC(CATEGORY, VERBOSITY, FORMAT, ...) 
 
 #endif
+
+
+// the rest defined here so its always available for any build mode
+#define _FU_LOG_OBJECT_D(CATEGORY, FORMAT, ...) _FU_LOG_SET_DISPLAY_COLOR _FU_LOG_OBJECT(CATEGORY, Display, FORMAT, ##__VA_ARGS__)	_FU_LOG_CLEAR_WARN_COLOR()
+#define _FU_LOG_OBJECT_W(CATEGORY, FORMAT, ...)							  _FU_LOG_OBJECT(CATEGORY, Warning, FORMAT, ##__VA_ARGS__)
+#define _FU_LOG_OBJECT_E(CATEGORY, FORMAT, ...)							  _FU_LOG_OBJECT(CATEGORY, Error, FORMAT, ##__VA_ARGS__)
+#define _FU_LOG_OBJECT_S(CATEGORY, FORMAT, ...) _FU_LOG_SET_SUCCESS_COLOR _FU_LOG_OBJECT(CATEGORY, Display, FORMAT, ##__VA_ARGS__)	_FU_LOG_CLEAR_WARN_COLOR()
+
+#define _FU_LOG_STATIC_D(CATEGORY, FORMAT, ...) _FU_LOG_SET_DISPLAY_COLOR _FU_LOG_STATIC(CATEGORY, Display, FORMAT, ##__VA_ARGS__)	_FU_LOG_CLEAR_WARN_COLOR();
+#define _FU_LOG_STATIC_W(CATEGORY, FORMAT, ...)							  _FU_LOG_STATIC(CATEGORY, Warning, FORMAT, ##__VA_ARGS__)
+#define _FU_LOG_STATIC_E(CATEGORY, FORMAT, ...)							  _FU_LOG_STATIC(CATEGORY, Error, FORMAT, ##__VA_ARGS__)
+#define _FU_LOG_STATIC_S(CATEGORY, FORMAT, ...) _FU_LOG_SET_SUCCESS_COLOR _FU_LOG_STATIC(CATEGORY, Display, FORMAT, ##__VA_ARGS__)	_FU_LOG_CLEAR_WARN_COLOR();
+
+#define FU_LOG_Temp_D(FORMAT, ...)										  _FU_LOG_OBJECT_D(LogFUTemp, FORMAT, ##__VA_ARGS__)
+#define FU_LOG_Temp_W(FORMAT, ...)										  _FU_LOG_OBJECT_W(LogFUTemp, FORMAT, ##__VA_ARGS__)
+#define FU_LOG_STemp_D(FORMAT, ...)										  _FU_LOG_STATIC_D(LogFUTemp, FORMAT, ##__VA_ARGS__)
+#define FU_LOG_STemp_W(FORMAT, ...)										  _FU_LOG_STATIC_W(LogFUTemp, FORMAT, ##__VA_ARGS__)
+
+#define FU_LOG_Validator_E(CATEGORY, FORMAT, ...)						  _FU_LOG_OBJECT_E(CATEGORY, FORMAT, ##__VA_ARGS__)
+#define FU_LOG_SValidator_E(CATEGORY, FORMAT, ...)						  _FU_LOG_STATIC_E(CATEGORY, FORMAT, ##__VA_ARGS__)
+
 
 namespace FU_Logging
 {

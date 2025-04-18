@@ -73,7 +73,6 @@ void FFUEditor::ExecuteSelectSameFolderLevel()
 		{
 			if (It->GetFolder() == ReferenceFolder)
 			{
-				FU_LOG_STemp_D("Selected {0}", *It);
 				GEditor->GetSelectedActors()->Select(*It);
 			}
 		}
