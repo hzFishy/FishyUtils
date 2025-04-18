@@ -3,13 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EditorOnly/FUEditor.h"
 #include "Modules/ModuleManager.h"
 
 class FFishyUtilsModule : public IModuleInterface
 {
+	
+#if WITH_EDITOR
+	FFUEditor FishyEditorInstance = FFUEditor();
+#endif
+	
 public:
-
-	/** IModuleInterface implementation */
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
 };

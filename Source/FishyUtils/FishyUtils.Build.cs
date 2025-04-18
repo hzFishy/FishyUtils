@@ -23,8 +23,21 @@ public class FishyUtils : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"GameplayTags"
+				"GameplayTags",
+				"ToolMenus",
+				"InputCore"
 			}
 		);
+		
+		if (Target.bBuildEditor)
+		{
+			bUseUnity = false;
+			
+			PrivateDependencyModuleNames.AddRange(new string[]
+			{
+				"UnrealEd",
+				"SceneOutliner"
+			});
+		}
 	}
 }
