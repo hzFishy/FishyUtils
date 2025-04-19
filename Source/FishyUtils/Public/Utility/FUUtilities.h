@@ -2,21 +2,22 @@
 
 #pragma once
 
-
 #include "GameplayTagContainer.h"
 
 
 namespace FU_Utilities
 {
-	template<class T>
-	T* AddRuntimeInstanceComponent(AActor* Actor, TSubclassOf<T> ComponentClass = T::StaticClass()) 
+	template<class ActorComponentType>
+	ActorComponentType* AddRuntimeInstanceComponent(AActor* Actor, TSubclassOf<ActorComponentType> ComponentClass = ActorComponentType::StaticClass()) 
 	{
+		static_assert(TIsDerivedFrom<ActorComponentType, UActorComponent>::IsDerived, "Provided type does not derive from UActorComponent");
+
 		if (!IsValid(Actor) || !IsValid(ComponentClass)) { return nullptr; }
 	
 		EObjectFlags Flags = RF_Transient;
 		Flags &= ~RF_Transactional; // unset flag
 	
-		T* NewComponent = NewObject<T>(Actor, ComponentClass, NAME_None, Flags);
+		ActorComponentType* NewComponent = NewObject<ActorComponentType>(Actor, ComponentClass, NAME_None, Flags);
 		if (!IsValid(NewComponent)) { return nullptr; }
 	
 		NewComponent->RegisterComponent();
@@ -59,5 +60,4 @@ namespace FU_Utilities
 	 *  @return 'My.Sub.Tag' will return 'Sub.Tag' if Depth=2
 	 */
 	FISHYUTILS_API FString GetLastTagChilds(const FGameplayTag& Tag, uint8 Depth);
-
 }
