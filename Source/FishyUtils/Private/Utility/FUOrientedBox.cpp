@@ -12,12 +12,28 @@ namespace FU_Utilities
 		
 	}
 
-	FFUOrientedBox::FFUOrientedBox(AActor* Actor, bool bNonColliding, FTransform OverrideTransform)
+	FFUOrientedBox::FFUOrientedBox(AActor* Actor, bool bNonColliding, TArray<UClass*> CustomIgnore, FTransform OverrideTransform)
 	{
 		if (!IsValid(Actor)) { return; }
  
-		// Get the AABB in Local space (aka Object space: such as in the Blueprint viewer). You might want to cache this result as this may be costly. 
-		const FBox Box = Actor->CalculateComponentsBoundingBoxInLocalSpace(bNonColliding);
+		// Get the AABB in Local space (aka Object space: such as in the Blueprint viewer). You might want to cache this result as this may be costly.
+		// instead of using CalculateComponentsBoundingBoxInLocalSpace directly we are using this modified version that allow us to whatever we want
+		FBox Box(ForceInit);
+		const FTransform& ActorToWorld = Actor->GetTransform();
+		const FTransform WorldToActor = ActorToWorld.Inverse();
+		Actor->ForEachComponent<UPrimitiveComponent>(false, [&](const UPrimitiveComponent* InPrimComp)
+		{
+			// apply filter
+			if (CustomIgnore.Contains(InPrimComp->GetClass())) { return; }
+			
+			// Only use collidable components to find collision bounding box.
+			if (InPrimComp->IsRegistered() && (bNonColliding || InPrimComp->IsCollisionEnabled()))
+			{
+				const FTransform ComponentToActor = InPrimComp->GetComponentTransform() * WorldToActor;
+				Box += InPrimComp->CalcBounds(ComponentToActor).GetBox();
+			}
+		});
+		
 		const auto Transform = OverrideTransform.GetLocation().IsZero() ? Actor->GetTransform() : OverrideTransform;
  
 		// Get World space Location.
