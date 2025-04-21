@@ -19,9 +19,9 @@ FString FU_Utilities::PrintBool(bool bValue)
 	return bValue ? "true" : "false";
 }
 
-FString FU_Utilities::PrintShortFloat(float Value)
+FString FU_Utilities::PrintCompactFloat(float Value)
 {
-	return FString::Printf(TEXT("%.1f"), Value);
+	return FString::Printf(TEXT("%.2f"), Value);
 }
 
 FString FU_Utilities::PrintCompactVector(FVector Value)

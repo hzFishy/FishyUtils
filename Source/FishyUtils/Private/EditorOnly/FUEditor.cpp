@@ -3,20 +3,16 @@
 
 #include "EditorOnly/FUEditor.h"
 
-#include "ActorFolderTreeItem.h"
-#include "EngineUtils.h"
-#include "FolderTreeItem.h"
-#include "LevelEditor.h"
-#include "SSceneOutliner.h"
-#include "Editor/SceneOutliner/Public/ISceneOutliner.h"
-#include "Logging/FULogging.h"
 
 
 #if WITH_EDITOR
 
+#include "EngineUtils.h"
+#include "LevelEditor.h"
+#include "Selection.h"
+
 #define LOCTEXT_NAMESPACE "FFishyUtilsModule"
 
-#include "Selection.h"
 
 FFUEditor::FFUEditor() {}
 

@@ -33,7 +33,7 @@ namespace FU_Utilities
 	 */
 	FISHYUTILS_API FString PrintBool(bool bVal);
 	
-	FISHYUTILS_API FString PrintShortFloat(float Value);
+	FISHYUTILS_API FString PrintCompactFloat(float Value);
 	
 	FISHYUTILS_API FString PrintCompactVector(FVector Value);
 

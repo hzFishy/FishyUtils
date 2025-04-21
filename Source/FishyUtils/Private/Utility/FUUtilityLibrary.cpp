@@ -2,18 +2,15 @@
 
 
 #include "Utility/FUUtilityLibrary.h"
-
 #include "Engine/AssetManager.h"
 #include "Kismet/GameplayStatics.h"
 
 
-FORCEINLINE_DEBUGGABLE
 FRotator UFUUtilityLibrary::Add_RotatorRotator(FRotator A, FRotator B)
 {
 	return A + B;
 }
 
-FORCEINLINE_DEBUGGABLE
 FRotator UFUUtilityLibrary::Subtract_RotatorRotator(FRotator A, FRotator B)
 {
 	return A - B;

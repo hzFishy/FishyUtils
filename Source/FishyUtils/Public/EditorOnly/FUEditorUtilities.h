@@ -7,6 +7,8 @@ namespace FU_EditorUtilities
 {
 	
 #if WITH_EDITOR
+#include "EngineUtils.h"
+
 	template<class ActorType>
 	ActorType* GetEditorWorldCounterpartActor(ActorType* PIEActor)
 	{

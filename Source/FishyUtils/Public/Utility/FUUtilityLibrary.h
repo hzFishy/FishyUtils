@@ -14,7 +14,8 @@ UCLASS()
 class FISHYUTILS_API UFUUtilityLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
-
+	
+public:
 	UFUNCTION(BlueprintPure, meta=(DisplayName = "rotator + rotator", CompactNodeTitle = "+", ScriptMethod = "Add", ScriptOperator = "+;+=", Keywords = "+ add plus", CommutativeAssociativeBinaryOperator = "true"), Category="Math|Rotator")
 	static FRotator Add_RotatorRotator(FRotator A, FRotator B);
 
