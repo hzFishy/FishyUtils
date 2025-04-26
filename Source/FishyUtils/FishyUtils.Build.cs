@@ -24,7 +24,6 @@ public class FishyUtils : ModuleRules
 				"Slate",
 				"SlateCore",
 				"GameplayTags",
-				"ToolMenus",
 				"InputCore"
 			}
 		);
@@ -36,7 +35,8 @@ public class FishyUtils : ModuleRules
 			PrivateDependencyModuleNames.AddRange(new string[]
 			{
 				"UnrealEd",
-				"SceneOutliner"
+				"SceneOutliner",
+				"ToolMenus"
 			});
 		}
 	}

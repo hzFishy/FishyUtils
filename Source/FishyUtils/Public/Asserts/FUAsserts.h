@@ -11,7 +11,7 @@
 
 #else
 
-	#define FU_ASRT_ALWAYS(InExpression)							{}
-	#define FU_ASRT_ALWAYSMSG(InExpression, InFormat, ... )			{}
+	#define FU_ASRT_ALWAYS(InExpression)							(LIKELY(!!(InExpression)))
+	#define FU_ASRT_ALWAYSMSG(InExpression, InFormat, ... )			(LIKELY(!!(InExpression)))
 
 #endif
