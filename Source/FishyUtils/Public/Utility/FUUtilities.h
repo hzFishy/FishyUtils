@@ -8,7 +8,7 @@
 namespace FU_Utilities
 {
 	template<class ActorComponentType>
-	ActorComponentType* AddRuntimeInstanceComponent(AActor* Actor, TSubclassOf<ActorComponentType> ComponentClass = ActorComponentType::StaticClass()) 
+	ActorComponentType* SpawnRuntimeComponentToActor(AActor* Actor, TSubclassOf<ActorComponentType> ComponentClass = ActorComponentType::StaticClass()) 
 	{
 		static_assert(TIsDerivedFrom<ActorComponentType, UActorComponent>::IsDerived, "Provided type does not derive from UActorComponent");
 
@@ -25,8 +25,8 @@ namespace FU_Utilities
 		
 		return NewComponent;
 	}
-
-	FISHYUTILS_API void RemoveRuntimeInstanceComponent(UActorComponent* ActorComponent);
+	
+	FISHYUTILS_API void RemoveRuntimeComponent(UActorComponent* ActorComponent);
 
 	/**
 	 * @return "true" or "false"

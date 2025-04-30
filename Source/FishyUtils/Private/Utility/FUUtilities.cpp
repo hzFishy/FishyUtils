@@ -5,7 +5,7 @@
 #include "Algo/Count.h"
 
 
-void FU_Utilities::RemoveRuntimeInstanceComponent(UActorComponent* ActorComponent)
+void FU_Utilities::RemoveRuntimeComponent(UActorComponent* ActorComponent)
 {
 	if (IsValid(ActorComponent))
 	{
