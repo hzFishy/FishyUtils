@@ -14,6 +14,7 @@ void FU_Draw::DrawDebugSphereFrame(UWorld* World, const FVector& Location, float
 	FU_Draw::DrawDebugSphere(World, Location, Radius, Color, 0, Thickness, DepthPriority);
 }
 
+
 void FU_Draw::DrawDebugBox(UWorld* World, const FVector& Location, const FVector& Extent, const FRotator& Rotation, FColor Color, float Time, float Thickness, uint8 DepthPriority)
 {
 	DrawDebugBox(World, Location, Extent, Rotation.Quaternion(), Color, false, Time, DepthPriority, Thickness);
@@ -34,12 +35,21 @@ void FU_Draw::DrawDebugBoxFrame(UWorld* World, const FVector& Location, float Ha
 
 void FU_Draw::DrawDebugLine(UWorld* World, const FVector& StartLocation, const FVector& EndLocation, FColor Color, float Time, float Thickness, uint8 DepthPriority)
 {
+	// For some reasons if you try to draw debug an arrow/line with a depth priority above 1 for more than a frame (Time > 0) it will only be drawn for a single frame
+	// As a temporary fix we reset the DepthPriority to 0 so the drawing lasts as much as requested 
+	const bool bDetectTimeDepthBug = DepthPriority > 0 && Time > 0;
+	if (bDetectTimeDepthBug)
+	{
+		DepthPriority = 0;
+	}
+	
 	DrawDebugLine(World, StartLocation, EndLocation, Color, false, Time, DepthPriority, Thickness);
 }
 void FU_Draw::DrawDebugLineFrame(UWorld* World, const FVector& StartLocation, const FVector& EndLocation, FColor Color, float Thickness, uint8 DepthPriority)
 {
 	FU_Draw::DrawDebugLine(World, StartLocation, EndLocation, Color, 0, Thickness, DepthPriority);
 }
+
 
 void FU_Draw::DrawDebugString(UWorld* World, const FVector& Location, const FString& Text, FColor Color, float Time, float FontScale)
 {
@@ -50,15 +60,26 @@ void FU_Draw::DrawDebugStringFrame(UWorld* World, const FVector& Location, const
 	FU_Draw::DrawDebugString(World, Location, Text, Color, 0, FontScale);
 }
 
+
 void FU_Draw::DrawDebugDirectionalArrow(UWorld* World, const FVector& StartLcation, const FVector& ScaledDirection, FColor Color, float Time, float ArrowSize, float Thickness, uint8 DepthPriority)
 {
 	const FVector EndLocation = StartLcation + ScaledDirection;
+
+	// For some reasons if you try to draw debug an arrow/line with a depth priority above 1 for more than a frame (Time > 0) it will only be drawn for a single frame
+	// As a temporary fix we reset the DepthPriority to 0 so the drawing lasts as much as requested 
+	const bool bDetectTimeDepthBug = DepthPriority > 0 && Time > 0;
+	if (bDetectTimeDepthBug)
+	{
+		DepthPriority = 0;
+	}
+	
 	DrawDebugDirectionalArrow(World, StartLcation, EndLocation, ArrowSize, Color, false, Time, DepthPriority, Thickness);
 }
 void FU_Draw::DrawDebugDirectionalArrowFrame(UWorld* World, const FVector& StartLcation, const FVector& ScaledDirection, FColor Color, float ArrowSize, float Thickness, uint8 DepthPriority)
 {
 	FU_Draw::DrawDebugDirectionalArrow(World, StartLcation, ScaledDirection, Color, 0, ArrowSize, Thickness, DepthPriority);
 }
+
 
 void FU_Draw::DrawDebugActorBounds(UWorld* World, AActor* Actor, bool bOnlyCollidingComponents, FColor Color, float Time, float Thickness, uint8 DepthPriority)
 {
