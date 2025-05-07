@@ -111,3 +111,24 @@ void FU_Draw::DrawDebugCapsuleFrame(UWorld* World, UCapsuleComponent* CapsuleCom
 {
 	FU_Draw::DrawDebugCapsule(World, CapsuleComponent, Color,  0, Thickness, DepthPriority);
 }
+
+void FU_Draw::DrawDebugBodyInstance(UWorld* World, const FBodyInstance& BodyInstance, FColor Color, float Time, float Thickness, uint8 DepthPriority)
+{
+	const FBox BoxBounds = BodyInstance.GetBodyBounds();
+	const FBox LocalBoxBounds = BodyInstance.GetBodyBoundsLocal();
+	
+	FU_Draw::DrawDebugBox(
+		World,
+		BoxBounds.GetCenter(),
+		LocalBoxBounds.GetExtent(),
+		BodyInstance.GetUnrealWorldTransform().GetRotation().Rotator(),
+		Color,
+		Time,
+		Thickness, DepthPriority
+	);
+}
+
+void FU_Draw::DrawDebugBodyInstanceFrame(UWorld* World, const FBodyInstance& BodyInstance, FColor Color, float Thickness, uint8 DepthPriority)
+{
+	DrawDebugBodyInstance(World, BodyInstance, Color, 0, Thickness, DepthPriority);
+}
