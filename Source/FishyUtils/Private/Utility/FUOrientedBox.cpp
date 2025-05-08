@@ -12,7 +12,7 @@ namespace FU_Utilities
 		
 	}
 
-	FFUOrientedBox::FFUOrientedBox(AActor* Actor, bool bNonColliding, TArray<UClass*> CustomIgnore, FTransform OverrideTransform)
+	FFUOrientedBox::FFUOrientedBox(AActor* Actor, bool bNonColliding, TArray<UClass*> CustomIgnore, const FTransform& OverrideTransform)
 	{
 		if (!IsValid(Actor)) { return; }
  
@@ -46,6 +46,29 @@ namespace FU_Utilities
 		Up = Transform.TransformVector(FVector::UpVector * Extent.Z);
  
 		// Now you have an oriented bounding box represented by a `Center` and three extent vectors.
+	}
+
+	FFUOrientedBox::FFUOrientedBox(UPrimitiveComponent* PrimitiveComponent, const FTransform& OverrideTransform)
+	{
+		if (!IsValid(PrimitiveComponent)) { return; }
+
+		// for details see constructor using an AActor
+		
+		FBox Box(ForceInit);
+		const FTransform& ActorToWorld = PrimitiveComponent->GetComponentTransform();
+		const FTransform WorldToActor = ActorToWorld.Inverse();
+		{
+			const FTransform ComponentToActor = PrimitiveComponent->GetComponentTransform() * WorldToActor;
+			Box += PrimitiveComponent->CalcBounds(ComponentToActor).GetBox();
+		}
+		
+		const auto Transform = OverrideTransform.GetLocation().IsZero() ? PrimitiveComponent->GetComponentTransform() : OverrideTransform;
+ 
+		Center = Transform.TransformPosition(Box.GetCenter());
+		const FVector Extent = Box.GetExtent();
+		Forward = Transform.TransformVector(FVector::ForwardVector * Extent.X);
+		Right = Transform.TransformVector(FVector::RightVector * Extent.Y);
+		Up = Transform.TransformVector(FVector::UpVector * Extent.Z);
 	}
 
 	void FFUOrientedBox::DrawDebug(UWorld* World, FColor Color, float LifeTime, float Thickness, uint8 DepthPriority)

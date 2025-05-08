@@ -15,19 +15,19 @@ void FU_Draw::DrawDebugSphereFrame(UWorld* World, const FVector& Location, float
 }
 
 
-void FU_Draw::DrawDebugBox(UWorld* World, const FVector& Location, const FVector& Extent, const FRotator& Rotation, FColor Color, float Time, float Thickness, uint8 DepthPriority)
+void FU_Draw::DrawDebugBox(UWorld* World, const FVector& Location, const FVector& Extent, const FQuat& Rotation, FColor Color, float Time, float Thickness, uint8 DepthPriority)
 {
-	DrawDebugBox(World, Location, Extent, Rotation.Quaternion(), Color, false, Time, DepthPriority, Thickness);
+	DrawDebugBox(World, Location, Extent, Rotation, Color, false, Time, DepthPriority, Thickness);
 }
-void FU_Draw::DrawDebugBoxFrame(UWorld* World, const FVector& Location, const FVector& Extent, const FRotator& Rotation, FColor Color, float Thickness, uint8 DepthPriority)
+void FU_Draw::DrawDebugBoxFrame(UWorld* World, const FVector& Location, const FVector& Extent, const FQuat& Rotation, FColor Color, float Thickness, uint8 DepthPriority)
 {
 	FU_Draw::DrawDebugBox(World, Location, Extent, Rotation, Color, 0, Thickness, DepthPriority);
 }
-void FU_Draw::DrawDebugBox(UWorld* World, const FVector& Location, float HalfSize, const FRotator& Rotation, FColor Color, float Time, float Thickness, uint8 DepthPriority)
+void FU_Draw::DrawDebugBox(UWorld* World, const FVector& Location, float HalfSize, const FQuat& Rotation, FColor Color, float Time, float Thickness, uint8 DepthPriority)
 {
 	FU_Draw::DrawDebugBox(World, Location, FVector(HalfSize), Rotation, Color, Time, DepthPriority, Thickness);
 }
-void FU_Draw::DrawDebugBoxFrame(UWorld* World, const FVector& Location, float HalfSize, const FRotator& Rotation, FColor Color, float Thickness, uint8 DepthPriority)
+void FU_Draw::DrawDebugBoxFrame(UWorld* World, const FVector& Location, float HalfSize, const FQuat& Rotation, FColor Color, float Thickness, uint8 DepthPriority)
 {
 	FU_Draw::DrawDebugBox(World, Location, HalfSize, Rotation, Color, 0, Thickness, DepthPriority);
 }
@@ -48,6 +48,19 @@ void FU_Draw::DrawDebugLine(UWorld* World, const FVector& StartLocation, const F
 void FU_Draw::DrawDebugLineFrame(UWorld* World, const FVector& StartLocation, const FVector& EndLocation, FColor Color, float Thickness, uint8 DepthPriority)
 {
 	FU_Draw::DrawDebugLine(World, StartLocation, EndLocation, Color, 0, Thickness, DepthPriority);
+}
+
+
+void FU_Draw::DrawDebugLineWithMiddleText(UWorld* World, float Time, const FVector& LineStartLocation, const FVector& LineEndLocation, FColor LineColor, const FString& Text, FColor TextColor, float LineThickness, float FontScale, uint8 LineDepthPriority)
+{
+	FU_Draw::DrawDebugLine(World, LineStartLocation, LineEndLocation, LineColor, Time, LineThickness, LineDepthPriority);
+
+	const FVector MiddleLocation = LineStartLocation + (LineEndLocation - LineStartLocation)/2;
+	FU_Draw::DrawDebugString(World, MiddleLocation, Text, TextColor, Time, FontScale);
+}
+void FU_Draw::DrawDebugLineWithMiddleTextFrame(UWorld* World, const FVector& LineStartLocation, const FVector& LineEndLocation, FColor LineColor, const FString& Text, FColor TextColor, float LineThickness, float FontScale, uint8 LineDepthPriority)
+{
+	FU_Draw::DrawDebugLineWithMiddleText(World, 0, LineStartLocation, LineEndLocation, LineColor, Text, TextColor, LineThickness, FontScale, LineDepthPriority);
 }
 
 
@@ -87,11 +100,11 @@ void FU_Draw::DrawDebugActorBounds(UWorld* World, AActor* Actor, bool bOnlyColli
 	FVector BoxExtent;
 	Actor->GetActorBounds(bOnlyCollidingComponents, BoxOrigin, BoxExtent, false);
 
-	FU_Draw::DrawDebugBox(World, BoxOrigin, BoxExtent, Actor->GetActorRotation(), Color, Time, Thickness, DepthPriority);
+	FU_Draw::DrawDebugBox(World, BoxOrigin, BoxExtent, Actor->GetActorRotation().Quaternion(), Color, Time, Thickness, DepthPriority);
 }
 void FU_Draw::DrawDebugActorBoundsFrame(UWorld* World, AActor* Actor, bool bOnlyCollidingComponents, FColor Color, float Thickness, uint8 DepthPriority)
 {
-	DrawDebugActorBounds(World, Actor, bOnlyCollidingComponents, Color, 0, Thickness, DepthPriority);
+	FU_Draw::DrawDebugActorBounds(World, Actor, bOnlyCollidingComponents, Color, 0, Thickness, DepthPriority);
 }
 
 
@@ -112,6 +125,7 @@ void FU_Draw::DrawDebugCapsuleFrame(UWorld* World, UCapsuleComponent* CapsuleCom
 	FU_Draw::DrawDebugCapsule(World, CapsuleComponent, Color,  0, Thickness, DepthPriority);
 }
 
+
 void FU_Draw::DrawDebugBodyInstance(UWorld* World, const FBodyInstance& BodyInstance, FColor Color, float Time, float Thickness, uint8 DepthPriority)
 {
 	const FBox BoxBounds = BodyInstance.GetBodyBounds();
@@ -121,14 +135,63 @@ void FU_Draw::DrawDebugBodyInstance(UWorld* World, const FBodyInstance& BodyInst
 		World,
 		BoxBounds.GetCenter(),
 		LocalBoxBounds.GetExtent(),
-		BodyInstance.GetUnrealWorldTransform().GetRotation().Rotator(),
+		BodyInstance.GetUnrealWorldTransform().GetRotation(),
 		Color,
 		Time,
 		Thickness, DepthPriority
 	);
 }
-
 void FU_Draw::DrawDebugBodyInstanceFrame(UWorld* World, const FBodyInstance& BodyInstance, FColor Color, float Thickness, uint8 DepthPriority)
 {
 	DrawDebugBodyInstance(World, BodyInstance, Color, 0, Thickness, DepthPriority);
+}
+
+
+void FU_Draw::DrawDebugPrimitiveComponent(UWorld* World, UPrimitiveComponent* PrimitiveComponent, FColor Color, float Time, float Thickness, uint8 DepthPriority)
+{
+	if (!IsValid(PrimitiveComponent)) { return; }
+
+	const FCollisionShape& Shape = PrimitiveComponent->GetCollisionShape();
+	if (Shape.IsBox())
+	{
+		// special case for box since we cant get the origin offset from FCollisionShape
+		FBoxSphereBounds Bounds = PrimitiveComponent->GetLocalBounds();
+		FU_Draw::DrawDebugBox(
+			World,
+			// TODO: not working with rotation
+			PrimitiveComponent->GetComponentLocation() + (Bounds.Origin * PrimitiveComponent->GetComponentScale()),
+			Shape.GetExtent(),
+			PrimitiveComponent->GetComponentRotation().Quaternion(),
+			Color, Time,
+			Thickness, DepthPriority
+		);
+		return;
+	}
+	
+	FU_Draw::DrawDebugCollisionShape(World, PrimitiveComponent->GetComponentLocation(), PrimitiveComponent->GetComponentRotation().Quaternion(), Shape, Color, Time, Thickness, DepthPriority);
+}
+void FU_Draw::DrawDebugPrimitiveComponentFrame(UWorld* World, UPrimitiveComponent* PrimitiveComponent, FColor Color, float Thickness, uint8 DepthPriority)
+{
+	FU_Draw::DrawDebugPrimitiveComponent(World, PrimitiveComponent, Color, 0, Thickness, DepthPriority);
+}
+
+
+void FU_Draw::DrawDebugCollisionShape(UWorld* World, const FVector& Location, const FQuat& Rotation, const FCollisionShape& Shape, FColor Color, float Time, float Thickness, uint8 DepthPriority)
+{
+	if (Shape.IsSphere())
+	{
+		FU_Draw::DrawDebugSphere(World, Location, Shape.GetSphereRadius(), Color, Time, Thickness, DepthPriority);
+	}
+	else if (Shape.IsCapsule())
+	{
+		FU_Draw::DrawDebugCapsule(World, Location, Rotation, Shape.GetCapsuleRadius(), Shape.GetCapsuleHalfHeight(), Color, Time, Thickness, DepthPriority);
+	}
+	else if (Shape.IsBox())
+	{
+		FU_Draw::DrawDebugBox(World, Location, Shape.GetExtent(), Rotation, Color, Time, Thickness, DepthPriority);
+	}
+}
+void FU_Draw::DrawDebugCollisionShapeFrame(UWorld* World, const FVector& Location, const FQuat& Rotation, const FCollisionShape& Shape, FColor Color, float Thickness, uint8 DepthPriority)
+{
+	FU_Draw::DrawDebugCollisionShape(World, Location, Rotation, Shape, Color, 0, Thickness, DepthPriority);
 }
