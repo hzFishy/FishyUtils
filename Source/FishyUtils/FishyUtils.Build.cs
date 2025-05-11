@@ -11,7 +11,7 @@ public class FishyUtils : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core",
+				"Core", "BlueprintComponentReference",
 			}
 		);
 			
@@ -35,8 +35,6 @@ public class FishyUtils : ModuleRules
 			PrivateDependencyModuleNames.AddRange(new string[]
 			{
 				"UnrealEd",
-				"SceneOutliner",
-				"ToolMenus"
 			});
 		}
 	}

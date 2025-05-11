@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FUOrientedBox.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "FUUtilityLibrary.generated.h"
 
@@ -24,5 +25,4 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|Generic", meta=(WorldContext="WorldContextObject"))
 	static bool AsyncOpenLevel(const UObject* WorldContextObject, TSoftObjectPtr<UWorld> Level, bool bAbsolute = true, FString Options = "");
-	
 };

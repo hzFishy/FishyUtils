@@ -2,13 +2,12 @@
 
 #pragma once
 
+#include "EngineUtils.h"
+#include "Framework/Commands/Commands.h"
+
 
 namespace FU_EditorUtilities
 {
-	
-#if WITH_EDITOR
-#include "EngineUtils.h"
-
 	template<class ActorType>
 	ActorType* GetEditorWorldCounterpartActor(ActorType* PIEActor)
 	{
@@ -43,6 +42,38 @@ namespace FU_EditorUtilities
 		}
 		return nullptr;
 	}
-#endif
 	
 }
+
+
+class FFUEditor
+{
+public:
+	class FFUEditorCommands : public TCommands<FFUEditorCommands>
+	{
+	public:
+		FFUEditorCommands() : TCommands<FFUEditorCommands>(
+				"FishyEditorCommands",
+				FText::FromString("Fishy Utilities"),
+				NAME_None,
+				FAppStyle::GetAppStyleSetName()
+			)
+		{}
+
+		TSharedPtr<FUICommandInfo> SelectSameFolderLevel;
+
+		virtual void RegisterCommands() override;
+	};
+	
+public:
+	FFUEditor();
+	~FFUEditor();
+	
+	void RegisterMenuExtensions();
+	
+	void UnregisterMenuExtensions();
+
+protected:
+	void ExecuteSelectSameFolderLevel();
+};
+

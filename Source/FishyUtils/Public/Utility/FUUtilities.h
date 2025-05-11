@@ -8,7 +8,7 @@
 namespace FU_Utilities
 {
 	template<class ActorComponentType>
-	ActorComponentType* SpawnRuntimeComponentToActor(AActor* Actor, TSubclassOf<ActorComponentType> ComponentClass = ActorComponentType::StaticClass()) 
+	ActorComponentType* SpawnRuntimeComponentForActor(AActor* Actor, TSubclassOf<ActorComponentType> ComponentClass = ActorComponentType::StaticClass()) 
 	{
 		static_assert(TIsDerivedFrom<ActorComponentType, UActorComponent>::IsDerived, "Provided type does not derive from UActorComponent");
 

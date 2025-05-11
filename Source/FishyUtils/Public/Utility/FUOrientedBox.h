@@ -11,12 +11,6 @@ namespace FU_Utilities
 	 */
 	struct FISHYUTILS_API FFUOrientedBox
 	{
-		FVector Center = FVector::ZeroVector;
-
-		FVector Forward = FVector::ZeroVector;
-		FVector Right = FVector::ZeroVector;
-		FVector Up = FVector::ZeroVector;
-
 		FFUOrientedBox();
 
 		/* Make a oriented box from an actor */
@@ -25,8 +19,15 @@ namespace FU_Utilities
 		/* Make a oriented box from a primitive component */
 		FFUOrientedBox(UPrimitiveComponent* PrimitiveComponent, const FTransform& OverrideTransform = FTransform::Identity);
 
+		
 		void DrawDebug(UWorld* World, FColor Color, float LifeTime, float Thickness = 2, uint8 DepthPriority = 0);
 		void DrawDebugFrame(UWorld* World, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
 		void DrawDebugFrame(FPrimitiveDrawInterface* PDI, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
+
+		
+		FVector Center = FVector::ZeroVector;
+		FVector Forward = FVector::ZeroVector;
+		FVector Right = FVector::ZeroVector;
+		FVector Up = FVector::ZeroVector;
 	};
 }

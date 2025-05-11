@@ -1,26 +1,18 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "FishyUtils.h"
 #include "Framework/Commands/Commands.h"
-#include "EditorOnly/FUEditor.h"
 
 #define LOCTEXT_NAMESPACE "FFishyUtilsModule"
 
 void FFishyUtilsModule::StartupModule()
 {
-#if WITH_EDITOR
-	FFUEditor::FFUEditorCommands::Register();
-	UToolMenus::RegisterStartupCallback(FSimpleMulticastDelegate::FDelegate::CreateRaw(&FishyEditorInstance, &FFUEditor::RegisterMenuExtensions));
-#endif
+
 }
 
 void FFishyUtilsModule::ShutdownModule()
 {
-#if WITH_EDITOR
-	FishyEditorInstance.UnregisterMenuExtensions();
-	FFUEditor::FFUEditorCommands::Unregister();
 
-#endif
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -1,18 +1,14 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
+#pragma once
 
-#include "EditorOnly/FUEditor.h"
-
-
-
-#if WITH_EDITOR
+#include "Utility/FUEditorUtilities.h"
 
 #include "EngineUtils.h"
 #include "LevelEditor.h"
 #include "Selection.h"
 
 #define LOCTEXT_NAMESPACE "FFishyUtilsModule"
-
 
 FFUEditor::FFUEditor() {}
 
@@ -79,11 +75,9 @@ void FFUEditor::FFUEditorCommands::RegisterCommands()
 {
 	UI_COMMAND(SelectSameFolderLevel,
 		"Select All In Folder",
-		"Selects all other actors that are in the samme root folder than the current selection (if multiple actors are selected the first selection will be used as reference)",
+		"Selects all other actors that are in the same root folder than the current selection (if multiple actors are selected the first selection will be used as reference)",
 		EUserInterfaceActionType::Button, FInputChord(EKeys::S, EModifierKey::Shift | EModifierKey::Alt)
 	);
 }
 
 #undef LOCTEXT_NAMESPACE
-
-#endif
