@@ -12,10 +12,10 @@ enum class EFUEComponentSocketType: uint8
 {
 	/** Not a valid socket or bone name. */
 	Invalid		  = 0 UMETA(Hidden),
-    /** Skeletal bone. */
-    Bone			= 1 << 0,
-    /** Socket. */
-    Socket			= 1 << 1,
+	/** Skeletal bone. */
+	Bone			= 1 << 0,
+	/** Socket. */
+	Socket			= 1 << 1,
 };
 ENUM_CLASS_FLAGS(EFUEComponentSocketType);
 
