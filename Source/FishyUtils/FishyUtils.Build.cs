@@ -11,7 +11,7 @@ public class FishyUtils : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core", "BlueprintComponentReference",
+				"Core", "BlueprintComponentReference", "DeveloperSettings"
 			}
 		);
 			
