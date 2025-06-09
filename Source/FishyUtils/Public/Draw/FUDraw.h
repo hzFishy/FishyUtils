@@ -32,7 +32,7 @@ namespace FU_Draw
 	FISHYUTILS_API void DrawDebugDirectionalArrow(UWorld* World, const FVector& StartLcation, const FVector& ScaledDirection, FColor Color, float Time, float ArrowSize = 2, float Thickness = 2, uint8 DepthPriority = 0);
 	FISHYUTILS_API void DrawDebugDirectionalArrowFrame(UWorld* World, const FVector& StartLcation, const FVector& ScaledDirection, FColor Color, float ArrowSize = 2, float Thickness = 2, uint8 DepthPriority = 0);
 
-	
+	/* For more control and precision see FFUOrientedBox */
 	FISHYUTILS_API void DrawDebugActorBounds(UWorld* World, AActor* Actor, bool bOnlyCollidingComponents, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0);
 	FISHYUTILS_API void DrawDebugActorBoundsFrame(UWorld* World, AActor* Actor, bool bOnlyCollidingComponents, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
 

@@ -143,7 +143,7 @@ void FU_Draw::DrawDebugBodyInstance(UWorld* World, const FBodyInstance& BodyInst
 }
 void FU_Draw::DrawDebugBodyInstanceFrame(UWorld* World, const FBodyInstance& BodyInstance, FColor Color, float Thickness, uint8 DepthPriority)
 {
-	DrawDebugBodyInstance(World, BodyInstance, Color, 0, Thickness, DepthPriority);
+	FU_Draw::DrawDebugBodyInstance(World, BodyInstance, Color, 0, Thickness, DepthPriority);
 }
 
 
