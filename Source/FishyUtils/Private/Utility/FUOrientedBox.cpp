@@ -12,7 +12,7 @@ namespace FU_Utilities
 		
 	}
 
-	FFUOrientedBox::FFUOrientedBox(AActor* Actor, bool bNonColliding, TArray<UClass*> CustomIgnore, const FTransform& OverrideTransform)
+	FFUOrientedBox::FFUOrientedBox(const AActor* Actor, bool bNonColliding, TArray<const UClass*> CustomIgnore, const FTransform& OverrideTransform)
 	{
 		if (!IsValid(Actor)) { return; }
  
@@ -48,7 +48,7 @@ namespace FU_Utilities
 		// Now you have an oriented bounding box represented by a `Center` and three extent vectors.
 	}
 
-	FFUOrientedBox::FFUOrientedBox(UPrimitiveComponent* PrimitiveComponent, const FTransform& OverrideTransform)
+	FFUOrientedBox::FFUOrientedBox(const UPrimitiveComponent* PrimitiveComponent, const FTransform& OverrideTransform)
 	{
 		if (!IsValid(PrimitiveComponent)) { return; }
 
