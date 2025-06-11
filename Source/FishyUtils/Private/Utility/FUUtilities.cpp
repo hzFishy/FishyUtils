@@ -118,3 +118,36 @@ FString FU_Utilities::GetLastTagChilds(const FGameplayTag& Tag, uint8 Depth)
 	
 	return Result;
 }
+
+
+void FU_Utilities::GetAttachChain(const USceneComponent* Component, TArray<const USceneComponent*>& OutChain)
+{
+	OutChain.Insert(Component, 0);
+	
+	if (IsValid(Component->GetAttachParent()))
+	{
+		GetAttachChain(Component->GetAttachParent(), OutChain);
+	}
+}
+
+void FU_Utilities::GetAddedTransformStartingAtComponent(const USceneComponent* Component, FTransform& AddedTransform)
+{
+	TArray<const USceneComponent*> OutChain;
+	GetAttachChain(Component, OutChain);
+
+	for (int i = 0; i < OutChain.Num(); ++i)
+	{
+		const auto* CurrentComponent = OutChain[i];
+
+		AddedTransform.SetLocation(AddedTransform.GetLocation() + CurrentComponent->GetRelativeLocation());
+
+		//AddedTransform.SetRotation((AddedTransform.GetRotation().Rotator() + Component->GetRelativeRotation()).Quaternion());
+	
+		UE::Math::TQuat<double> NewQuat = AddedTransform.GetRotation() * CurrentComponent->GetRelativeRotation().Quaternion();
+		NewQuat.Normalize();
+		AddedTransform.SetRotation(NewQuat);
+	
+		AddedTransform.SetScale3D(AddedTransform.GetScale3D() * CurrentComponent->GetRelativeScale3D());
+
+	}
+}

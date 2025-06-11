@@ -60,4 +60,17 @@ namespace FU_Utilities
 	 *  @return 'My.Sub.Tag' will return 'Sub.Tag' if Depth=2
 	 */
 	FISHYUTILS_API FString GetLastTagChilds(const FGameplayTag& Tag, uint8 Depth);
+
+	
+	/**
+	 *	For the given Component get the full chain of attachements.
+	 *	@returns {Parent, Child1, Child2, ..., Component}
+	 */
+	FISHYUTILS_API void GetAttachChain(const USceneComponent* Component, TArray<const USceneComponent*>& OutChain);
+	
+	/**
+	 *	For the given Component get the sum of all relative transforms. 
+	 *  This can be used when world transform cannot be get directly on the Component.
+	 */
+	FISHYUTILS_API void GetAddedTransformStartingAtComponent(const USceneComponent* Component, FTransform& AddedTransform);
 }

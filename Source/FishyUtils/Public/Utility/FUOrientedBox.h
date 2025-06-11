@@ -14,10 +14,12 @@ namespace FU_Utilities
 		FFUOrientedBox();
 
 		/* Make a oriented box from an actor */
-		FFUOrientedBox(const AActor* Actor, bool bNonColliding, TArray<const UClass*> CustomIgnore = {}, const FTransform& OverrideTransform = FTransform::Identity);
+		FFUOrientedBox(const AActor* Actor, bool bNonColliding, TArray<const UClass*> CustomIgnore = {}, const FTransform* OverrideTransform = nullptr);
 
-		/* Make a oriented box from a primitive component */
-		FFUOrientedBox(const UPrimitiveComponent* PrimitiveComponent, const FTransform& OverrideTransform = FTransform::Identity);
+		/**
+		 * Make a oriented box from a primitive component
+		 */
+		FFUOrientedBox(const UPrimitiveComponent* PrimitiveComponent, const FTransform* OverrideTransform = nullptr);
 
 		
 		void DrawDebug(UWorld* World, FColor Color, float LifeTime, float Thickness = 2, uint8 DepthPriority = 0);

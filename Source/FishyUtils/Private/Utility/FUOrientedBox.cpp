@@ -12,10 +12,13 @@ namespace FU_Utilities
 		
 	}
 
-	FFUOrientedBox::FFUOrientedBox(const AActor* Actor, bool bNonColliding, TArray<const UClass*> CustomIgnore, const FTransform& OverrideTransform)
+	FFUOrientedBox::FFUOrientedBox(const AActor* Actor, bool bNonColliding, TArray<const UClass*> CustomIgnore, const FTransform* OverrideTransform)
 	{
 		if (!IsValid(Actor)) { return; }
- 
+
+		const bool bUseOverrideTransform = OverrideTransform != nullptr;
+		const FTransform UsedTransform = bUseOverrideTransform ? *OverrideTransform : Actor->GetTransform();
+		
 		// Get the AABB in Local space (aka Object space: such as in the Blueprint viewer). You might want to cache this result as this may be costly.
 		// instead of using CalculateComponentsBoundingBoxInLocalSpace directly we are using this modified version that allow us to whatever we want
 		FBox Box(ForceInit);
@@ -33,42 +36,37 @@ namespace FU_Utilities
 				Box += InPrimComp->CalcBounds(ComponentToActor).GetBox();
 			}
 		});
+
 		
-		const auto Transform = OverrideTransform.GetLocation().IsZero() ? Actor->GetTransform() : OverrideTransform;
- 
 		// Get World space Location.
-		Center = Transform.TransformPosition(Box.GetCenter());
+		Center = UsedTransform.TransformPosition(Box.GetCenter());
  
 		// And World space extent
 		const FVector Extent = Box.GetExtent();
-		Forward = Transform.TransformVector(FVector::ForwardVector * Extent.X);
-		Right = Transform.TransformVector(FVector::RightVector * Extent.Y);
-		Up = Transform.TransformVector(FVector::UpVector * Extent.Z);
+		Forward = UsedTransform.TransformVector(FVector::ForwardVector * Extent.X);
+		Right = UsedTransform.TransformVector(FVector::RightVector * Extent.Y);
+		Up = UsedTransform.TransformVector(FVector::UpVector * Extent.Z);
  
-		// Now you have an oriented bounding box represented by a `Center` and three extent vectors.
+		// Now you have an oriented bounding box represented by a Center and three extent vectors.
 	}
 
-	FFUOrientedBox::FFUOrientedBox(const UPrimitiveComponent* PrimitiveComponent, const FTransform& OverrideTransform)
+	FFUOrientedBox::FFUOrientedBox(const UPrimitiveComponent* PrimitiveComponent, const FTransform* OverrideTransform)
 	{
 		if (!IsValid(PrimitiveComponent)) { return; }
 
-		// for details see constructor using an AActor
+		const FTransform ComponentTransform = OverrideTransform ? *OverrideTransform : PrimitiveComponent->GetComponentTransform();
 		
 		FBox Box(ForceInit);
-		const FTransform& ActorToWorld = PrimitiveComponent->GetComponentTransform();
+		const FTransform& ActorToWorld = ComponentTransform;
 		const FTransform WorldToActor = ActorToWorld.Inverse();
-		{
-			const FTransform ComponentToActor = PrimitiveComponent->GetComponentTransform() * WorldToActor;
-			Box += PrimitiveComponent->CalcBounds(ComponentToActor).GetBox();
-		}
-		
-		const auto Transform = OverrideTransform.GetLocation().IsZero() ? PrimitiveComponent->GetComponentTransform() : OverrideTransform;
+		const FTransform ComponentToActor = ComponentTransform * WorldToActor;
+		Box = PrimitiveComponent->CalcBounds(ComponentToActor).GetBox();
  
-		Center = Transform.TransformPosition(Box.GetCenter());
+		Center = ComponentTransform.TransformPosition(Box.GetCenter());
 		const FVector Extent = Box.GetExtent();
-		Forward = Transform.TransformVector(FVector::ForwardVector * Extent.X);
-		Right = Transform.TransformVector(FVector::RightVector * Extent.Y);
-		Up = Transform.TransformVector(FVector::UpVector * Extent.Z);
+		Forward = ComponentTransform.TransformVector(FVector::ForwardVector * Extent.X);
+		Right = ComponentTransform.TransformVector(FVector::RightVector * Extent.Y);
+		Up = ComponentTransform.TransformVector(FVector::UpVector * Extent.Z);
 	}
 
 	void FFUOrientedBox::DrawDebug(UWorld* World, FColor Color, float LifeTime, float Thickness, uint8 DepthPriority)
