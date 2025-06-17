@@ -69,7 +69,7 @@ namespace FU_Utilities
 		Up = ComponentTransform.TransformVector(FVector::UpVector * Extent.Z);
 	}
 
-	void FFUOrientedBox::DrawDebug(UWorld* World, FColor Color, float LifeTime, float Thickness, uint8 DepthPriority)
+	void FFUOrientedBox::DrawDebug(const UWorld* World, FColor Color, float LifeTime, float Thickness, uint8 DepthPriority)
 	{
 		const FVector ExtentsX = Right;
 		const FVector ExtentsY = Up;
@@ -100,7 +100,7 @@ namespace FU_Utilities
 		FU_Draw::DrawDebugLine(World, Corner4, Corner8, Color, LifeTime, Thickness, DepthPriority);
 	}
 
-	void FFUOrientedBox::DrawDebugFrame(UWorld* World, FColor Color, float Thickness, uint8 DepthPriority)
+	void FFUOrientedBox::DrawDebugFrame(const UWorld* World, FColor Color, float Thickness, uint8 DepthPriority)
 	{
 		DrawDebug(World, Color, 0, Thickness, DepthPriority);
 	}

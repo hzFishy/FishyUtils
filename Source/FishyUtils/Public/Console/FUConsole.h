@@ -10,7 +10,7 @@
 #endif
 
 #ifndef FU_CONSOLE_PROJECTNAME
-	// edit this in your Build.cs file
+	// edit this in your Build.cs file using PublicDefinitions.Add("FU_CONSOLE_PROJECTNAME=\"PROJECTNAME\"");
 	#define FU_CONSOLE_PROJECTNAME "FU"
 #endif
 
@@ -22,9 +22,6 @@ namespace FU_Console
 	/**
 	 *  @return "ProjectPrefix.Catepgry.CommandName"
 	 */
-#define _FU_Console_BuildFullCommandString(CategoryString, CommandNameString) \
-	FString::Printf(TEXT("%s.%s.%s"), TEXT(FU_CONSOLE_PROJECTNAME), TEXT(CategoryString), TEXT(CommandNameString))
-
 	static FString BuildFullCommandString(const FString& Category, const FString& CommandName)
 	{
 		return FString::Printf(TEXT("%s.%s.%s"), TEXT(FU_CONSOLE_PROJECTNAME), *Category, *CommandName);

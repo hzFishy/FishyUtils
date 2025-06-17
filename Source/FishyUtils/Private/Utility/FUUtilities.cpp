@@ -3,6 +3,8 @@
 
 #include "Utility/FUUtilities.h"
 #include "Algo/Count.h"
+#include "Engine/SCS_Node.h"
+#include "Engine/SimpleConstructionScript.h"
 
 
 void FU_Utilities::RemoveRuntimeComponent(UActorComponent* ActorComponent)
@@ -120,34 +122,101 @@ FString FU_Utilities::GetLastTagChilds(const FGameplayTag& Tag, uint8 Depth)
 }
 
 
-void FU_Utilities::GetAttachChain(const USceneComponent* Component, TArray<const USceneComponent*>& OutChain)
+void FU_Utilities::GetAttachChain(const USceneComponent* TargetChildComponent, TArray<const USceneComponent*>& OutChain)
 {
-	OutChain.Insert(Component, 0);
+	OutChain.Insert(TargetChildComponent, 0);
 	
-	if (IsValid(Component->GetAttachParent()))
+	const auto* ParentComponent = TargetChildComponent->GetAttachParent();
+	if (ParentComponent != nullptr && ParentComponent->GetFName().IsValid())
 	{
-		GetAttachChain(Component->GetAttachParent(), OutChain);
+		GetAttachChain(ParentComponent, OutChain);
 	}
 }
 
-void FU_Utilities::GetAddedTransformStartingAtComponent(const USceneComponent* Component, FTransform& AddedTransform)
+#if WITH_EDITOR
+void FU_Utilities::GetAttachChainForChildComponent_BlueprintEditor(const USceneComponent* TargetChildComponent, const USimpleConstructionScript* SCS,
+	TArray<const USceneComponent*>& OutChain)
+{
+	if (TargetChildComponent->HasAnyFlags(EObjectFlags::RF_ArchetypeObject))
+	{
+		// iterate root node, then go for childs, sub childs ... etc until finding the component
+		for (auto& RootNode : SCS->GetRootNodes())
+		{
+			TArray<const USCS_Node*> OutPathNodes;
+			OutPathNodes.Add(RootNode);
+			if (GetAttachChainForChildComponent_BlueprintEditor_IterateNodes(TargetChildComponent, RootNode, OutPathNodes))
+			{
+				for (auto& OutPathNode : OutPathNodes)
+				{
+					OutChain.Add(Cast<USceneComponent>(OutPathNode->ComponentTemplate));
+				}
+				break;
+			}
+		}
+		return;
+	}
+	else
+	{
+		GetAttachChain(TargetChildComponent, OutChain);
+	}
+}
+
+bool FU_Utilities::GetAttachChainForChildComponent_BlueprintEditor_IterateNodes(const USceneComponent* TargetComponent, const USCS_Node* CurrentParentNode,
+	TArray<const USCS_Node*>& OutPath)
+{
+	// check if we hit the target node
+	// TODO component names arent unique for a single actor, must check in another way
+	if (CurrentParentNode->ComponentTemplate->GetFName() == TargetComponent->GetFName()) { return true; }
+
+	for (auto& ChildNode : CurrentParentNode->GetChildNodes())
+	{
+		// add current node in path
+		OutPath.Add(ChildNode);
+	
+		if (GetAttachChainForChildComponent_BlueprintEditor_IterateNodes(TargetComponent, ChildNode, OutPath))
+		{
+			return true;
+		}
+
+		// we didnt find it, remove as this path is invalid
+		OutPath.RemoveAt(OutPath.Num() - 1);
+	}
+
+	return false;
+}
+
+#endif
+
+void FU_Utilities::GetSimulatedWorldTransformFromComponent(const USceneComponent* Component, FTransform& OutWorldTransform, TArray<const USceneComponent*>* OverrideChain)
 {
 	TArray<const USceneComponent*> OutChain;
-	GetAttachChain(Component, OutChain);
-
+	if (OverrideChain != nullptr)
+	{
+		OutChain = *OverrideChain;
+	}
+	else
+	{
+		GetAttachChain(Component, OutChain);
+	}
+	
 	for (int i = 0; i < OutChain.Num(); ++i)
 	{
 		const auto* CurrentComponent = OutChain[i];
 
-		AddedTransform.SetLocation(AddedTransform.GetLocation() + CurrentComponent->GetRelativeLocation());
+		const auto& ParentQuat = OutWorldTransform.GetRotation();
+		const FVector& ParentLocation = OutWorldTransform.GetLocation();
+		const FVector& ParentScale = OutWorldTransform.GetScale3D();
+		const auto& RelativeQuat = CurrentComponent->GetRelativeRotation().Quaternion();
+		const FVector& RelativeLocation = CurrentComponent->GetRelativeTransform().GetLocation();
 
-		//AddedTransform.SetRotation((AddedTransform.GetRotation().Rotator() + Component->GetRelativeRotation()).Quaternion());
-	
-		UE::Math::TQuat<double> NewQuat = AddedTransform.GetRotation() * CurrentComponent->GetRelativeRotation().Quaternion();
-		NewQuat.Normalize();
-		AddedTransform.SetRotation(NewQuat);
-	
-		AddedTransform.SetScale3D(AddedTransform.GetScale3D() * CurrentComponent->GetRelativeScale3D());
+		// location, takes into account rotation and scale
+		OutWorldTransform.SetLocation(ParentLocation + (ParentQuat.RotateVector(RelativeLocation * ParentScale)));
 
+		// rotation
+		OutWorldTransform.SetRotation((OutWorldTransform.GetRotation() * RelativeQuat).GetNormalized());
+
+		// scale
+		OutWorldTransform.SetScale3D(OutWorldTransform.GetScale3D() * CurrentComponent->GetRelativeScale3D());
 	}
+
 }

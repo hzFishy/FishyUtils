@@ -63,14 +63,27 @@ namespace FU_Utilities
 
 	
 	/**
-	 *	For the given Component get the full chain of attachements.
-	 *	@returns {Parent, Child1, Child2, ..., Component}
+	 *	For the given TargetChildComponent get the full chain of attachements.
+	 *	@returns {Parent, Child1, Child2, ..., TargetComponent}
 	 */
-	FISHYUTILS_API void GetAttachChain(const USceneComponent* Component, TArray<const USceneComponent*>& OutChain);
+	FISHYUTILS_API void GetAttachChain(const USceneComponent* TargetChildComponent, TArray<const USceneComponent*>& OutChain);
+
+#if WITH_EDITOR
+	/**
+	 *  The SCS must be from the owning actor of the TargetChildComponent.
+	 *  This iterarates by starting at the root nodes (aka the root component of the owning actor of the SCS).
+	 *	@returns {Parent, Child1, Child2, ..., TargetComponent}
+	 */
+	FISHYUTILS_API void GetAttachChainForChildComponent_BlueprintEditor(const USceneComponent* TargetChildComponent, const USimpleConstructionScript* SCS, TArray<const USceneComponent*>& OutChain);
+	
+	/* Used internally by GetAttachChainForChildComponent_BlueprintEditor */
+	FISHYUTILS_API bool GetAttachChainForChildComponent_BlueprintEditor_IterateNodes(const USceneComponent* TargetComponent, const USCS_Node* CurrentParentNode, TArray<const USCS_Node*>& OutPath);
+
+#endif
 	
 	/**
 	 *	For the given Component get the sum of all relative transforms. 
 	 *  This can be used when world transform cannot be get directly on the Component.
 	 */
-	FISHYUTILS_API void GetAddedTransformStartingAtComponent(const USceneComponent* Component, FTransform& AddedTransform);
+	FISHYUTILS_API void GetSimulatedWorldTransformFromComponent(const USceneComponent* Component, FTransform& OutWorldTransform, TArray<const USceneComponent*>* OverrideChain = nullptr);
 }
