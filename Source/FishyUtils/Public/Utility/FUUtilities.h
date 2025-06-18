@@ -64,9 +64,12 @@ namespace FU_Utilities
 	
 	/**
 	 *	For the given TargetChildComponent get the full chain of attachements.
-	 *	@returns {Parent, Child1, Child2, ..., TargetComponent}
+	 *	@returns {Parent, Child1, Child2, ..., TargetComponent}. Parent is usually the actor's default scene root component
 	 */
+	FISHYUTILS_API void GetAttachChain(USceneComponent* TargetChildComponent, TArray<USceneComponent*>& OutChain);
 	FISHYUTILS_API void GetAttachChain(const USceneComponent* TargetChildComponent, TArray<const USceneComponent*>& OutChain);
+	FISHYUTILS_API void GetAttachChain(USceneComponent* TargetChildComponent, TArray<TWeakObjectPtr<USceneComponent>>& OutChain);
+	FISHYUTILS_API void GetAttachChain(const USceneComponent* TargetChildComponent, TArray<TWeakObjectPtr<const USceneComponent>>& OutChain);
 
 #if WITH_EDITOR
 	/**
@@ -75,6 +78,7 @@ namespace FU_Utilities
 	 *	@returns {Parent, Child1, Child2, ..., TargetComponent}
 	 */
 	FISHYUTILS_API void GetAttachChainForChildComponent_BlueprintEditor(const USceneComponent* TargetChildComponent, const USimpleConstructionScript* SCS, TArray<const USceneComponent*>& OutChain);
+	FISHYUTILS_API void GetAttachChainForChildComponent_BlueprintEditor(const USceneComponent* TargetChildComponent, const USimpleConstructionScript* SCS, TArray<TWeakObjectPtr<const USceneComponent>>& OutChain);
 	
 	/* Used internally by GetAttachChainForChildComponent_BlueprintEditor */
 	FISHYUTILS_API bool GetAttachChainForChildComponent_BlueprintEditor_IterateNodes(const USceneComponent* TargetComponent, const USCS_Node* CurrentParentNode, TArray<const USCS_Node*>& OutPath);
@@ -86,4 +90,6 @@ namespace FU_Utilities
 	 *  This can be used when world transform cannot be get directly on the Component.
 	 */
 	FISHYUTILS_API void GetSimulatedWorldTransformFromComponent(const USceneComponent* Component, FTransform& OutWorldTransform, TArray<const USceneComponent*>* OverrideChain = nullptr);
+	FISHYUTILS_API void GetSimulatedWorldTransformFromComponent(USceneComponent* Component, FTransform& OutWorldTransform, TArray<USceneComponent*>* OverrideChain = nullptr);
+	FISHYUTILS_API void GetSimulatedWorldTransformFromComponent(const USceneComponent* Component, FTransform& OutWorldTransform, TArray<TWeakObjectPtr<const USceneComponent>>* OverrideChain = nullptr);
 }
