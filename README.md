@@ -4,4 +4,4 @@
 3. In the windows cmd (or anything else you might use) clone this git and the `BlueprintComponentReferencePlugin` dependency
   - `git clone https://github.com/hzFishy/FishyUtils.git`
   - `git clone https://github.com/aquanox/BlueprintComponentReferencePlugin.git`
-4. Now you can include `FishyUtils` in your project (or any other plugin) and use it:
+4. Now you can include `FishyUtils` in your project (or any other plugin) and use it
