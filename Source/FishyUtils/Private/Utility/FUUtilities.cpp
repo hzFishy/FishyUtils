@@ -225,7 +225,6 @@ bool FU_Utilities::GetAttachChainForChildComponent_BlueprintEditor_IterateNodes(
                                                                                 TArray<const USCS_Node*>& OutPath)
 {
 	// check if we hit the target node
-	// TODO component names arent unique for a single actor, must check in another way
 	if (CurrentParentNode->ComponentTemplate->GetFName() == TargetComponent->GetFName()) { return true; }
 
 	for (auto& ChildNode : CurrentParentNode->GetChildNodes())
