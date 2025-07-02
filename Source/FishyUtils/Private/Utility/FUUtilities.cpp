@@ -346,3 +346,12 @@ void FU_Utilities::GetSimulatedWorldTransformFromComponent(const USceneComponent
 		OutWorldTransform.SetScale3D(OutWorldTransform.GetScale3D() * CurrentComponent->GetRelativeScale3D());
 	}
 }
+
+FName FU_Utilities::GetNameWithoutTemplateSuffix(FName FullName)
+{
+	FString StringName = FullName.ToString();
+
+	StringName.RemoveFromEnd("_GEN_VARIABLE");
+	
+	return FName(*StringName);
+}

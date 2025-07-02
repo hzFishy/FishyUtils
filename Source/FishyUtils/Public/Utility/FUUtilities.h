@@ -92,4 +92,7 @@ namespace FU_Utilities
 	FISHYUTILS_API void GetSimulatedWorldTransformFromComponent(const USceneComponent* Component, FTransform& OutWorldTransform, TArray<const USceneComponent*>* OverrideChain = nullptr);
 	FISHYUTILS_API void GetSimulatedWorldTransformFromComponent(USceneComponent* Component, FTransform& OutWorldTransform, TArray<USceneComponent*>* OverrideChain = nullptr);
 	FISHYUTILS_API void GetSimulatedWorldTransformFromComponent(const USceneComponent* Component, FTransform& OutWorldTransform, TArray<TWeakObjectPtr<const USceneComponent>>* OverrideChain = nullptr);
+
+	/* Remove the _GEN_VARIABLE part of the name */
+	FISHYUTILS_API FName GetNameWithoutTemplateSuffix(FName FullName);
 }
