@@ -13,7 +13,10 @@ namespace FU_Utilities
 	{
 		FFUOrientedBox();
 
-		/* Make a oriented box from an actor */
+		/**
+		 * Make a oriented box from an actor.
+		 * @param bNonColliding if true it will take into account primitive components that have no collision enabled
+		 */
 		FFUOrientedBox(const AActor* Actor, bool bNonColliding, TArray<const UClass*> CustomIgnore = {}, const FTransform* OverrideTransform = nullptr);
 
 		/**

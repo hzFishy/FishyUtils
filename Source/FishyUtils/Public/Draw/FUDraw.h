@@ -57,4 +57,8 @@ namespace FU_Draw
 	
 	FISHYUTILS_API void DrawDebugCollisionShape(const UWorld* World, const FVector& Location, const FQuat& Rotation, const FCollisionShape& Shape, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0);
 	FISHYUTILS_API void DrawDebugCollisionShapeFrame(const UWorld* World, const FVector& Location, const FQuat& Rotation, const FCollisionShape& Shape, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
+
+	/* For each primitive component draw an oriented box */
+	FISHYUTILS_API void DrawDebugOrientedActorPrimitiveComponents(const UWorld* World, const AActor* Actor, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0);
+	FISHYUTILS_API void DrawDebugOrientedActorPrimitiveComponentsFrame(const UWorld* World, const AActor* Actor, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
 }
