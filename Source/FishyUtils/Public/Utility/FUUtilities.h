@@ -33,6 +33,7 @@ namespace FU_Utilities
 	 */
 	FISHYUTILS_API FString PrintBool(bool bVal);
 	
+	/* Print only the 2 decimals */
 	FISHYUTILS_API FString PrintCompactFloat(float Value);
 	
 	FISHYUTILS_API FString PrintCompactVector(FVector Value);
