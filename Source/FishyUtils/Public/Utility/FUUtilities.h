@@ -96,4 +96,7 @@ namespace FU_Utilities
 
 	/* Remove the _GEN_VARIABLE part of the name */
 	FISHYUTILS_API FName GetNameWithoutTemplateSuffix(FName FullName);
+
+	/* Remove the _C part of the name */
+	FISHYUTILS_API FName GetNameWithoutClassSuffix(FName ClassName);
 }

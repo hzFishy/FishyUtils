@@ -355,3 +355,12 @@ FName FU_Utilities::GetNameWithoutTemplateSuffix(FName FullName)
 	
 	return FName(*StringName);
 }
+
+FName FU_Utilities::GetNameWithoutClassSuffix(FName ClassName)
+{
+	FString StringName = ClassName.ToString();
+
+	StringName.RemoveFromEnd("_C");
+	
+	return FName(*StringName);
+}
