@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿// By hzFishy 2025 - Do whatever you want with it
 
 #pragma once
 
@@ -37,9 +37,10 @@ struct FISHYUTILS_API FFUPickerSockets
 	FName SelectedSocket = NAME_None;
 
 #if WITH_EDITORONLY_DATA
-	UPROPERTY(EditAnywhere,  meta=(AllowedClasses="/Script/Engine.PrimitiveComponent"))
+	
+	UPROPERTY(EditAnywhere, meta=(AllowedClasses="/Script/Engine.PrimitiveComponent"))
 	FBlueprintComponentReference ComponentReference;
-
+	
 	UPROPERTY(EditAnywhere)
 	FName ComponentName = NAME_None;
 	
@@ -47,4 +48,3 @@ struct FISHYUTILS_API FFUPickerSockets
 	uint8 SocketFilterFlags = static_cast<uint8>(EFUEComponentSocketType::Bone);
 #endif
 };
-

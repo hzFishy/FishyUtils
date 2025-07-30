@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿// By hzFishy 2025 - Do whatever you want with it
 
 #pragma once
 
@@ -95,8 +95,10 @@ namespace FU_Utilities
 	FISHYUTILS_API void GetSimulatedWorldTransformFromComponent(const USceneComponent* Component, FTransform& OutWorldTransform, TArray<TWeakObjectPtr<const USceneComponent>>* OverrideChain = nullptr);
 
 	/* Remove the _GEN_VARIABLE part of the name */
-	FISHYUTILS_API FName GetNameWithoutTemplateSuffix(FName FullName);
+	FISHYUTILS_API FName GetFNameWithoutTemplateSuffix(FName FullName);
+	FISHYUTILS_API FString GetNameWithoutTemplateSuffix(FName FullName);
 
 	/* Remove the _C part of the name */
-	FISHYUTILS_API FName GetNameWithoutClassSuffix(FName ClassName);
+	FISHYUTILS_API FName GetFNameWithoutClassSuffix(FName ClassName);
+	FISHYUTILS_API FString GetNameWithoutClassSuffix(FName ClassName);
 }

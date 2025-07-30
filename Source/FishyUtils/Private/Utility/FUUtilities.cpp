@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿// By hzFishy 2025 - Do whatever you want with it
 
 
 #include "Utility/FUUtilities.h"
@@ -347,7 +347,7 @@ void FU_Utilities::GetSimulatedWorldTransformFromComponent(const USceneComponent
 	}
 }
 
-FName FU_Utilities::GetNameWithoutTemplateSuffix(FName FullName)
+FName FU_Utilities::GetFNameWithoutTemplateSuffix(FName FullName)
 {
 	FString StringName = FullName.ToString();
 
@@ -356,11 +356,20 @@ FName FU_Utilities::GetNameWithoutTemplateSuffix(FName FullName)
 	return FName(*StringName);
 }
 
-FName FU_Utilities::GetNameWithoutClassSuffix(FName ClassName)
+FString FU_Utilities::GetNameWithoutTemplateSuffix(FName FullName)
+{
+	return GetFNameWithoutTemplateSuffix(FullName).ToString();
+}
+
+FName FU_Utilities::GetFNameWithoutClassSuffix(FName ClassName)
 {
 	FString StringName = ClassName.ToString();
 
 	StringName.RemoveFromEnd("_C");
 	
 	return FName(*StringName);
+}
+FString FU_Utilities::GetNameWithoutClassSuffix(FName ClassName)
+{
+	return GetFNameWithoutClassSuffix(ClassName).ToString();
 }

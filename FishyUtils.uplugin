@@ -23,12 +23,11 @@
 			"Name": "FishyUtilsEditor",
 			"Type": "UncookedOnly",
 			"LoadingPhase": "Default"
-		}
-	],
-	"Plugins": [
+		},
 		{
-			"Name": "BlueprintComponentReferencePlugin",
-			"Enabled": true
+			"Name": "FishyUtilsUncooked",
+			"Type": "UncookedOnly",
+			"LoadingPhase": "Default"
 		}
 	]
 }

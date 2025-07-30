@@ -1,9 +1,10 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿// By hzFishy 2025 - Do whatever you want with it
 
 
 #include "Draw/FUDraw.h"
 #include "Components/BillboardComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/TextRenderComponent.h"
 #include "Utility/FUOrientedBox.h"
 
 
@@ -192,19 +193,29 @@ void FU_Draw::DrawDebugCollisionShapeFrame(const UWorld* World, const FVector& L
 }
 
 
-void FU_Draw::DrawDebugOrientedActorPrimitiveComponents(const UWorld* World, const AActor* Actor, FColor Color, float Time, float Thickness, uint8 DepthPriority)
+void FU_Draw::DrawDebugOrientedActorPrimitiveComponents(const UWorld* World, const AActor* Actor, FColor Color, float Time, float Thickness, uint8 DepthPriority, TArray<UClass*>* IgnoredClasses)
 {
+	if (!IgnoredClasses)
+	{
+		IgnoredClasses = new TArray<UClass*>();
+	}
+
+	IgnoredClasses->Add(UBillboardComponent::StaticClass());
+	IgnoredClasses->Add(UTextRenderComponent::StaticClass());
+	
 	Actor->ForEachComponent<UPrimitiveComponent>(false, [&](const UPrimitiveComponent* InPrimComp)
 	{
-		// can happens that a billboard is found
-		if (InPrimComp->GetClass()->IsChildOf<UBillboardComponent>()) { return; }
+		for (auto& IgnoredClass : *IgnoredClasses)
+		{
+			if (InPrimComp->GetClass()->IsChildOf(IgnoredClass)) { return; }
+		}
 		
 		FU_Utilities::FFUOrientedBox OrientedBox(InPrimComp);
 		OrientedBox.DrawDebug(World, Color, Time, Thickness, DepthPriority);
 	});
 }
 
-void FU_Draw::DrawDebugOrientedActorPrimitiveComponentsFrame(const UWorld* World, const AActor* Actor, FColor Color, float Thickness, uint8 DepthPriority)
+void FU_Draw::DrawDebugOrientedActorPrimitiveComponentsFrame(const UWorld* World, const AActor* Actor, FColor Color, float Thickness, uint8 DepthPriority, TArray<UClass*>* IgnoredClasses)
 {
-	FU_Draw::DrawDebugOrientedActorPrimitiveComponents(World, Actor, Color, 0, Thickness, DepthPriority);
+	FU_Draw::DrawDebugOrientedActorPrimitiveComponents(World, Actor, Color, 0, Thickness, DepthPriority, IgnoredClasses);
 }

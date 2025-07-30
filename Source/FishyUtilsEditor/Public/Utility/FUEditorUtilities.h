@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿// By hzFishy 2025 - Do whatever you want with it
 
 #pragma once
 
