@@ -3,7 +3,7 @@
 #pragma once
 
 
-namespace FU_Utilities
+namespace FU::Utils
 {
 	/**
 	 * Represents an oriented bounding box.

@@ -607,8 +607,8 @@ namespace DBG::Log
 				*/
 				
 
-		FLogCategory<ELogVerbosity::Log, ELogVerbosity::Log> LogCategory =
-			FLogCategory<ELogVerbosity::Type::Log, ELogVerbosity::Type::Log>(Category.GetCategoryName());
+		FLogCategory<ELogVerbosity::Log, ELogVerbosity::All> LogCategory =
+			FLogCategory<ELogVerbosity::Type::Log, ELogVerbosity::Type::All>(Category.GetCategoryName());
 			
 		
 		// Format the actual log provided from the user.

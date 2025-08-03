@@ -3,9 +3,10 @@
 #pragma once
 
 #include "GameplayTagContainer.h"
+#include "Engine/AssetManager.h"
 
 
-namespace FU_Utilities
+namespace FU::Utils
 {
 	template<class ActorComponentType>
 	ActorComponentType* SpawnRuntimeComponentForActor(AActor* Actor, TSubclassOf<ActorComponentType> ComponentClass = ActorComponentType::StaticClass()) 
@@ -83,7 +84,6 @@ namespace FU_Utilities
 	
 	/* Used internally by GetAttachChainForChildComponent_BlueprintEditor */
 	FISHYUTILS_API bool GetAttachChainForChildComponent_BlueprintEditor_IterateNodes(const USceneComponent* TargetComponent, const USCS_Node* CurrentParentNode, TArray<const USCS_Node*>& OutPath);
-
 #endif
 	
 	/**
@@ -95,10 +95,50 @@ namespace FU_Utilities
 	FISHYUTILS_API void GetSimulatedWorldTransformFromComponent(const USceneComponent* Component, FTransform& OutWorldTransform, TArray<TWeakObjectPtr<const USceneComponent>>* OverrideChain = nullptr);
 
 	/* Remove the _GEN_VARIABLE part of the name */
-	FISHYUTILS_API FName GetFNameWithoutTemplateSuffix(FName FullName);
-	FISHYUTILS_API FString GetNameWithoutTemplateSuffix(FName FullName);
+	FISHYUTILS_API FName GetFNameWithoutTemplateSuffix(FName ObjectName);
+	FISHYUTILS_API FString GetNameWithoutTemplateSuffix(FName ObjectName);
+	FISHYUTILS_API FName GetFNameWithoutTemplateSuffix(UObject* Object);
+	FISHYUTILS_API FString GetNameWithoutTemplateSuffix(UObject* Object);
 
 	/* Remove the _C part of the name */
 	FISHYUTILS_API FName GetFNameWithoutClassSuffix(FName ClassName);
 	FISHYUTILS_API FString GetNameWithoutClassSuffix(FName ClassName);
+	FISHYUTILS_API FName GetFNameWithoutClassSuffix(UClass* Class);
+	FISHYUTILS_API FString GetNameWithoutClassSuffix(UClass* Class);
+
+	namespace Loading
+	{
+		template<std::derived_from<UObject> LoadedObjectType>
+		bool SyncLoadObjects(const TArray<FSoftObjectPath>& SoftPaths, TArray<LoadedObjectType*>& LoadedObjects)
+		{
+			if (SoftPaths.IsEmpty()) { return false; }
+			
+			for (auto& SoftPath : SoftPaths)
+			{
+				if (!SoftPath.IsNull())
+				{
+					auto& NewEntry = LoadedObjects.Emplace_GetRef(nullptr);
+					if (!SyncLoadObject<LoadedObjectType>(SoftPath, NewEntry))
+					{
+						LoadedObjects.RemoveAt(LoadedObjects.Num()-1);
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		
+		template<std::derived_from<UObject> LoadedObjectType>
+		bool SyncLoadObject(const FSoftObjectPath& SoftPath, LoadedObjectType*& LoadedObject)
+		{
+			if (SoftPath.IsNull()) { return false; }
+
+			auto* AM = UAssetManager::GetIfInitialized();
+			if (!IsValid(AM)) { return false; }
+
+			LoadedObject = Cast<LoadedObjectType>(AM->GetStreamableManager().LoadSynchronous(SoftPath));
+
+			return true;
+		}
+	}
 }

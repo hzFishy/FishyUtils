@@ -210,7 +210,7 @@ void FU_Draw::DrawDebugOrientedActorPrimitiveComponents(const UWorld* World, con
 			if (InPrimComp->GetClass()->IsChildOf(IgnoredClass)) { return; }
 		}
 		
-		FU_Utilities::FFUOrientedBox OrientedBox(InPrimComp);
+		FU::Utils::FFUOrientedBox OrientedBox(InPrimComp);
 		OrientedBox.DrawDebug(World, Color, Time, Thickness, DepthPriority);
 	});
 }

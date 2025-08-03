@@ -7,7 +7,7 @@
 #include "Engine/SimpleConstructionScript.h"
 
 
-void FU_Utilities::RemoveRuntimeComponent(UActorComponent* ActorComponent)
+void FU::Utils::RemoveRuntimeComponent(UActorComponent* ActorComponent)
 {
 	if (IsValid(ActorComponent))
 	{
@@ -16,28 +16,28 @@ void FU_Utilities::RemoveRuntimeComponent(UActorComponent* ActorComponent)
 	}
 }
 
-FString FU_Utilities::PrintBool(bool bValue)
+FString FU::Utils::PrintBool(bool bValue)
 {
 	return bValue ? "true" : "false";
 }
 
-FString FU_Utilities::PrintCompactFloat(float Value)
+FString FU::Utils::PrintCompactFloat(float Value)
 {
 	return FString::Printf(TEXT("%.2f"), Value);
 }
 
-FString FU_Utilities::PrintCompactVector(FVector Value)
+FString FU::Utils::PrintCompactVector(FVector Value)
 {
 	return FString::Printf(TEXT("(X=%.1f, Y=%.1f, Z=%.1f)"), Value.X, Value.Y, Value.Z);
 }
 
-FString FU_Utilities::PrintCompactRotator(FRotator Value)
+FString FU::Utils::PrintCompactRotator(FRotator Value)
 {
 	return FString::Printf(TEXT("(R/X=%.1f, P/Y=%.1f, Y/Z=%.1f)"), Value.Roll, Value.Pitch, Value.Yaw);
 }
 
 
-FString FU_Utilities::GetObjectDetailedName(const UObject* Object)
+FString FU::Utils::GetObjectDetailedName(const UObject* Object)
 {
 	if (IsValid(Object))
 	{
@@ -75,7 +75,7 @@ FString FU_Utilities::GetObjectDetailedName(const UObject* Object)
 }
 
 
-FString FU_Utilities::GetLastTagChild(const FGameplayTag& Tag)
+FString FU::Utils::GetLastTagChild(const FGameplayTag& Tag)
 {
 	if (!Tag.IsValid()) { return "None"; }
 	
@@ -89,7 +89,7 @@ FString FU_Utilities::GetLastTagChild(const FGameplayTag& Tag)
 	return TagString;
 }
 
-FString FU_Utilities::GetLastTagChilds(const FGameplayTag& Tag, uint8 Depth)
+FString FU::Utils::GetLastTagChilds(const FGameplayTag& Tag, uint8 Depth)
 {
 	if (!Tag.IsValid()) { return "None"; }
 
@@ -122,7 +122,7 @@ FString FU_Utilities::GetLastTagChilds(const FGameplayTag& Tag, uint8 Depth)
 }
 
 
-void FU_Utilities::GetAttachChain(USceneComponent* TargetChildComponent, TArray<USceneComponent*>& OutChain)
+void FU::Utils::GetAttachChain(USceneComponent* TargetChildComponent, TArray<USceneComponent*>& OutChain)
 {
 	OutChain.Insert(TargetChildComponent, 0);
 	
@@ -133,7 +133,7 @@ void FU_Utilities::GetAttachChain(USceneComponent* TargetChildComponent, TArray<
 	}
 }
 
-void FU_Utilities::GetAttachChain(const USceneComponent* TargetChildComponent, TArray<const USceneComponent*>& OutChain)
+void FU::Utils::GetAttachChain(const USceneComponent* TargetChildComponent, TArray<const USceneComponent*>& OutChain)
 {
 	OutChain.Insert(TargetChildComponent, 0);
 	
@@ -144,7 +144,7 @@ void FU_Utilities::GetAttachChain(const USceneComponent* TargetChildComponent, T
 	}
 }
 
-void FU_Utilities::GetAttachChain(USceneComponent* TargetChildComponent, TArray<TWeakObjectPtr<USceneComponent>>& OutChain)
+void FU::Utils::GetAttachChain(USceneComponent* TargetChildComponent, TArray<TWeakObjectPtr<USceneComponent>>& OutChain)
 {
 	OutChain.Insert(TargetChildComponent, 0);
 	
@@ -155,7 +155,7 @@ void FU_Utilities::GetAttachChain(USceneComponent* TargetChildComponent, TArray<
 	}
 }
 
-void FU_Utilities::GetAttachChain(const USceneComponent* TargetChildComponent, TArray<TWeakObjectPtr<const USceneComponent>>& OutChain)
+void FU::Utils::GetAttachChain(const USceneComponent* TargetChildComponent, TArray<TWeakObjectPtr<const USceneComponent>>& OutChain)
 {
 	OutChain.Insert(TargetChildComponent, 0);
 	
@@ -167,7 +167,7 @@ void FU_Utilities::GetAttachChain(const USceneComponent* TargetChildComponent, T
 }
 
 #if WITH_EDITOR
-void FU_Utilities::GetAttachChainForChildComponent_BlueprintEditor(const USceneComponent* TargetChildComponent, const USimpleConstructionScript* SCS,
+void FU::Utils::GetAttachChainForChildComponent_BlueprintEditor(const USceneComponent* TargetChildComponent, const USimpleConstructionScript* SCS,
 	TArray<const USceneComponent*>& OutChain)
 {
 	if (TargetChildComponent->HasAnyFlags(EObjectFlags::RF_ArchetypeObject))
@@ -194,7 +194,7 @@ void FU_Utilities::GetAttachChainForChildComponent_BlueprintEditor(const USceneC
 	}
 }
 
-void FU_Utilities::GetAttachChainForChildComponent_BlueprintEditor(const USceneComponent* TargetChildComponent,
+void FU::Utils::GetAttachChainForChildComponent_BlueprintEditor(const USceneComponent* TargetChildComponent,
 	const USimpleConstructionScript* SCS, TArray<TWeakObjectPtr<const USceneComponent>>& OutChain)
 {
 	if (TargetChildComponent->HasAnyFlags(EObjectFlags::RF_ArchetypeObject))
@@ -221,8 +221,7 @@ void FU_Utilities::GetAttachChainForChildComponent_BlueprintEditor(const USceneC
 	}
 }
 
-bool FU_Utilities::GetAttachChainForChildComponent_BlueprintEditor_IterateNodes(const USceneComponent* TargetComponent, const USCS_Node* CurrentParentNode,
-                                                                                TArray<const USCS_Node*>& OutPath)
+bool FU::Utils::GetAttachChainForChildComponent_BlueprintEditor_IterateNodes(const USceneComponent* TargetComponent, const USCS_Node* CurrentParentNode, TArray<const USCS_Node*>& OutPath)
 {
 	// check if we hit the target node
 	if (CurrentParentNode->ComponentTemplate->GetFName() == TargetComponent->GetFName()) { return true; }
@@ -246,7 +245,7 @@ bool FU_Utilities::GetAttachChainForChildComponent_BlueprintEditor_IterateNodes(
 
 #endif
 
-void FU_Utilities::GetSimulatedWorldTransformFromComponent(const USceneComponent* Component, FTransform& OutWorldTransform, TArray<const USceneComponent*>* OverrideChain)
+void FU::Utils::GetSimulatedWorldTransformFromComponent(const USceneComponent* Component, FTransform& OutWorldTransform, TArray<const USceneComponent*>* OverrideChain)
 {
 	TArray<const USceneComponent*> OutChain;
 	if (OverrideChain != nullptr)
@@ -279,7 +278,7 @@ void FU_Utilities::GetSimulatedWorldTransformFromComponent(const USceneComponent
 	}
 }
 
-void FU_Utilities::GetSimulatedWorldTransformFromComponent(USceneComponent* Component, FTransform& OutWorldTransform,
+void FU::Utils::GetSimulatedWorldTransformFromComponent(USceneComponent* Component, FTransform& OutWorldTransform,
 	TArray<USceneComponent*>* OverrideChain)
 {
 	TArray<USceneComponent*> OutChain;
@@ -313,7 +312,7 @@ void FU_Utilities::GetSimulatedWorldTransformFromComponent(USceneComponent* Comp
 	}
 }
 
-void FU_Utilities::GetSimulatedWorldTransformFromComponent(const USceneComponent* Component,
+void FU::Utils::GetSimulatedWorldTransformFromComponent(const USceneComponent* Component,
 	FTransform& OutWorldTransform, TArray<TWeakObjectPtr<const USceneComponent>>* OverrideChain)
 {
 	TArray<TWeakObjectPtr<const USceneComponent>> OutChain;
@@ -347,21 +346,31 @@ void FU_Utilities::GetSimulatedWorldTransformFromComponent(const USceneComponent
 	}
 }
 
-FName FU_Utilities::GetFNameWithoutTemplateSuffix(FName FullName)
+FName FU::Utils::GetFNameWithoutTemplateSuffix(FName ObjectName)
 {
-	FString StringName = FullName.ToString();
+	FString StringName = ObjectName.ToString();
 
 	StringName.RemoveFromEnd("_GEN_VARIABLE");
 	
 	return FName(*StringName);
 }
 
-FString FU_Utilities::GetNameWithoutTemplateSuffix(FName FullName)
+FString FU::Utils::GetNameWithoutTemplateSuffix(FName ObjectName)
 {
-	return GetFNameWithoutTemplateSuffix(FullName).ToString();
+	return GetFNameWithoutTemplateSuffix(ObjectName).ToString();
 }
 
-FName FU_Utilities::GetFNameWithoutClassSuffix(FName ClassName)
+FName FU::Utils::GetFNameWithoutTemplateSuffix(UObject* Object)
+{
+	return GetFNameWithoutTemplateSuffix(Object->GetFName());
+}
+
+FString FU::Utils::GetNameWithoutTemplateSuffix(UObject* Object)
+{
+	return GetNameWithoutTemplateSuffix(Object->GetFName());
+}
+
+FName FU::Utils::GetFNameWithoutClassSuffix(FName ClassName)
 {
 	FString StringName = ClassName.ToString();
 
@@ -369,7 +378,17 @@ FName FU_Utilities::GetFNameWithoutClassSuffix(FName ClassName)
 	
 	return FName(*StringName);
 }
-FString FU_Utilities::GetNameWithoutClassSuffix(FName ClassName)
+FString FU::Utils::GetNameWithoutClassSuffix(FName ClassName)
 {
 	return GetFNameWithoutClassSuffix(ClassName).ToString();
+}
+
+FName FU::Utils::GetFNameWithoutClassSuffix(UClass* Class)
+{
+	return GetFNameWithoutClassSuffix(Class->GetFName());
+}
+
+FString FU::Utils::GetNameWithoutClassSuffix(UClass* Class)
+{
+	return GetNameWithoutClassSuffix(Class->GetFName());
 }

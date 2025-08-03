@@ -5,7 +5,7 @@
 
 #include "Draw/FUDraw.h"
 
-namespace FU_Utilities
+namespace FU::Utils
 {
 	FFUOrientedBox::FFUOrientedBox()
 	{

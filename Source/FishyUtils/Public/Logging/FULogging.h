@@ -14,7 +14,8 @@ FISHYUTILS_API DECLARE_LOG_CATEGORY_EXTERN(LogFUTemp, Log, Log);
 	/*----------------------------------------------------------------------------
 		REQUIREMENTS
 
-		You must give the Log verbosity to default and compile time level, example: DECLARE_LOG_CATEGORY_EXTERN(LogBPGValidator, Log, Log);
+		You must give the Log verbosity to default and compile time level, example: DECLARE_LOG_CATEGORY_EXTERN(LogBPGValidator, Log, All);
+		You may experience compiling errors if you dont use "Log" as runtime level and "All" as compile level.
 	----------------------------------------------------------------------------*/
 
 #if FU_WITH_LOGGING
@@ -38,7 +39,7 @@ FISHYUTILS_API DECLARE_LOG_CATEGORY_EXTERN(LogFUTemp, Log, Log);
 
 #define _FU_LOG_OBJECT(CATEGORY, VERBOSITY, FORMAT, ...) do\
 {\
-	DBG::Log::Log(__COUNTER__, std::source_location::current(), CATEGORY, DBG::Log::DbgLogArgs{}.Verbosity(ELogVerbosity::VERBOSITY).SetFunctionName(__FUNCTIONW__).SetObjectDetailedName(FU_Utilities::GetObjectDetailedName(this)), TEXT(FORMAT) __VA_OPT__(,) __VA_ARGS__);\
+	DBG::Log::Log(__COUNTER__, std::source_location::current(), CATEGORY, DBG::Log::DbgLogArgs{}.Verbosity(ELogVerbosity::VERBOSITY).SetFunctionName(__FUNCTIONW__).SetObjectDetailedName(FU::Utils::GetObjectDetailedName(this)), TEXT(FORMAT) __VA_OPT__(,) __VA_ARGS__);\
 }while(false);
 
 #define _FU_LOG_STATIC(CATEGORY, VERBOSITY, FORMAT, ...) do\
