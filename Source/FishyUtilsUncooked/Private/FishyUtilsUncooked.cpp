@@ -1,4 +1,6 @@
-﻿#include "FishyUtilsUncooked.h"
+﻿// By hzFishy - 2025 - Do whatever you want with it.
+
+#include "FishyUtilsUncooked.h"
 
 #define LOCTEXT_NAMESPACE "FFishyUtilsUncookedModule"
 

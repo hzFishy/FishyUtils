@@ -1,4 +1,4 @@
-﻿// Copyright KOIDEAS 2025
+﻿// By hzFishy 2025 - Do whatever you want with it
 
 #include "Utility/FUValidatorContainer.h"
 using namespace FU::Editor::Validator;

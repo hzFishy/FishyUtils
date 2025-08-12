@@ -5,9 +5,3 @@
 
 
 DEFINE_LOG_CATEGORY(LogFUTemp);
-
-
-namespace FU_Logging
-{
-	
-}

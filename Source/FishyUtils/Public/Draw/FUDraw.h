@@ -5,7 +5,7 @@
 class UCapsuleComponent;
 
 
-namespace FU_Draw
+namespace FU::Draw
 {
 	FISHYUTILS_API void DrawDebugSphere(const UWorld* World, const FVector& Location, float Radius, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0);
 	FISHYUTILS_API void DrawDebugSphereFrame(const UWorld* World, const FVector& Location, float Radius, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);

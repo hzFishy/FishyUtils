@@ -6,7 +6,7 @@
 #include "Draw/FUDraw.h"
 
 void UFUPhysicsLibrary::FindSkeletalOverlappingBodies(UPrimitiveComponent* OverlappingPrimitiveComponent, USkeletalMeshComponent* OverlappingSkeletalMeshComponent,
-                                                      TArray<FFUSkeletalOverlapResult>& OutOverlapResults, const FFUSkeletalOverlapDebugParams& DebugParams)
+	TArray<FFUSkeletalOverlapResult>& OutOverlapResults, const FFUSkeletalOverlapDebugParams& DebugParams)
 {
 	if (!IsValid(OverlappingPrimitiveComponent) || !IsValid(OverlappingSkeletalMeshComponent)) { return; }
 
@@ -25,7 +25,7 @@ void UFUPhysicsLibrary::FindSkeletalOverlappingBodies(UPrimitiveComponent* Overl
 
 		if (DebugParams.bDebug)
 		{
-			FU_Draw::DrawDebugBodyInstance(
+			FU::Draw::DrawDebugBodyInstance(
 			   OverlappingPrimitiveComponent->GetWorld(),
 			   *SkeletalBI,
 			   bOverlaps ? FColor::Red : FColor::White,

@@ -13,6 +13,7 @@ struct FFUSkeletalOverlapResult
 	GENERATED_BODY()
 
 	FBodyInstance* BodyInstance = nullptr;
+	
 	UPROPERTY(BlueprintReadOnly) int32 InstanceBoneIndex = -1;
 };
 

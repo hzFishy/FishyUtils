@@ -84,20 +84,20 @@ namespace FU::Utils
 		const FVector Corner7 = Center - ExtentsX - ExtentsY - ExtentsZ;
 		const FVector Corner8 = Center - ExtentsX + ExtentsY - ExtentsZ;
 
-		FU_Draw::DrawDebugLine(World, Corner1, Corner2, Color, LifeTime, Thickness, DepthPriority);
-		FU_Draw::DrawDebugLine(World, Corner2, Corner3, Color, LifeTime, Thickness, DepthPriority);
-		FU_Draw::DrawDebugLine(World, Corner3, Corner4, Color, LifeTime, Thickness, DepthPriority);
-		FU_Draw::DrawDebugLine(World, Corner4, Corner1, Color, LifeTime, Thickness, DepthPriority);
+		FU::Draw::DrawDebugLine(World, Corner1, Corner2, Color, LifeTime, Thickness, DepthPriority);
+		FU::Draw::DrawDebugLine(World, Corner2, Corner3, Color, LifeTime, Thickness, DepthPriority);
+		FU::Draw::DrawDebugLine(World, Corner3, Corner4, Color, LifeTime, Thickness, DepthPriority);
+		FU::Draw::DrawDebugLine(World, Corner4, Corner1, Color, LifeTime, Thickness, DepthPriority);
  
-		FU_Draw::DrawDebugLine(World, Corner5, Corner6, Color, LifeTime, Thickness, DepthPriority);
-		FU_Draw::DrawDebugLine(World, Corner6, Corner7, Color, LifeTime, Thickness, DepthPriority);
-		FU_Draw::DrawDebugLine(World, Corner7, Corner8, Color, LifeTime, Thickness, DepthPriority);
-		FU_Draw::DrawDebugLine(World, Corner8, Corner5, Color, LifeTime, Thickness, DepthPriority);
+		FU::Draw::DrawDebugLine(World, Corner5, Corner6, Color, LifeTime, Thickness, DepthPriority);
+		FU::Draw::DrawDebugLine(World, Corner6, Corner7, Color, LifeTime, Thickness, DepthPriority);
+		FU::Draw::DrawDebugLine(World, Corner7, Corner8, Color, LifeTime, Thickness, DepthPriority);
+		FU::Draw::DrawDebugLine(World, Corner8, Corner5, Color, LifeTime, Thickness, DepthPriority);
  
-		FU_Draw::DrawDebugLine(World, Corner1, Corner5, Color, LifeTime, Thickness, DepthPriority);
-		FU_Draw::DrawDebugLine(World, Corner2, Corner6, Color, LifeTime, Thickness, DepthPriority);
-		FU_Draw::DrawDebugLine(World, Corner3, Corner7, Color, LifeTime, Thickness, DepthPriority);
-		FU_Draw::DrawDebugLine(World, Corner4, Corner8, Color, LifeTime, Thickness, DepthPriority);
+		FU::Draw::DrawDebugLine(World, Corner1, Corner5, Color, LifeTime, Thickness, DepthPriority);
+		FU::Draw::DrawDebugLine(World, Corner2, Corner6, Color, LifeTime, Thickness, DepthPriority);
+		FU::Draw::DrawDebugLine(World, Corner3, Corner7, Color, LifeTime, Thickness, DepthPriority);
+		FU::Draw::DrawDebugLine(World, Corner4, Corner8, Color, LifeTime, Thickness, DepthPriority);
 	}
 
 	void FFUOrientedBox::DrawDebugFrame(const UWorld* World, FColor Color, float Thickness, uint8 DepthPriority)

@@ -79,8 +79,3 @@ FISHYUTILS_API DECLARE_LOG_CATEGORY_EXTERN(LogFUTemp, Log, Log);
 #define FU_LOG_Validator_E(CATEGORY, FORMAT, ...)						  _FU_LOG_OBJECT_E(CATEGORY, FORMAT, ##__VA_ARGS__)
 #define FU_LOG_SValidator_E(CATEGORY, FORMAT, ...)						  _FU_LOG_STATIC_E(CATEGORY, FORMAT, ##__VA_ARGS__)
 
-
-namespace FU_Logging
-{
-	
-}
