@@ -13,6 +13,7 @@ namespace FU::Draw
 	
 	FISHYUTILS_API void DrawDebugBox(const UWorld* World, const FVector& Location, const FVector& Extent, const FQuat& Rotation, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0);
 	FISHYUTILS_API void DrawDebugBoxFrame(const UWorld* World, const FVector& Location, const FVector& Extent, const FQuat& Rotation, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
+	
 	FISHYUTILS_API void DrawDebugBox(const UWorld* World, const FVector& Location, float HalfSize, const FQuat& Rotation, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0);
 	FISHYUTILS_API void DrawDebugBoxFrame(const UWorld* World, const FVector& Location, float HalfSize, const FQuat& Rotation, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
 
@@ -32,6 +33,10 @@ namespace FU::Draw
 	FISHYUTILS_API void DrawDebugDirectionalArrow(const UWorld* World, const FVector& StartLcation, const FVector& ScaledDirection, FColor Color, float Time, float ArrowSize = 2, float Thickness = 2, uint8 DepthPriority = 0);
 	FISHYUTILS_API void DrawDebugDirectionalArrowFrame(const UWorld* World, const FVector& StartLcation, const FVector& ScaledDirection, FColor Color, float ArrowSize = 2, float Thickness = 2, uint8 DepthPriority = 0);
 
+	FISHYUTILS_API void DrawDebugDirectionalArrowWithMiddleText(const UWorld* World, const FVector& StartLcation, const FVector& ScaledDirection, FColor LineColor, const FString& Text, FColor TextColor, float Time, float ArrowSize = 2, float Thickness = 2, float FontScale = 2, uint8 DepthPriority = 0);
+	FISHYUTILS_API void DrawDebugDirectionalArrowWithMiddleTextFrame(const UWorld* World, const FVector& StartLcation, const FVector& ScaledDirection, FColor LineColor, const FString& Text, FColor TextColor, float ArrowSize = 2, float Thickness = 2, float FontScale = 2, uint8 DepthPriority = 0);
+
+	
 	/* For more control and precision see FFUOrientedBox */
 	FISHYUTILS_API void DrawDebugActorBounds(const UWorld* World, const AActor* Actor, bool bOnlyCollidingComponents, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0);
 	FISHYUTILS_API void DrawDebugActorBoundsFrame(const UWorld* World, const AActor* Actor, bool bOnlyCollidingComponents, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
@@ -39,6 +44,7 @@ namespace FU::Draw
 	
 	FISHYUTILS_API void DrawDebugCapsule(const UWorld* World, const FVector& Location, const FQuat& Rotation, float Radius, float HalfHeight, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0);
 	FISHYUTILS_API void DrawDebugCapsuleFrame(const UWorld* World, const FVector& Location, const FQuat& Rotation, float Radius, float HalfHeight, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
+	
 	FISHYUTILS_API void DrawDebugCapsule(const UWorld* World, const UCapsuleComponent* CapsuleComponent, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0);
 	FISHYUTILS_API void DrawDebugCapsuleFrame(const UWorld* World, const UCapsuleComponent* CapsuleComponent, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
 

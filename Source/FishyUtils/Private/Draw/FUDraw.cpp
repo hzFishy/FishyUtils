@@ -8,29 +8,36 @@
 #include "Utility/FUOrientedBox.h"
 
 
-void FU::Draw::DrawDebugSphere(const UWorld* World, const FVector& Location, float Radius, FColor Color, float Time, float Thickness, uint8 DepthPriority)
+void FU::Draw::DrawDebugSphere(const UWorld* World, const FVector& Location, float Radius, FColor Color, float Time,
+	float Thickness, uint8 DepthPriority)
 {
 	DrawDebugSphere(World, Location, Radius, 10, Color, false, Time, DepthPriority, Thickness);
 }
-void FU::Draw::DrawDebugSphereFrame(const UWorld* World, const FVector& Location, float Radius, FColor Color, float Thickness, uint8 DepthPriority)
+void FU::Draw::DrawDebugSphereFrame(const UWorld* World, const FVector& Location, float Radius, FColor Color,
+	float Thickness, uint8 DepthPriority)
 {
 	FU::Draw::DrawDebugSphere(World, Location, Radius, Color, 0, Thickness, DepthPriority);
 }
 
 
-void FU::Draw::DrawDebugBox(const UWorld* World, const FVector& Location, const FVector& Extent, const FQuat& Rotation, FColor Color, float Time, float Thickness, uint8 DepthPriority)
+void FU::Draw::DrawDebugBox(const UWorld* World, const FVector& Location, const FVector& Extent, const FQuat& Rotation,
+	FColor Color, float Time, float Thickness, uint8 DepthPriority)
 {
 	DrawDebugBox(World, Location, Extent, Rotation, Color, false, Time, DepthPriority, Thickness);
 }
-void FU::Draw::DrawDebugBoxFrame(const UWorld* World, const FVector& Location, const FVector& Extent, const FQuat& Rotation, FColor Color, float Thickness, uint8 DepthPriority)
+void FU::Draw::DrawDebugBoxFrame(const UWorld* World, const FVector& Location, const FVector& Extent, const FQuat& Rotation,
+	FColor Color, float Thickness, uint8 DepthPriority)
 {
 	FU::Draw::DrawDebugBox(World, Location, Extent, Rotation, Color, 0, Thickness, DepthPriority);
 }
-void FU::Draw::DrawDebugBox(const UWorld* World, const FVector& Location, float HalfSize, const FQuat& Rotation, FColor Color, float Time, float Thickness, uint8 DepthPriority)
+
+void FU::Draw::DrawDebugBox(const UWorld* World, const FVector& Location, float HalfSize, const FQuat& Rotation,
+	FColor Color, float Time, float Thickness, uint8 DepthPriority)
 {
 	FU::Draw::DrawDebugBox(World, Location, FVector(HalfSize), Rotation, Color, Time, DepthPriority, Thickness);
 }
-void FU::Draw::DrawDebugBoxFrame(const UWorld* World, const FVector& Location, float HalfSize, const FQuat& Rotation, FColor Color, float Thickness, uint8 DepthPriority)
+void FU::Draw::DrawDebugBoxFrame(const UWorld* World, const FVector& Location, float HalfSize, const FQuat& Rotation,
+	FColor Color, float Thickness, uint8 DepthPriority)
 {
 	FU::Draw::DrawDebugBox(World, Location, HalfSize, Rotation, Color, 0, Thickness, DepthPriority);
 }
@@ -96,6 +103,21 @@ void FU::Draw::DrawDebugDirectionalArrowFrame(const UWorld* World, const FVector
 	FU::Draw::DrawDebugDirectionalArrow(World, StartLcation, ScaledDirection, Color, 0, ArrowSize, Thickness, DepthPriority);
 }
 
+void FU::Draw::DrawDebugDirectionalArrowWithMiddleText(const UWorld* World, const FVector& StartLcation, const FVector& ScaledDirection,
+	FColor LineColor, const FString& Text, FColor TextColor, float Time, float ArrowSize, float Thickness, float FontScale, uint8 DepthPriority)
+{
+	FU::Draw::DrawDebugDirectionalArrow(World, StartLcation, ScaledDirection, LineColor, Time, ArrowSize, Thickness, DepthPriority);
+
+	const FVector MiddleLocation = StartLcation + ScaledDirection/2;
+	FU::Draw::DrawDebugString(World, MiddleLocation, Text, TextColor, Time, FontScale);
+}
+
+void FU::Draw::DrawDebugDirectionalArrowWithMiddleTextFrame(const UWorld* World, const FVector& StartLcation, const FVector& ScaledDirection,
+	FColor LineColor, const FString& Text, FColor TextColor, float ArrowSize, float Thickness, float FontScale, uint8 DepthPriority)
+{
+	FU::Draw::DrawDebugDirectionalArrowWithMiddleText(World, StartLcation, ScaledDirection, LineColor, Text, TextColor, 0, ArrowSize, Thickness, FontScale, DepthPriority);
+}
+
 
 void FU::Draw::DrawDebugActorBounds(const UWorld* World, const AActor* Actor, bool bOnlyCollidingComponents, FColor Color, float Time, float Thickness, uint8 DepthPriority)
 {
@@ -119,6 +141,7 @@ void FU::Draw::DrawDebugCapsuleFrame(const UWorld* World, const FVector& Locatio
 {
 	FU::Draw::DrawDebugCapsule(World, Location, Rotation, Radius, HalfHeight, Color, 0, Thickness, DepthPriority);
 }
+
 void FU::Draw::DrawDebugCapsule(const UWorld* World, const UCapsuleComponent* CapsuleComponent, FColor Color, float Time, float Thickness, uint8 DepthPriority)
 {
 	FU::Draw::DrawDebugCapsule(World, CapsuleComponent->GetComponentLocation(), CapsuleComponent->GetComponentRotation().Quaternion(), CapsuleComponent->GetScaledCapsuleRadius(), CapsuleComponent->GetScaledCapsuleHalfHeight(), Color, Time, Thickness, DepthPriority);
