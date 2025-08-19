@@ -18,3 +18,4 @@
 
 	#define FU_ALWAYSVALID(Object)								FU_ALWAYS(IsValid(Object))
 	#define FU_ALWAYSVALIDMSG(Object, InFormat, ...)			FU_ALWAYSMSG(IsValid(Object), InFormat, ##__VA_ARGS__)
+	#define FU_ALWAYSWEAKVALIDMSG(Object, InFormat, ...)			FU_ALWAYSMSG(Object.IsValid(), InFormat, ##__VA_ARGS__)
