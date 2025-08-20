@@ -11,7 +11,6 @@
 
 namespace FU_Console
 {
-
 #if FU_WITH_CONSOLE
 	
 	/**
@@ -53,7 +52,33 @@ namespace FU_Console
 			FAutoConsoleCommandWithWorldAndArgs(*BuildFullCommandString(Category, CommandName), *HelpDescription, Delegate, ECVF_Default)
 		{}
 	};
-	
+
+#define FU_CMD_BOOL_WITH_OPT_FLOAT_CPPONLY(Id, Cmd, CmdHelp, BoolVar, FloatVar, DefaultFloatVarValue) \
+		static bool BoolVar = false; \
+		static float FloatVar = DefaultFloatVarValue; \
+		FU_Console::FFUAutoConsoleCommandWithArgs C##CallbackFunc("", Cmd, CmdHelp, \
+			FConsoleCommandWithArgsDelegate::CreateLambda([](const TArray<FString>& Args) \
+			{ \
+				/* if no time arg, toggle */ \
+				/* if enabled and time arg, keep enabled and change time */ \
+				const float Newtime = !Args.IsEmpty() ? FCString::Atof(*Args[0]) : DefaultFloatVarValue; \
+				if (!BoolVar) \
+				{ \
+					BoolVar = true; FloatVar = Newtime; \
+				} \
+				else \
+				{ \
+					if (Args.IsEmpty()) \
+					{ \
+						BoolVar = false; FloatVar = Newtime; \
+					} \
+					else \
+					{ \
+						BoolVar = true; FloatVar = Newtime; \
+					} \
+				} \
+			}) \
+		); \
+
 #endif
-	
 }
