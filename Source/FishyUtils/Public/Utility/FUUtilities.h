@@ -9,14 +9,14 @@
 namespace FU::Utils
 {
 	template<class ActorComponentType>
-	ActorComponentType* SpawnRuntimeComponentForActor(AActor* Actor, TSubclassOf<ActorComponentType> ComponentClass = ActorComponentType::StaticClass()) 
+	ActorComponentType* SpawnRuntimeComponentForActor(AActor* Actor, TSubclassOf<ActorComponentType> ComponentClass = ActorComponentType::StaticClass(), EObjectFlags Flags = RF_Transient) 
 	{
 		static_assert(TIsDerivedFrom<ActorComponentType, UActorComponent>::IsDerived, "Provided type does not derive from UActorComponent");
 
 		if (!IsValid(Actor) || !IsValid(ComponentClass)) { return nullptr; }
 	
-		EObjectFlags Flags = RF_Transient;
-		Flags &= ~RF_Transactional; // unset flag
+		Flags |= RF_Transient;
+		Flags &= ~RF_Transactional; // unset flag in case it was set
 	
 		ActorComponentType* NewComponent = NewObject<ActorComponentType>(Actor, ComponentClass, NAME_None, Flags);
 		if (!IsValid(NewComponent)) { return nullptr; }
