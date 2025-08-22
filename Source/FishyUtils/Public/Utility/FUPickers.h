@@ -27,11 +27,11 @@ namespace FU_Pickers
 
 
 USTRUCT(BlueprintType, DisplayName = "Socket Picker")
-struct FISHYUTILS_API FFUPickerSockets
+struct FISHYUTILS_API FFUPickerSocket
 {
 	GENERATED_BODY();
 
-	FFUPickerSockets();
+	FFUPickerSocket();
 	
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	FName SelectedSocket = NAME_None;

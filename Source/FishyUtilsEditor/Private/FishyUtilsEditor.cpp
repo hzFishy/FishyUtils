@@ -12,7 +12,7 @@ void FFishyUtilsEditorModule::StartupModule()
 {
 	FPropertyEditorModule& PropertyModule = FModuleManager::GetModuleChecked<FPropertyEditorModule>("PropertyEditor");
 	PropertyModule.RegisterCustomPropertyTypeLayout(
-		FFUPickerSockets::StaticStruct()->GetFName(),
+		FFUPickerSocket::StaticStruct()->GetFName(),
 		FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FFUPickerSocketCustomization::MakeInstance)
 	);
 
@@ -24,7 +24,7 @@ void FFishyUtilsEditorModule::StartupModule()
 void FFishyUtilsEditorModule::ShutdownModule()
 {
 	FPropertyEditorModule& PropertyModule = FModuleManager::GetModuleChecked<FPropertyEditorModule>("PropertyEditor");
-	PropertyModule.UnregisterCustomPropertyTypeLayout(FFUPickerSockets::StaticStruct()->GetFName());
+	PropertyModule.UnregisterCustomPropertyTypeLayout(FFUPickerSocket::StaticStruct()->GetFName());
 
 	FishyEditorInstance.UnregisterMenuExtensions();
 	FFUEditor::FFUEditorCommands::Unregister();

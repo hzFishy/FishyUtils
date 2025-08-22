@@ -8,7 +8,7 @@ EFUEComponentSocketType FU_Pickers::ConvertSocketTypeFromEngine(EComponentSocket
 	return static_cast<EFUEComponentSocketType>(Type);
 }
 
-FFUPickerSockets::FFUPickerSockets()
+FFUPickerSocket::FFUPickerSocket()
 {
 	
 }

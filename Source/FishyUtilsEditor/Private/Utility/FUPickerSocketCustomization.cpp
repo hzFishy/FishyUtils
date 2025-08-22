@@ -90,7 +90,7 @@ void FFUPickerSocketCustomization::CustomizeHeader(TSharedRef<IPropertyHandle> P
 
 void FFUPickerSocketCustomization::CustomizeChildren(TSharedRef<IPropertyHandle> PropertyHandle, IDetailChildrenBuilder& ChildBuilder, IPropertyTypeCustomizationUtils& CustomizationUtils)
 {
-	SocketTypeProp = PropertyHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FFUPickerSockets, SocketFilterFlags));
+	SocketTypeProp = PropertyHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FFUPickerSocket, SocketFilterFlags));
 	SocketTypeProp->GetValue(SocketFilterFlags);
 	SocketTypeProp->SetOnPropertyValueChanged(FSimpleDelegate::CreateLambda([this]()
 	{
@@ -98,7 +98,7 @@ void FFUPickerSocketCustomization::CustomizeChildren(TSharedRef<IPropertyHandle>
 		RequestSocketRefresh();
 	}));
 	
-	ComponentReferenceProp = PropertyHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FFUPickerSockets, ComponentReference));
+	ComponentReferenceProp = PropertyHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FFUPickerSocket, ComponentReference));
 	void* OutAddress = nullptr;
 	ComponentReferenceProp->GetValueData(OutAddress);
 	ComponentReference = *static_cast<FBlueprintComponentReference*>(OutAddress);
@@ -110,11 +110,17 @@ void FFUPickerSocketCustomization::CustomizeChildren(TSharedRef<IPropertyHandle>
 		RequestSocketRefresh();
 	}));
 
-	auto& SocketSelectionGroup = ChildBuilder.AddGroup(FName("Socket Selection"), INVTEXT("Socket Selection"));
+	auto& SocketSelectionGroup = ChildBuilder.AddGroup(
+		FName("Socket Selection"),
+		FText::FromString(FString::Printf(TEXT("%s (Socket Selection)"), *PropertyHandle->GetProperty()->GetName()))
+	);
 	
-	SocketNameProp = PropertyHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FFUPickerSockets, SelectedSocket));
+	SocketNameProp = PropertyHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FFUPickerSocket, SelectedSocket));
 	SocketNameProp->GetValue(SelectedSocketName);
-	auto& SocketGroup = ChildBuilder.AddGroup(FName("Socket Value"), INVTEXT("Socket Value"));
+	auto& SocketGroup = ChildBuilder.AddGroup(
+		FName("Socket Value"),
+		FText::FromString(FString::Printf(TEXT("%s (Socket Value)"), *PropertyHandle->GetProperty()->GetName()))
+	);
 	SocketGroup.AddPropertyRow(SocketNameProp.ToSharedRef());
 	SocketGroup.ToggleExpansion(true);
 
