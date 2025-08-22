@@ -56,7 +56,7 @@ namespace FU_Console
 #define FU_CMD_BOOL_WITH_OPT_FLOAT_CPPONLY(Id, Cmd, CmdHelp, BoolVar, FloatVar, DefaultFloatVarValue) \
 		static bool BoolVar = false; \
 		static float FloatVar = DefaultFloatVarValue; \
-		FU_Console::FFUAutoConsoleCommandWithArgs C##CallbackFunc("", Cmd, CmdHelp, \
+		FU_Console::FFUAutoConsoleCommandWithArgs C##Id("", Cmd, CmdHelp, \
 			FConsoleCommandWithArgsDelegate::CreateLambda([](const TArray<FString>& Args) \
 			{ \
 				/* if no time arg, toggle */ \
