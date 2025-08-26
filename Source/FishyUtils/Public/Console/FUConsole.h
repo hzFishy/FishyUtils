@@ -18,7 +18,18 @@ namespace FU_Console
 	 */
 	static FString BuildFullCommandString(const FString& Category, const FString& CommandName)
 	{
-		return FString::Printf(TEXT("%s.%s"), *Category, *CommandName);
+		if (Category.IsEmpty())
+		{
+			return CommandName;
+		}
+		else if (CommandName.IsEmpty())
+		{
+			return Category;
+		}
+		else
+		{
+			return FString::Printf(TEXT("%s.%s"), *Category, *CommandName);
+		}
 	};
 
 	/* No world, no args */
@@ -79,6 +90,78 @@ namespace FU_Console
 				} \
 			}) \
 		); \
+
+/** On each call the bool var will flip */
+#define FU_CMD_BOOL_TOGGLE(Id, Cmd, CmdHelp, BoolVar, DefaultBoolVal) \
+    static bool BoolVar = DefaultBoolVal; \
+    FU_Console::FFUAutoConsoleCommand C##Id("", Cmd, CmdHelp, \
+        FConsoleCommandDelegate::CreateLambda([]() \
+        { \
+            BoolVar = !BoolVar; \
+        }) \
+    ); \
+
+/** Get first instance of given actor class in editor/game world and run given function with optional args */
+#define FU_CMD_ACTOR_SINGLERUNFUNC(Id, Cmd, CmdHelp, ActorClass, FuncName, ...) \
+    FU_Console::FFUAutoConsoleCommand C##Id("", Cmd, CmdHelp, \
+        FConsoleCommandDelegate::CreateLambda([]() \
+        { \
+			for (auto It = TActorIterator<ActorClass>(GWorld); It; ++It) \
+			{ \
+				if (IsValid(*It)) \
+				{ \
+					It->FuncName(##__VA_ARGS__); \
+					break; \
+				} \
+			} \
+        }) \
+    ); \
+
+/** Get all instances of given actor class in editor/game world and run given function with optional args */
+#define FU_CMD_ACTOR_ALLRUNFUNC(Id, Cmd, CmdHelp, ActorClass, FuncName, ...) \
+    FU_Console::FFUAutoConsoleCommand C##Id("", Cmd, CmdHelp, \
+        FConsoleCommandDelegate::CreateLambda([]() \
+        { \
+			for (auto It = TActorIterator<ActorClass>(GWorld); It; ++It) \
+			{ \
+				if (IsValid(*It)) \
+				{ \
+					It->FuncName(##__VA_ARGS__); \
+				} \
+			} \
+        }) \
+    ); \
+
+/** Get first instance of given UObject class in editor/game world (excludes COD and Archetypes) and run given function with optional args */
+#define FU_CMD_OBJECT_SINGLERUNFUNC(Id, Cmd, CmdHelp, ObjectClass, FuncName, ...) \
+    FU_Console::FFUAutoConsoleCommand C##Id("", Cmd, CmdHelp, \
+        FConsoleCommandDelegate::CreateLambda([]() \
+        { \
+			for (auto It = TObjectIterator<ObjectClass>(EObjectFlags::RF_ClassDefaultObject | EObjectFlags::RF_ArchetypeObject); It; ++It) \
+			{ \
+				if (IsValid(*It) && It->GetWorld() == GWorld) \
+				{ \
+					It->FuncName(##__VA_ARGS__); \
+					break; \
+				} \
+			} \
+        }) \
+    ); \
+
+/** Get first instance of given UObject class in editor/game world (excludes COD and Archetypes) and run given function with optional args */
+#define FU_CMD_OBJECT_ALLRUNFUNC(Id, Cmd, CmdHelp, ObjectClass, FuncName, ...) \
+    FU_Console::FFUAutoConsoleCommand C##Id("", Cmd, CmdHelp, \
+        FConsoleCommandDelegate::CreateLambda([]() \
+        { \
+			for (auto It = TObjectIterator<ObjectClass>(EObjectFlags::RF_ClassDefaultObject | EObjectFlags::RF_ArchetypeObject); It; ++It) \
+			{ \
+				if (IsValid(*It) && It->GetWorld() == GWorld) \
+				{ \
+					It->FuncName(##__VA_ARGS__); \
+				} \
+			} \
+        }) \
+    ); \
 
 #endif
 }
