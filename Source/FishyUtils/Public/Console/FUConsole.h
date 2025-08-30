@@ -64,39 +64,9 @@ namespace FU_Console
 		{}
 	};
 
-	
 #define FU_CMD_BOOL_WITH_OPT_FLOAT_CPPONLY(Id, Cmd, CmdHelp, BoolVar, FloatVar, DefaultFloatVarValue) \
 		static bool BoolVar = false; \
 		static float FloatVar = DefaultFloatVarValue; \
-		FU_Console::FFUAutoConsoleCommandWithArgs C##Id("", Cmd, CmdHelp, \
-			FConsoleCommandWithArgsDelegate::CreateLambda([](const TArray<FString>& Args) \
-			{ \
-				/* if no time arg, toggle */ \
-				/* if enabled and time arg, keep enabled and change time */ \
-				const float Newtime = !Args.IsEmpty() ? FCString::Atof(*Args[0]) : DefaultFloatVarValue; \
-				if (!BoolVar) \
-				{ \
-					BoolVar = true; FloatVar = Newtime; \
-				} \
-				else \
-				{ \
-					if (Args.IsEmpty()) \
-					{ \
-						BoolVar = false; FloatVar = Newtime; \
-					} \
-					else \
-					{ \
-						BoolVar = true; FloatVar = Newtime; \
-					} \
-				} \
-			}) \
-		); \
-
-	
-	/** Same as FU_CMD_BOOL_WITH_OPT_FLOAT_CPPONLY but BoolVar and FloatVar are expected to be vars marked as extern in the header */
-#define FU_CMD_BOOL_WITH_OPT_FLOAT_CPP_WITH_EXTERN(Id, Cmd, CmdHelp, BoolVar, FloatVar, DefaultFloatVarValue) \
-		bool BoolVar = false; \
-		float FloatVar = DefaultFloatVarValue; \
 		FU_Console::FFUAutoConsoleCommandWithArgs C##Id("", Cmd, CmdHelp, \
 			FConsoleCommandWithArgsDelegate::CreateLambda([](const TArray<FString>& Args) \
 			{ \
