@@ -142,3 +142,7 @@ namespace FU::Utils
 		}
 	}
 }
+
+
+/** Wrap with WITH_EDITOR */
+#define FU_UTILS_EDITOR_RETURN_NOTGAMEWORLD if (!IsValid(GetWorld()) || !GetWorld()->IsGameWorld()) { return; }
