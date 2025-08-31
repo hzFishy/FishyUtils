@@ -40,7 +40,7 @@ class FISHYUTILS_API UFUDeveloperSettings : public UDeveloperSettings
 
 public:
 	UFUDeveloperSettings() = default;
-	UFUDeveloperSettings(FName GameName);
+	UFUDeveloperSettings(FName InCategoryName);
 
 	// public:
 	// 	UPROPERTY(Config, EditAnywhere, Category = "")

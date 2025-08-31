@@ -3,7 +3,7 @@
 
 #include "Utility/FUDeveloperSettings.h"
 
-UFUDeveloperSettings::UFUDeveloperSettings(FName GameName)
+UFUDeveloperSettings::UFUDeveloperSettings(FName InCategoryName)
 {
-	CategoryName = GameName;
+	CategoryName = InCategoryName;
 }
