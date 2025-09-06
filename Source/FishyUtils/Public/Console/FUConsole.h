@@ -140,7 +140,7 @@ namespace FU_Console
 			{ \
 				if (IsValid(*It)) \
 				{ \
-					It->FuncName(##__VA_ARGS__); \
+					It->FuncName(__VA_ARGS__); \
 					break; \
 				} \
 			} \
@@ -156,7 +156,7 @@ namespace FU_Console
 			{ \
 				if (IsValid(*It)) \
 				{ \
-					It->FuncName(##__VA_ARGS__); \
+					It->FuncName(__VA_ARGS__); \
 				} \
 			} \
         }) \
@@ -171,7 +171,7 @@ namespace FU_Console
 			{ \
 				if (IsValid(*It) && It->GetWorld() == GWorld) \
 				{ \
-					It->FuncName(##__VA_ARGS__); \
+					It->FuncName(__VA_ARGS__); \
 					break; \
 				} \
 			} \
@@ -187,7 +187,7 @@ namespace FU_Console
 			{ \
 				if (IsValid(*It) && It->GetWorld() == GWorld) \
 				{ \
-					It->FuncName(##__VA_ARGS__); \
+					It->FuncName(__VA_ARGS__); \
 				} \
 			} \
         }) \
