@@ -13,6 +13,9 @@ enum class EFUCameraViewType
 	Roll
 };
 
+/**
+ * A snapshot of the player camera manager, used to restore the PCM view when an override is removed
+ */
 struct FISHYUTILS_API FFUCameraManagerSnapshot
 {
 	FFUCameraManagerSnapshot();
@@ -23,6 +26,9 @@ struct FISHYUTILS_API FFUCameraManagerSnapshot
 	float ViewMax;
 };
 
+/**
+ * A camera view override which holds a snapshot of the modified view type beofer it was applied for easy restore.
+ */
 struct FISHYUTILS_API FFUCameraViewOverride
 {
 	FFUCameraViewOverride();
@@ -31,7 +37,6 @@ struct FISHYUTILS_API FFUCameraViewOverride
 	void Apply(AFUPlayerCameraManager* PCM);
 	void ResetToSnapshot(AFUPlayerCameraManager* PCM);
 	
-	// state before being applied
 	FFUCameraManagerSnapshot Snapshot;
 	EFUCameraViewType Type;
 	TOptional<float> ViewMin;
@@ -42,6 +47,9 @@ protected:
 	float* GetPCMViewVarPtr(APlayerCameraManager* PCM, bool bGetMin);
 };
 
+/**
+ * An entry of a given name, can hold 1 override per view type
+ */
 struct FISHYUTILS_API FFUCameraViewOverrideEntry
 {
 	FFUCameraViewOverrideEntry(AFUPlayerCameraManager* PCM, const FFUCameraViewOverride& Override);
@@ -52,6 +60,9 @@ struct FISHYUTILS_API FFUCameraViewOverrideEntry
 	TMap<EFUCameraViewType, FFUCameraViewOverride> Overrides;
 };
 
+/**
+ * Manages active overrides
+ */
 struct FISHYUTILS_API FFUCameraViewOverrideContainer
 {
 	FFUCameraViewOverrideContainer();
@@ -73,7 +84,7 @@ protected:
 
 
 /**
- * 
+ * Player Camera Manager from Fishy Utils
  */
 UCLASS(DisplayName="Fishy Player Camera Manager")
 class FISHYUTILS_API AFUPlayerCameraManager : public APlayerCameraManager
@@ -93,6 +104,4 @@ public:
 	----------------------------------------------------------------------------*/
 public:
 	AFUPlayerCameraManager();
-
-	
 };

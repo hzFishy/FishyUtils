@@ -98,6 +98,7 @@ float* FFUCameraViewOverride::GetPCMViewVarPtr(APlayerCameraManager* PCM, bool b
 	}
 }
 
+
 FFUCameraViewOverrideEntry::FFUCameraViewOverrideEntry(AFUPlayerCameraManager* PCM, const FFUCameraViewOverride& Override)
 {
 	AddOverride(PCM, Override);
@@ -158,8 +159,8 @@ void FFUCameraViewOverrideContainer::RemoveEntry(FName Name, EFUCameraViewType T
 	}
 }
 
-
-/*----------------------------------------------------------------------------
+	
+	/*----------------------------------------------------------------------------
 		Defaults
 	----------------------------------------------------------------------------*/
 AFUPlayerCameraManager::AFUPlayerCameraManager():
