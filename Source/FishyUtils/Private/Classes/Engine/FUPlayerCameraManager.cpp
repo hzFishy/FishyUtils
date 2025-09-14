@@ -1,8 +1,7 @@
 ﻿// By hzFishy 2025 - Do whatever you want with it
 
 
-#include "Classes/Player/FUPlayerCameraManager.h"
-
+#include "Classes/Engine/FUPlayerCameraManager.h"
 #include "Asserts/FUAsserts.h"
 
 
