@@ -129,7 +129,7 @@ namespace FU::Utils
 		 * // UPROPERTY() TObjectPtr<UClass> LoadedClimbAbilityClass;
 		 * FU_ASYNCLOAD(ClimbAbilityClass.ToSoftObjectPath(), UClass, LoadedClimbAbilityClass, 0,
 		 * {
-		 *    if (FU_ASYNCLOAD_RESULT)
+		 *    if (FU_UTILS_ASYNCLOAD_RES_BOOL)
 		 *	   {
 		 *	      GameplayAbilitySpecHandle = OwnerAbilitySystemComponent->K2_GiveAbility(LoadedClimbAbilityClass, 0, -1);
 		 *	  }
