@@ -8,6 +8,9 @@
 
 namespace FU::Utils
 {
+	/** Wrap with WITH_EDITOR */
+	#define FU_UTILS_EDITOR_RETURN_NOTGAMEWORLD if (!IsValid(GetWorld()) || !GetWorld()->IsGameWorld()) { return; }
+
 	template<std::derived_from<UActorComponent> ActorComponentType>
 	ActorComponentType* SpawnRuntimeComponentForActor(AActor* Actor, TSubclassOf<ActorComponentType> ComponentClass = ActorComponentType::StaticClass(), EObjectFlags Flags = RF_Transient) 
 	{
@@ -106,6 +109,70 @@ namespace FU::Utils
 
 	namespace Loading
 	{
+		/**
+		 * Use with FU_UTILS_ASYNCLOAD inside the callback to know if the load suceeded in a valid UObject
+		 */
+		#define FU_UTILS_ASYNCLOAD_RES_BOOL bIsValidLoad
+
+		/**
+		 * Use with FU_UTILS_ASYNCLOAD inside the callback to get the loaded UObject
+		 */
+		#define FU_UTILS_ASYNCLOAD_RES_OBJECT LoadedObject
+
+		/**
+		 * Wrapper for async requests.
+		 * @warning This can cause issues if the object requesting the async request gets destroyed before the request finished. You cannot cancel this request
+		 * 
+		 * Example of use with callback:
+		 * @code
+		 * // TSoftClassPtr<UGameplayAbility> ClimbAbilityClass;
+		 * // UPROPERTY() TObjectPtr<UClass> LoadedClimbAbilityClass;
+		 * FU_ASYNCLOAD(ClimbAbilityClass.ToSoftObjectPath(), UClass, LoadedClimbAbilityClass, 0,
+		 * {
+		 *    if (FU_ASYNCLOAD_RESULT)
+		 *	   {
+		 *	      GameplayAbilitySpecHandle = OwnerAbilitySystemComponent->K2_GiveAbility(LoadedClimbAbilityClass, 0, -1);
+		 *	  }
+		 * });
+		 *  @endcode 
+		 */
+		#define FU_UTILS_ASYNCLOAD(SoftPath, Class, DestinationOnLoad, Priority, CallbackBody, ...) \
+			{ \
+				auto OnLoaded = [this, ##__VA_ARGS__](const FSoftObjectPath& Path, Class* FU_UTILS_ASYNCLOAD_RES_OBJECT) \
+				{ \
+					const bool FU_UTILS_ASYNCLOAD_RES_BOOL = IsValid(FU_UTILS_ASYNCLOAD_RES_OBJECT); \
+					if (FU_UTILS_ASYNCLOAD_RES_BOOL) \
+					{ \
+						DestinationOnLoad = FU_UTILS_ASYNCLOAD_RES_OBJECT; \
+					} \
+					CallbackBody; \
+				}; \
+				FLoadAssetAsyncOptionalParams LoadAssetAsyncOptionalParams; \
+				LoadAssetAsyncOptionalParams.PackagePriority = Priority; \
+				SoftPath.LoadAsync(FLoadSoftObjectPathAsyncDelegate::CreateLambda([this, OnLoaded](const FSoftObjectPath& Path, UObject* LoadedObject) \
+				{ \
+					OnLoaded(Path, Cast<Class>(LoadedObject)); \
+				}), LoadAssetAsyncOptionalParams); \
+			} \
+
+		/**
+		 * Similar to FU_UTILS_ASYNCLOAD but you have to handle the assignement yourself in the callback
+		 */
+		#define FU_UTILS_ASYNCLOAD_NOASSIGN(Id, SoftPath, Class, Priority, CallbackBody, ...) \
+			{ \
+				auto OnLoaded = [this, ##__VA_ARGS__](const FSoftObjectPath& Path, Class* FU_UTILS_ASYNCLOAD_RES_OBJECT) \
+				{ \
+					const bool FU_UTILS_ASYNCLOAD_RES_BOOL = IsValid(FU_UTILS_ASYNCLOAD_RES_OBJECT); \
+					CallbackBody; \
+				}; \
+				FLoadAssetAsyncOptionalParams LoadAssetAsyncOptionalParams; \
+				LoadAssetAsyncOptionalParams.PackagePriority = Priority; \
+				SoftPath.LoadAsync(FLoadSoftObjectPathAsyncDelegate::CreateLambda([this, OnLoaded](const FSoftObjectPath& Path, UObject* LoadedObject) \
+				{ \
+					OnLoaded(Path, Cast<Class>(LoadedObject)); \
+				}), LoadAssetAsyncOptionalParams); \
+			} \
+		
 		template<std::derived_from<UObject> LoadedObjectType>
 		bool SyncLoadObjects(const TArray<FSoftObjectPath>& SoftPaths, TArray<LoadedObjectType*>& LoadedObjects)
 		{
@@ -140,7 +207,3 @@ namespace FU::Utils
 		}
 	}
 }
-
-
-/** Wrap with WITH_EDITOR */
-#define FU_UTILS_EDITOR_RETURN_NOTGAMEWORLD if (!IsValid(GetWorld()) || !GetWorld()->IsGameWorld()) { return; }
