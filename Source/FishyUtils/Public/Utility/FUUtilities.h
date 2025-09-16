@@ -110,6 +110,11 @@ namespace FU::Utils
 	namespace Loading
 	{
 		/**
+		 * Use with FU_UTILS_ASYNCLOAD inside the callback to know if the UObject that requested the async load is still valid
+		 */
+		#define FU_UTILS_ASYNCLOAD_SELF_VALID IsValid(this)
+
+		/**
 		 * Use with FU_UTILS_ASYNCLOAD inside the callback to know if the load suceeded in a valid UObject
 		 */
 		#define FU_UTILS_ASYNCLOAD_RES_BOOL bIsValidLoad
@@ -121,7 +126,9 @@ namespace FU::Utils
 
 		/**
 		 * Wrapper for async requests.
-		 * @warning This can cause issues if the object requesting the async request gets destroyed before the request finished. You cannot cancel this request
+		 * At the end of the async request we arent assigning the loaded object to the destination ptr if "this" is invalid.
+		 * Same for the callback body.
+		 * You cannot cancel this request.
 		 * 
 		 * Example of use with callback:
 		 * @code
@@ -141,11 +148,14 @@ namespace FU::Utils
 				auto OnLoaded = [this, ##__VA_ARGS__](const FSoftObjectPath& Path, Class* FU_UTILS_ASYNCLOAD_RES_OBJECT) \
 				{ \
 					const bool FU_UTILS_ASYNCLOAD_RES_BOOL = IsValid(FU_UTILS_ASYNCLOAD_RES_OBJECT); \
-					if (FU_UTILS_ASYNCLOAD_RES_BOOL) \
+					if (FU_UTILS_ASYNCLOAD_SELF_VALID) \
 					{ \
-						DestinationOnLoad = FU_UTILS_ASYNCLOAD_RES_OBJECT; \
+						if (FU_UTILS_ASYNCLOAD_RES_BOOL) \
+						{ \
+							DestinationOnLoad = FU_UTILS_ASYNCLOAD_RES_OBJECT; \
+						} \
+						CallbackBody; \
 					} \
-					CallbackBody; \
 				}; \
 				FLoadAssetAsyncOptionalParams LoadAssetAsyncOptionalParams; \
 				LoadAssetAsyncOptionalParams.PackagePriority = Priority; \
@@ -156,14 +166,17 @@ namespace FU::Utils
 			} \
 
 		/**
-		 * Similar to FU_UTILS_ASYNCLOAD but you have to handle the assignement yourself in the callback
+		 * Similar to FU_UTILS_ASYNCLOAD but you have to handle the assignement yourself in the callback.
 		 */
 		#define FU_UTILS_ASYNCLOAD_NOASSIGN(Id, SoftPath, Class, Priority, CallbackBody, ...) \
 			{ \
 				auto OnLoaded = [this, ##__VA_ARGS__](const FSoftObjectPath& Path, Class* FU_UTILS_ASYNCLOAD_RES_OBJECT) \
 				{ \
 					const bool FU_UTILS_ASYNCLOAD_RES_BOOL = IsValid(FU_UTILS_ASYNCLOAD_RES_OBJECT); \
-					CallbackBody; \
+					if (FU_UTILS_ASYNCLOAD_SELF_VALID) \
+					{ \
+						CallbackBody; \
+					} \
 				}; \
 				FLoadAssetAsyncOptionalParams LoadAssetAsyncOptionalParams; \
 				LoadAssetAsyncOptionalParams.PackagePriority = Priority; \
