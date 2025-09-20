@@ -25,8 +25,7 @@ void FFUEditor::RegisterMenuExtensions()
 	
 	FToolMenuSection& FishySelectionSection = SelectionMenu->AddSection(
 		"FishyUtilities",
-		INVTEXT("Fishy Utilities"),
-		FToolMenuInsert("SelectBones", EToolMenuInsertType::After)
+		INVTEXT("Fishy Utilities")
 	);
 
 	FishySelectionSection.AddMenuEntry(FFUEditorCommands::Get().SelectSameFolderLevel);
