@@ -219,4 +219,9 @@ namespace FU::Utils
 			return true;
 		}
 	}
+
+	namespace Math
+	{
+		FISHYUTILS_API bool IsPointInSphere(const FVector& Center, float Radius, const FVector& Point);
+	}
 }
