@@ -3,7 +3,10 @@
 
 #include "Utility/FUUILibrary.h"
 
-void UFUUILibrary::SetInputModeAndMouseVisibility(APlayerController* PlayerController, EFUInputMode NewInputMode, EFUNewMouseVisibility NewMouseVisibility)
+#include "Blueprint/WidgetLayoutLibrary.h"
+
+void UFUUILibrary::SetInputModeAndMouseVisibility(APlayerController* PlayerController, EFUInputMode NewInputMode,
+	EFUNewMouseVisibility NewMouseVisibility, bool bResetCursorToCenter)
 {
 	if (!IsValid(PlayerController))
 	{
@@ -54,5 +57,13 @@ void UFUUILibrary::SetInputModeAndMouseVisibility(APlayerController* PlayerContr
 				PlayerController->SetShowMouseCursor(false);
 			}
 			break;
+	}
+
+	if (bResetCursorToCenter)
+	{
+		FVector2D Size = UWidgetLayoutLibrary::GetViewportSize(PlayerController);
+		int32 X = FMath::TruncToInt(Size.X / 2);
+		int32 Y = FMath::TruncToInt(Size.Y / 2);
+		PlayerController->SetMouseLocation(X, Y);
 	}
 }

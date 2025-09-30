@@ -34,5 +34,6 @@ class FISHYUTILS_API UFUUILibrary : public UBlueprintFunctionLibrary
 
 public:
 	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI")
-	static void SetInputModeAndMouseVisibility(APlayerController* PlayerController, EFUInputMode NewInputMode, EFUNewMouseVisibility NewMouseVisibility);
+	static void SetInputModeAndMouseVisibility(APlayerController* PlayerController, EFUInputMode NewInputMode,
+		EFUNewMouseVisibility NewMouseVisibility, bool bResetCursorToCenter);
 };
