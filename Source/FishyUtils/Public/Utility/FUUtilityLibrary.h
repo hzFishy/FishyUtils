@@ -29,6 +29,9 @@ public:
 	UFUNCTION(BlueprintPure, meta=(Keywords="-1, Decrement", CompactNodeTitle="-1"))
 	static int32 IntMinusOne(int32 X) { return X - 1; }
 	
+	UFUNCTION(BlueprintPure, meta=(Keywords="*-1, Invert", CompactNodeTitle="*-1"))
+	static float Invert(float X) { return X * -1; }
+	
 	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|Generic", meta=(WorldContext="WorldContextObject"))
 	static bool AsyncOpenLevel(const UObject* WorldContextObject, TSoftObjectPtr<UWorld> Level, bool bAbsolute = true, FString Options = "");
 };
