@@ -130,7 +130,35 @@ namespace FU_Console
             BoolVar = !BoolVar; \
         }) \
     ); \
-
+    
+/** Same as FU_CMD_BOOL_TOGGLE but BoolVar is expected to be declared as extern in the header */
+#define FU_CMD_BOOL_TOGGLE_EXTERN(Id, Cmd, CmdHelp, BoolVar, DefaultBoolVal) \
+    bool BoolVar = DefaultBoolVal; \
+    FU_Console::FFUAutoConsoleCommand C##Id("", Cmd, CmdHelp, \
+        FConsoleCommandDelegate::CreateLambda([]() \
+        { \
+            BoolVar = !BoolVar; \
+        }) \
+    ); \
+    
+/** Uses FAutoConsoleVariableRef */
+#define FU_CMD_AUTOVAR(Id, Cmd, CmdHelp, VarType, VarName, DefaultVarValue) \
+	VarType VarName = DefaultVarValue; \
+	FAutoConsoleVariableRef Id( \
+		TEXT(Cmd), \
+		VarName, \
+		TEXT(CmdHelp) \
+	); \
+	
+/** Same as FU_CMD_AUTOVAR but VarName is expected to be declared as extern in the header */
+#define FU_CMD_AUTOVAR_EXTERN(Id, Cmd, CmdHelp, VarType, VarName, DefaultVarValue) \
+	VarType VarName = DefaultVarValue; \
+	FAutoConsoleVariableRef Id( \
+		TEXT(Cmd), \
+		VarName, \
+		TEXT(CmdHelp) \
+	); \
+	
 /** Get first instance of given actor class in editor/game world and run given function with optional args */
 #define FU_CMD_ACTOR_SINGLERUNFUNC(Id, Cmd, CmdHelp, ActorClass, FuncName, ...) \
     FU_Console::FFUAutoConsoleCommand C##Id("", Cmd, CmdHelp, \

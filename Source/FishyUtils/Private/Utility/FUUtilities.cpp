@@ -393,6 +393,21 @@ FString FU::Utils::GetNameWithoutClassSuffix(UClass* Class)
 	return GetNameWithoutClassSuffix(Class->GetFName());
 }
 
+
+FU::Utils::FFUMessageBuilder::FFUMessageBuilder() {}
+
+FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::Append(FString Text)
+{
+	Message.Append(Text);
+	return *this;
+}
+
+FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::NewLine(FString Text)
+{
+	return Append("\n" + Text);
+}
+
+
 bool FU::Utils::Math::IsPointInSphere(const FVector& Center, float Radius, const FVector& Point)
 {
 	return (Point - Center).Length() < Radius;

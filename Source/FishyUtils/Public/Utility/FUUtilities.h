@@ -107,6 +107,23 @@ namespace FU::Utils
 	FISHYUTILS_API FName GetFNameWithoutClassSuffix(UClass* Class);
 	FISHYUTILS_API FString GetNameWithoutClassSuffix(UClass* Class);
 
+	
+	struct FISHYUTILS_API FFUMessageBuilder
+	{
+	public:
+		FFUMessageBuilder();
+		
+		FFUMessageBuilder& Append(FString Text);
+
+		FFUMessageBuilder& NewLine(FString Text);
+
+		const FString GetMessage() const { return Message; }; 
+		
+	protected:
+		FString Message;
+	};
+
+	
 	namespace Loading
 	{
 		/**
@@ -220,6 +237,7 @@ namespace FU::Utils
 		}
 	}
 
+	
 	namespace Math
 	{
 		FISHYUTILS_API bool IsPointInSphere(const FVector& Center, float Radius, const FVector& Point);
