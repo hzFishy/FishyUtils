@@ -18,5 +18,7 @@
 
 	#define FU_ENSURE_VALID(Object)								FU_ENSURE(IsValid(Object))
 	#define FU_ENSURE_VALID_MSG(Object, InFormat, ...)			FU_ENSURE_MSG(IsValid(Object), InFormat, ##__VA_ARGS__)
+	#define FU_ENSURE_WEAKVALID(Object)							FU_ENSURE(Object.IsValid())
 	#define FU_ENSURE_WEAKVALID_MSG(Object, InFormat, ...)		FU_ENSURE_MSG(Object.IsValid(), InFormat, ##__VA_ARGS__)
+	#define FU_ENSURE_WEAKNOTNULL(Object)						FU_ENSURE(!Object.IsNull())
 	#define FU_ENSURE_WEAKNOTNULL_MSG(Object, InFormat, ...)	FU_ENSURE_MSG(!Object.IsNull(), InFormat, ##__VA_ARGS__)
