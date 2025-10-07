@@ -38,10 +38,13 @@ namespace FU::Utils
 	/* Print only the 2 decimals */
 	FISHYUTILS_API FString PrintCompactFloat(float Value);
 	
+	FISHYUTILS_API FString PrintCompactFloat(const float* Value);
+	
 	FISHYUTILS_API FString PrintCompactVector(FVector Value);
 
 	FISHYUTILS_API FString PrintCompactRotator(FRotator Value);
 
+	FISHYUTILS_API FString SafeGetName(const UObject* Object);
 	
 	/**
 	 *
@@ -116,6 +119,8 @@ namespace FU::Utils
 		
 		FFUMessageBuilder& Append(FString Text);
 		
+		FFUMessageBuilder& Append(bool bCond, FString Text);
+		
 		template <typename... Types>
 		FFUMessageBuilder& Append(UE::Core::TCheckedFormatString<FString::FmtCharType, Types...> Fmt, Types... Args)
 		{
@@ -123,6 +128,8 @@ namespace FU::Utils
 		}
 
 		FFUMessageBuilder& NewLine(FString Text);
+		
+		FFUMessageBuilder& NewLine(bool bCond, FString Text);
 		
 		template <typename... Types>
 		FFUMessageBuilder& NewLine(UE::Core::TCheckedFormatString<FString::FmtCharType, Types...> Fmt, Types... Args)

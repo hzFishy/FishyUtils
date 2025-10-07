@@ -26,6 +26,18 @@ FString FU::Utils::PrintCompactFloat(float Value)
 	return FString::Printf(TEXT("%.2f"), Value);
 }
 
+FString FU::Utils::PrintCompactFloat(const float* Value)
+{
+	if (Value == nullptr)
+	{
+		return "Null Float";
+	}
+	else
+	{
+		return FU::Utils::PrintCompactFloat(*Value);
+	}
+}
+
 FString FU::Utils::PrintCompactVector(FVector Value)
 {
 	return FString::Printf(TEXT("(X=%.1f, Y=%.1f, Z=%.1f)"), Value.X, Value.Y, Value.Z);
@@ -34,6 +46,15 @@ FString FU::Utils::PrintCompactVector(FVector Value)
 FString FU::Utils::PrintCompactRotator(FRotator Value)
 {
 	return FString::Printf(TEXT("(R/X=%.1f, P/Y=%.1f, Y/Z=%.1f)"), Value.Roll, Value.Pitch, Value.Yaw);
+}
+
+FString FU::Utils::SafeGetName(const UObject* Object)
+{
+	if (IsValid(Object))
+	{
+		return Object->GetName();
+	}
+	return "Null Object";
 }
 
 
@@ -407,9 +428,27 @@ FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::Append(FString Text)
 	return *this;
 }
 
+FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::Append(bool bCond, FString Text)
+{
+	if (bCond)
+	{
+		return Append(Text);
+	}
+	return *this;
+}
+
 FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::NewLine(FString Text)
 {
 	return Append("\n" + Text);
+}
+
+FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::NewLine(bool bCond, FString Text)
+{
+	if (bCond)
+	{
+		return NewLine(Text);
+	}
+	return *this;
 }
 
 
