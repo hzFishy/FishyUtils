@@ -396,6 +396,11 @@ FString FU::Utils::GetNameWithoutClassSuffix(UClass* Class)
 
 FU::Utils::FFUMessageBuilder::FFUMessageBuilder() {}
 
+FU::Utils::FFUMessageBuilder::FFUMessageBuilder(FString InitalText)
+{
+	Append(InitalText);
+}
+
 FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::Append(FString Text)
 {
 	Message.Append(Text);

@@ -112,11 +112,24 @@ namespace FU::Utils
 	{
 	public:
 		FFUMessageBuilder();
+		FFUMessageBuilder(FString InitalText);
 		
 		FFUMessageBuilder& Append(FString Text);
+		
+		template <typename... Types>
+		FFUMessageBuilder& Append(UE::Core::TCheckedFormatString<FString::FmtCharType, Types...> Fmt, Types... Args)
+		{
+			return Append(FString::Printf(Fmt, Args...));
+		}
 
 		FFUMessageBuilder& NewLine(FString Text);
-
+		
+		template <typename... Types>
+		FFUMessageBuilder& NewLine(UE::Core::TCheckedFormatString<FString::FmtCharType, Types...> Fmt, Types... Args)
+		{
+			return NewLine(FString::Printf(Fmt, Args...));
+		}
+		
 		const FString GetMessage() const { return Message; }; 
 		
 	protected:
