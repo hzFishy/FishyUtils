@@ -11,7 +11,7 @@ public class FishyUtils : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core", 
+				"Core", "CoreUObject",
 				"BlueprintComponentReference",
 				"DeveloperSettings", 
 				"UMG"
@@ -22,7 +22,7 @@ public class FishyUtils : ModuleRules
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"CoreUObject", "Engine",
+				"Engine",
 				"Slate", "SlateCore",
 				"InputCore",
 				"GameplayTags"

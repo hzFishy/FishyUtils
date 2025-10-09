@@ -143,6 +143,13 @@ namespace FU::Utils
 		FString Message;
 	};
 
+	inline uint32 GetWeakObjectTypeHash(const UObject* Object)
+	{
+		// based on FWeakObjectPtr::operator=(FObjectPtr ObjectPtr)
+		int32 ObjectIndex = GUObjectArray.ObjectToIndex((UObjectBase*)Object);
+		int32 ActualSerialNumber = GUObjectArray.GetSerialNumber(ObjectIndex);
+		return HashCombine(ObjectIndex, ActualSerialNumber);
+	}
 	
 	namespace Loading
 	{
