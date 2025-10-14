@@ -12,39 +12,20 @@
 namespace FU_Console
 {
 #if FU_WITH_CONSOLE
-	
-	/**
-	 *  @return "ProjectPrefix.Catepgry.CommandName"
-	 */
-	static FString BuildFullCommandString(const FString& Category, const FString& CommandName)
-	{
-		if (Category.IsEmpty())
-		{
-			return CommandName;
-		}
-		else if (CommandName.IsEmpty())
-		{
-			return Category;
-		}
-		else
-		{
-			return FString::Printf(TEXT("%s.%s"), *Category, *CommandName);
-		}
-	};
 
 	/* No world, no args */
 	struct FFUAutoConsoleCommand : private FAutoConsoleCommand
 	{
-		FFUAutoConsoleCommand(const FString& Category, const FString& CommandName, const FString& HelpDescription, const FConsoleCommandDelegate& Delegate):
-			FAutoConsoleCommand(*BuildFullCommandString(Category, CommandName), *HelpDescription, Delegate, ECVF_Default)
+		FFUAutoConsoleCommand(const FString& CommandName, const FString& HelpDescription, const FConsoleCommandDelegate& Delegate):
+			FAutoConsoleCommand(*CommandName, *HelpDescription, Delegate, ECVF_Default)
 		{}
 	};
 	
 	/* No world, with args */
 	struct FFUAutoConsoleCommandWithArgs : private FAutoConsoleCommand
 	{
-		FFUAutoConsoleCommandWithArgs(const FString& Category, const FString& CommandName, const FString& HelpDescription, const FConsoleCommandWithArgsDelegate& Delegate):
-			FAutoConsoleCommand(*BuildFullCommandString(Category, CommandName), *HelpDescription, Delegate, ECVF_Default)
+		FFUAutoConsoleCommandWithArgs(const FString& CommandName, const FString& HelpDescription, const FConsoleCommandWithArgsDelegate& Delegate):
+			FAutoConsoleCommand(*CommandName, *HelpDescription, Delegate, ECVF_Default)
 		{}
 	};
 	
@@ -52,23 +33,27 @@ namespace FU_Console
 	struct FFUAutoConsoleCommandWithWorld : private FAutoConsoleCommandWithWorld
 	{
 		FFUAutoConsoleCommandWithWorld(const FString& Category, const FString& CommandName, const FString& HelpDescription, const FConsoleCommandWithWorldDelegate& Delegate):
-			FAutoConsoleCommandWithWorld(*BuildFullCommandString(Category, CommandName), *HelpDescription, Delegate, ECVF_Default)
+			FAutoConsoleCommandWithWorld(*CommandName, *HelpDescription, Delegate, ECVF_Default)
 		{}
 	};
 	
 	/* World and with args */
 	struct FFUAutoConsoleCommandWithWorldAndArgs : private FAutoConsoleCommandWithWorldAndArgs
 	{
-		FFUAutoConsoleCommandWithWorldAndArgs(const FString& Category, const FString& CommandName, const FString& HelpDescription, const FConsoleCommandWithWorldAndArgsDelegate& Delegate):
-			FAutoConsoleCommandWithWorldAndArgs(*BuildFullCommandString(Category, CommandName), *HelpDescription, Delegate, ECVF_Default)
+		FFUAutoConsoleCommandWithWorldAndArgs(const FString& CommandName, const FString& HelpDescription, const FConsoleCommandWithWorldAndArgsDelegate& Delegate):
+			FAutoConsoleCommandWithWorldAndArgs(*CommandName, *HelpDescription, Delegate, ECVF_Default)
 		{}
 	};
 
 	
+/**
+ * Declares a boolean var and a float var.
+ * Use the command as 'My.Console.Command <opt float>', this will toggle the boolean and optionally change the float value
+ */
 #define FU_CMD_BOOL_WITH_OPT_FLOAT_CPPONLY(Id, Cmd, CmdHelp, BoolVar, FloatVar, DefaultFloatVarValue) \
 		static bool BoolVar = false; \
 		static float FloatVar = DefaultFloatVarValue; \
-		FU_Console::FFUAutoConsoleCommandWithArgs C##Id("", Cmd, CmdHelp, \
+		FU_Console::FFUAutoConsoleCommandWithArgs C##Id(Cmd, CmdHelp, \
 			FConsoleCommandWithArgsDelegate::CreateLambda([](const TArray<FString>& Args) \
 			{ \
 				/* if no time arg, toggle */ \
@@ -92,12 +77,11 @@ namespace FU_Console
 			}) \
 		); \
 
-	
-	/** Same as FU_CMD_BOOL_WITH_OPT_FLOAT_CPPONLY but BoolVar and FloatVar are expected to be vars marked as extern in the header */
+/** Same as FU_CMD_BOOL_WITH_OPT_FLOAT_CPPONLY but BoolVar and FloatVar are expected to be vars marked as extern in the header */
 #define FU_CMD_BOOL_WITH_OPT_FLOAT_CPP_WITH_EXTERN(Id, Cmd, CmdHelp, BoolVar, FloatVar, DefaultFloatVarValue) \
 		bool BoolVar = false; \
 		float FloatVar = DefaultFloatVarValue; \
-		FU_Console::FFUAutoConsoleCommandWithArgs C##Id("", Cmd, CmdHelp, \
+		FU_Console::FFUAutoConsoleCommandWithArgs C##Id(Cmd, CmdHelp, \
 			FConsoleCommandWithArgsDelegate::CreateLambda([](const TArray<FString>& Args) \
 			{ \
 				/* if no time arg, toggle */ \
@@ -124,7 +108,7 @@ namespace FU_Console
 /** On each call the bool var will flip */
 #define FU_CMD_BOOL_TOGGLE(Id, Cmd, CmdHelp, BoolVar, DefaultBoolVal) \
     static bool BoolVar = DefaultBoolVal; \
-    FU_Console::FFUAutoConsoleCommand C##Id("", Cmd, CmdHelp, \
+    FU_Console::FFUAutoConsoleCommand C##Id(Cmd, CmdHelp, \
         FConsoleCommandDelegate::CreateLambda([]() \
         { \
             BoolVar = !BoolVar; \
@@ -134,7 +118,7 @@ namespace FU_Console
 /** Same as FU_CMD_BOOL_TOGGLE but BoolVar is expected to be declared as extern in the header */
 #define FU_CMD_BOOL_TOGGLE_EXTERN(Id, Cmd, CmdHelp, BoolVar, DefaultBoolVal) \
     bool BoolVar = DefaultBoolVal; \
-    FU_Console::FFUAutoConsoleCommand C##Id("", Cmd, CmdHelp, \
+    FU_Console::FFUAutoConsoleCommand C##Id(Cmd, CmdHelp, \
         FConsoleCommandDelegate::CreateLambda([]() \
         { \
             BoolVar = !BoolVar; \
@@ -160,8 +144,8 @@ namespace FU_Console
 	); \
 	
 /** Get first instance of given actor class in editor/game world and run given function with optional args */
-#define FU_CMD_ACTOR_SINGLERUNFUNC(Id, Cmd, CmdHelp, ActorClass, FuncName, ...) \
-    FU_Console::FFUAutoConsoleCommand C##Id("", Cmd, CmdHelp, \
+#define FU_CMD_RUNFUNC_ACTOR_SINGLE(Id, Cmd, CmdHelp, ActorClass, FuncName, ...) \
+    FU_Console::FFUAutoConsoleCommand C##Id(Cmd, CmdHelp, \
         FConsoleCommandDelegate::CreateLambda([]() \
         { \
 			for (auto It = TActorIterator<ActorClass>(GWorld); It; ++It) \
@@ -176,8 +160,8 @@ namespace FU_Console
     ); \
 
 /** Get all instances of given actor class in editor/game world and run given function with optional args */
-#define FU_CMD_ACTOR_ALLRUNFUNC(Id, Cmd, CmdHelp, ActorClass, FuncName, ...) \
-    FU_Console::FFUAutoConsoleCommand C##Id("", Cmd, CmdHelp, \
+#define FU_CMD_RUNFUNC_ACTOR_ALL(Id, Cmd, CmdHelp, ActorClass, FuncName, ...) \
+    FU_Console::FFUAutoConsoleCommand C##Id(Cmd, CmdHelp, \
         FConsoleCommandDelegate::CreateLambda([]() \
         { \
 			for (auto It = TActorIterator<ActorClass>(GWorld); It; ++It) \
@@ -190,9 +174,9 @@ namespace FU_Console
         }) \
     ); \
 
-/** Get first instance of given UObject class in editor/game world (excludes COD and Archetypes) and run given function with optional args */
-#define FU_CMD_OBJECT_SINGLERUNFUNC(Id, Cmd, CmdHelp, ObjectClass, FuncName, ...) \
-    FU_Console::FFUAutoConsoleCommand C##Id("", Cmd, CmdHelp, \
+/** Get first instance of given UObject class in editor/game world (excludes CDOs and Archetypes) and run given function with optional args */
+#define FU_CMD_RUNFUNC_OBJECT_SINGLE(Id, Cmd, CmdHelp, ObjectClass, FuncName, ...) \
+    FU_Console::FFUAutoConsoleCommand C##Id(Cmd, CmdHelp, \
         FConsoleCommandDelegate::CreateLambda([]() \
         { \
 			for (auto It = TObjectIterator<ObjectClass>(EObjectFlags::RF_ClassDefaultObject | EObjectFlags::RF_ArchetypeObject); It; ++It) \
@@ -206,9 +190,9 @@ namespace FU_Console
         }) \
     ); \
 
-/** Get first instance of given UObject class in editor/game world (excludes COD and Archetypes) and run given function with optional args */
-#define FU_CMD_OBJECT_ALLRUNFUNC(Id, Cmd, CmdHelp, ObjectClass, FuncName, ...) \
-    FU_Console::FFUAutoConsoleCommand C##Id("", Cmd, CmdHelp, \
+/** Get first instance of given UObject class in editor/game world (excludes CDOs and Archetypes) and run given function with optional args */
+#define FU_CMD_RUNFUNC_OBJECT_ALL(Id, Cmd, CmdHelp, ObjectClass, FuncName, ...) \
+    FU_Console::FFUAutoConsoleCommand C##Id(Cmd, CmdHelp, \
         FConsoleCommandDelegate::CreateLambda([]() \
         { \
 			for (auto It = TObjectIterator<ObjectClass>(EObjectFlags::RF_ClassDefaultObject | EObjectFlags::RF_ArchetypeObject); It; ++It) \
@@ -221,5 +205,14 @@ namespace FU_Console
         }) \
     ); \
 
+#define FU_CMD_RUNLAMBDA(Id, Cmd, CmdHelp, LambdaBody) \
+    FU_Console::FFUAutoConsoleCommand C##Id(Cmd, CmdHelp, \
+        FConsoleCommandDelegate::CreateLambda([]() \
+        { \
+			LambdaBody \
+        }) \
+    ); \
+
+	
 #endif
 }
