@@ -451,6 +451,11 @@ FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::NewLine(bool bCond, 
 	return *this;
 }
 
+bool FU::Utils::IsTransformIdentity(const FTransform& Transform)
+{
+	return Transform.GetLocation().IsZero() && Transform.GetRotation().IsIdentity() && Transform.GetScale3D() == FVector::OneVector;
+}
+
 
 bool FU::Utils::Math::IsPointInSphere(const FVector& Center, float Radius, const FVector& Point)
 {

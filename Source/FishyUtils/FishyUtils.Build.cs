@@ -14,7 +14,8 @@ public class FishyUtils : ModuleRules
 				"Core", "CoreUObject",
 				"BlueprintComponentReference",
 				"DeveloperSettings", 
-				"UMG"
+				"UMG", 
+				"StateTreeModule"
 			}
 		);
 			

@@ -113,7 +113,6 @@ namespace FU::Utils
 	
 	struct FISHYUTILS_API FFUMessageBuilder
 	{
-	public:
 		FFUMessageBuilder();
 		FFUMessageBuilder(FString InitalText);
 		
@@ -150,6 +149,8 @@ namespace FU::Utils
 		int32 ActualSerialNumber = GUObjectArray.GetSerialNumber(ObjectIndex);
 		return HashCombine(ObjectIndex, ActualSerialNumber);
 	}
+
+	FISHYUTILS_API bool IsTransformIdentity(const FTransform& Transform);
 	
 	namespace Loading
 	{
