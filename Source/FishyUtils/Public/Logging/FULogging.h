@@ -5,7 +5,7 @@
 #include "FishyUtils/Private/Logging/dbgLog/dbgLog.h"
 #include "Utility/FUUtilities.h"
 
-FISHYUTILS_API DECLARE_LOG_CATEGORY_EXTERN(LogFUTemp, Log, Log);
+FISHYUTILS_API DECLARE_LOG_CATEGORY_EXTERN(LogFUTemp, Log, All);
 
 
 #define FU_WITH_LOGGING KEEP_DBG_LOG
