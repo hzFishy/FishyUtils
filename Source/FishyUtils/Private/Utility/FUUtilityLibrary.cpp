@@ -34,3 +34,8 @@ bool UFUUtilityLibrary::AsyncOpenLevel(const UObject* WorldContextObject, const 
 	
 	return true;
 }
+
+float UFUUtilityLibrary::FindDeltaAngleDegrees(float A, float B)
+{
+	return FMath::FindDeltaAngleDegrees(A, B);
+}
