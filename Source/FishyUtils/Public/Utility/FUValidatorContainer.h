@@ -2,17 +2,17 @@
 
 #pragma once
 
+UENUM(BlueprintType, DisplayName="Fishy Editor Validator Status")
+enum class EFUEditorValidatorStatus : uint8
+{
+	None,
+	Message,
+	Warning,
+	Error
+};
+
 namespace FU::Editor::Validator
 {
-	UENUM(BlueprintType, DisplayName="Fishy Editor Validator Status")
-	enum class EFUEditorValidatorStatus
-	{
-		None,
-		Message,
-		Warning,
-		Error
-	};
-	
 	struct FISHYUTILS_API FFUEditorValidatorContainerBase
 	{
 		FFUEditorValidatorContainerBase();
