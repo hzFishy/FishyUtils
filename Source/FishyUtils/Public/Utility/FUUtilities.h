@@ -270,4 +270,6 @@ namespace FU::Utils
 	{
 		FISHYUTILS_API bool IsPointInSphere(const FVector& Center, float Radius, const FVector& Point);
 	}
+
+	FISHYUTILS_API void ArrayToString(const TArray<FString>& Array, FString& OutString, FString Separator);
 }
