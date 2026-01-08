@@ -19,8 +19,8 @@ struct FFUCharacterMovementSpeedInstanceData
 };
 
 /**
- * While this task is active we change the CMC ma walk speed.
- * On exit we set iut back to the previous cached value.
+ * While this task is active we change the CMC max walk speed.
+ * On exit we set it back to the previously cached value.
  */
 USTRUCT(DisplayName="Task Character Movement Speed", Category="Fishy Utils")
 struct FISHYUTILS_API FFUTask_CharacterMovementSpeed : public FStateTreeTaskCommonBase
