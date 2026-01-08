@@ -34,4 +34,11 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|Generic", meta=(WorldContext="WorldContextObject"))
 	static bool AsyncOpenLevel(const UObject* WorldContextObject, TSoftObjectPtr<UWorld> Level, bool bAbsolute = true, FString Options = "");
+
+	/**
+	 * Find the smallest angle between two headings (in degrees).
+	 * Return delta in [-180,180] range.
+	 */
+	UFUNCTION(BlueprintPure, Category="FishyUtils|Utility|Math")
+	static float FindDeltaAngleDegrees(float A, float B);
 };
