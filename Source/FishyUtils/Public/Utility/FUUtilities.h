@@ -122,13 +122,13 @@ namespace FU::Utils
 		
 #if ENGINE_MINOR_VERSION > 5
 		template <typename... Types>
-		FFUMessageBuilder& Append(UE::Core::TCheckedFormatString<FString::FmtCharType, Types...> Fmt, Types... Args)
+		FFUMessageBuilder& Appendf(UE::Core::TCheckedFormatString<FString::FmtCharType, Types...> Fmt, Types... Args)
 		{
-			return Append(FString::Printf(Fmt, Args...));
+			return Appendf(FString::Printf(Fmt, Args...));
 		}
 #else
-	template <typename FmtType, typename... Types>
-		FFUMessageBuilder& Append(FmtType Fmt, Types... Args)
+		template <typename FmtType, typename... Types>
+		FFUMessageBuilder& Appendf(const FmtType& Fmt, Types... Args)
 		{
 			return Append(FString::Printf(Fmt, Args...));
 		}
@@ -140,13 +140,13 @@ namespace FU::Utils
 		
 #if ENGINE_MINOR_VERSION > 5
 		template <typename... Types>
-		FFUMessageBuilder& NewLine(UE::Core::TCheckedFormatString<FString::FmtCharType, Types...> Fmt, Types... Args)
+		FFUMessageBuilder& NewLinef(UE::Core::TCheckedFormatString<FString::FmtCharType, Types...> Fmt, Types... Args)
 		{
-			return NewLine(FString::Printf(Fmt, Args...));
+			return NewLinef(FString::Printf(Fmt, Args...));
 		}
 #else
-	template <typename FmtType, typename... Types>
-		FFUMessageBuilder& NewLine(FmtType Fmt, Types... Args)
+		template <typename FmtType, typename... Types>
+		FFUMessageBuilder& NewLinef(const FmtType& Fmt, Types... Args)
 		{
 			return NewLine(FString::Printf(Fmt, Args...));
 		}
