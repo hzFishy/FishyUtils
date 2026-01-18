@@ -92,10 +92,10 @@ void FU::Draw::DrawDebugStringFrame(const UWorld* World, const FVector& Location
 }
 
 
-void FU::Draw::DrawDebugDirectionalArrow(const UWorld* World, const FVector& StartLcation,
+void FU::Draw::DrawDebugDirectionalArrow(const UWorld* World, const FVector& StartLocation,
 	const FVector& ScaledDirection, FColor Color, float Time, float ArrowSize, float Thickness, uint8 DepthPriority)
 {
-	const FVector EndLocation = StartLcation + ScaledDirection;
+	const FVector EndLocation = StartLocation + ScaledDirection;
 
 	// For some reasons if you try to draw debug an arrow/line with a depth priority above 1 for more than a frame (Time > 0) it will only be drawn for a single frame
 	// As a temporary fix we reset the DepthPriority to 0 so the drawing lasts as much as requested 
@@ -105,29 +105,29 @@ void FU::Draw::DrawDebugDirectionalArrow(const UWorld* World, const FVector& Sta
 		DepthPriority = 0;
 	}
 	
-	DrawDebugDirectionalArrow(World, StartLcation, EndLocation, ArrowSize, Color, false, Time, DepthPriority, Thickness);
+	DrawDebugDirectionalArrow(World, StartLocation, EndLocation, ArrowSize, Color, false, Time, DepthPriority, Thickness);
 }
-void FU::Draw::DrawDebugDirectionalArrowFrame(const UWorld* World, const FVector& StartLcation,
+void FU::Draw::DrawDebugDirectionalArrowFrame(const UWorld* World, const FVector& StartLocation,
 	const FVector& ScaledDirection, FColor Color, float ArrowSize, float Thickness, uint8 DepthPriority)
 {
-	FU::Draw::DrawDebugDirectionalArrow(World, StartLcation, ScaledDirection, Color, 0, ArrowSize, Thickness, DepthPriority);
+	FU::Draw::DrawDebugDirectionalArrow(World, StartLocation, ScaledDirection, Color, 0, ArrowSize, Thickness, DepthPriority);
 }
 
-void FU::Draw::DrawDebugDirectionalArrowWithMiddleText(const UWorld* World, const FVector& StartLcation,
+void FU::Draw::DrawDebugDirectionalArrowWithMiddleText(const UWorld* World, const FVector& StartLocation,
 	const FVector& ScaledDirection, FColor LineColor, const FString& Text, FColor TextColor, float Time,
 	float ArrowSize, float Thickness, float FontScale, uint8 DepthPriority)
 {
-	FU::Draw::DrawDebugDirectionalArrow(World, StartLcation, ScaledDirection, LineColor, Time, ArrowSize, Thickness, DepthPriority);
+	FU::Draw::DrawDebugDirectionalArrow(World, StartLocation, ScaledDirection, LineColor, Time, ArrowSize, Thickness, DepthPriority);
 
-	const FVector MiddleLocation = StartLcation + ScaledDirection/2;
+	const FVector MiddleLocation = StartLocation + ScaledDirection/2;
 	FU::Draw::DrawDebugString(World, MiddleLocation, Text, TextColor, Time, FontScale);
 }
 
-void FU::Draw::DrawDebugDirectionalArrowWithMiddleTextFrame(const UWorld* World, const FVector& StartLcation,
+void FU::Draw::DrawDebugDirectionalArrowWithMiddleTextFrame(const UWorld* World, const FVector& StartLocation,
 	const FVector& ScaledDirection, FColor LineColor, const FString& Text, FColor TextColor,
 	float ArrowSize, float Thickness, float FontScale, uint8 DepthPriority)
 {
-	FU::Draw::DrawDebugDirectionalArrowWithMiddleText(World, StartLcation, ScaledDirection, LineColor, Text, TextColor, 0, ArrowSize, Thickness, FontScale, DepthPriority);
+	FU::Draw::DrawDebugDirectionalArrowWithMiddleText(World, StartLocation, ScaledDirection, LineColor, Text, TextColor, 0, ArrowSize, Thickness, FontScale, DepthPriority);
 }
 
 

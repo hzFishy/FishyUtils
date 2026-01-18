@@ -120,22 +120,37 @@ namespace FU::Utils
 		
 		FFUMessageBuilder& Append(bool bCond, FString Text);
 		
+#if ENGINE_MINOR_VERSION > 5
 		template <typename... Types>
 		FFUMessageBuilder& Append(UE::Core::TCheckedFormatString<FString::FmtCharType, Types...> Fmt, Types... Args)
 		{
 			return Append(FString::Printf(Fmt, Args...));
 		}
-
+#else
+	template <typename FmtType, typename... Types>
+		FFUMessageBuilder& Append(FmtType Fmt, Types... Args)
+		{
+			return Append(FString::Printf(Fmt, Args...));
+		}
+#endif
+		
 		FFUMessageBuilder& NewLine(FString Text);
 		
 		FFUMessageBuilder& NewLine(bool bCond, FString Text);
 		
+#if ENGINE_MINOR_VERSION > 5
 		template <typename... Types>
 		FFUMessageBuilder& NewLine(UE::Core::TCheckedFormatString<FString::FmtCharType, Types...> Fmt, Types... Args)
 		{
 			return NewLine(FString::Printf(Fmt, Args...));
 		}
-		
+#else
+	template <typename FmtType, typename... Types>
+		FFUMessageBuilder& NewLine(FmtType Fmt, Types... Args)
+		{
+			return NewLine(FString::Printf(Fmt, Args...));
+		}
+#endif
 		const FString GetMessage() const { return Message; }; 
 		
 	protected:

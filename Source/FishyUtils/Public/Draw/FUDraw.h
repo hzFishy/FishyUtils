@@ -44,17 +44,17 @@ namespace FU::Draw
 		FColor Color, float FontScale = 2);
 
 	
-	FISHYUTILS_API void DrawDebugDirectionalArrow(const UWorld* World, const FVector& StartLcation,
+	FISHYUTILS_API void DrawDebugDirectionalArrow(const UWorld* World, const FVector& StartLocation,
 		const FVector& ScaledDirection, FColor Color, float Time,
 		float ArrowSize = 2, float Thickness = 2, uint8 DepthPriority = 0);
-	FISHYUTILS_API void DrawDebugDirectionalArrowFrame(const UWorld* World, const FVector& StartLcation,
+	FISHYUTILS_API void DrawDebugDirectionalArrowFrame(const UWorld* World, const FVector& StartLocation,
 		const FVector& ScaledDirection, FColor Color,
 		float ArrowSize = 2, float Thickness = 2, uint8 DepthPriority = 0);
 
-	FISHYUTILS_API void DrawDebugDirectionalArrowWithMiddleText(const UWorld* World, const FVector& StartLcation,
+	FISHYUTILS_API void DrawDebugDirectionalArrowWithMiddleText(const UWorld* World, const FVector& StartLocation,
 		const FVector& ScaledDirection, FColor LineColor, const FString& Text, FColor TextColor, float Time,
 		float ArrowSize = 2, float Thickness = 2, float FontScale = 2, uint8 DepthPriority = 0);
-	FISHYUTILS_API void DrawDebugDirectionalArrowWithMiddleTextFrame(const UWorld* World, const FVector& StartLcation,
+	FISHYUTILS_API void DrawDebugDirectionalArrowWithMiddleTextFrame(const UWorld* World, const FVector& StartLocation,
 		const FVector& ScaledDirection, FColor LineColor, const FString& Text, FColor TextColor,
 		float ArrowSize = 2, float Thickness = 2, float FontScale = 2, uint8 DepthPriority = 0);
 
