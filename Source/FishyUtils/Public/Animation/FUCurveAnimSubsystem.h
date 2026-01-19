@@ -1,4 +1,4 @@
-// By hzFishy 2025 - Do whatever you want with it
+// By hzFishy - 2026 - Do whatever you want with it.
 // Special thanks to TomLooman who inspired this system (see https://github.com/tomlooman/ActionRoguelike)
 
 #pragma once
