@@ -142,7 +142,7 @@ namespace FU::Utils
 		template <typename... Types>
 		FFUMessageBuilder& NewLinef(UE::Core::TCheckedFormatString<FString::FmtCharType, Types...> Fmt, Types... Args)
 		{
-			return NewLinef(FString::Printf(Fmt, Args...));
+			return NewLine(FString::Printf(Fmt, Args...));
 		}
 #else
 		template <typename FmtType, typename... Types>
