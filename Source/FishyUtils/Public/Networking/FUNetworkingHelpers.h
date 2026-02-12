@@ -12,3 +12,8 @@
 #define FU_NET_MARKDIRTY_ONREPCALL(PropertyName) \
 	FU_NET_MARKDIRTY(PropertyName) \
 	OnRep_##PropertyName() \
+
+/** Call dirty for push model and call OnRep func with old value (usually for listen servers) */
+#define FU_NET_MARKDIRTY_ONREPCALL_WITHOLD(PropertyName, OldValue) \
+	FU_NET_MARKDIRTY(PropertyName) \
+	OnRep_##PropertyName(OldValue) \
