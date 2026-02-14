@@ -5,3 +5,5 @@
   - `git clone https://github.com/hzFishy/FishyUtils.git`
   - `git clone https://github.com/aquanox/BlueprintComponentReferencePlugin.git`
 4. Now you can include `FishyUtils` in your project (or any other plugin) and use it
+
+If you really don't want to add `BlueprintComponentReferencePlugin` to you project, you can still clone this repo only and manually edit a few files (and remove some of them) to avoid the dependency.
