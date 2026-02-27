@@ -4,19 +4,98 @@
 #include "Draw/FUDraw.h"
 #include "Components/BillboardComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/LineBatchComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Utility/FUOrientedBox.h"
 
 
-void FU::Draw::DrawDebugSphere(const UWorld* World, const FVector& Location, float Radius, FColor Color, float Time,
-	float Thickness, uint8 DepthPriority)
+ULineBatchComponent* FU::Draw::GetDebugLineBatcher(const UWorld* InWorld, float LifeTime, bool bDepthIsForeground)
 {
-	DrawDebugSphere(World, Location, Radius, 10, Color, false, Time, DepthPriority, Thickness);
+	if (InWorld)
+	{
+		if (LifeTime < 0)
+		{
+			return bDepthIsForeground ? InWorld->GetLineBatcher(UWorld::ELineBatcherType::ForegroundPersistent) : InWorld->GetLineBatcher(UWorld::ELineBatcherType::WorldPersistent);
+		}
+		else
+		{
+			return bDepthIsForeground ? InWorld->GetLineBatcher(UWorld::ELineBatcherType::Foreground) : InWorld->GetLineBatcher(UWorld::ELineBatcherType::World);
+		}
+	}
+	
+	return nullptr;
+}
+
+void FU::Draw::ClearDrawDebugGroup(const UWorld* World, uint32 BatchID)
+{
+	World->GetLineBatcher(UWorld::ELineBatcherType::ForegroundPersistent)->ClearBatch(BatchID);
+	World->GetLineBatcher(UWorld::ELineBatcherType::WorldPersistent)->ClearBatch(BatchID);
+	World->GetLineBatcher(UWorld::ELineBatcherType::Foreground)->ClearBatch(BatchID);
+	World->GetLineBatcher(UWorld::ELineBatcherType::World)->ClearBatch(BatchID);
+}
+
+
+void FU::Draw::DrawDebugSphere(const UWorld* World, const FVector& Location, float Radius, FColor Color, float Time,
+	float Thickness, uint8 DepthPriority, uint32 BatchID)
+{
+	if (ULineBatchComponent* const LineBatcher = GetDebugLineBatcher(World, Time, (DepthPriority == SDPG_Foreground)))
+	{
+		LineBatcher->DrawSphere(Location, Radius, 10, Color, Time, DepthPriority, Thickness, BatchID);
+	}
 }
 void FU::Draw::DrawDebugSphereFrame(const UWorld* World, const FVector& Location, float Radius, FColor Color,
 	float Thickness, uint8 DepthPriority)
 {
 	FU::Draw::DrawDebugSphere(World, Location, Radius, Color, 0, Thickness, DepthPriority);
+}
+
+
+void FU::Draw::DrawDebugCircle(const UWorld* World, const FVector& Location, float Radius, const FColor& Color, 
+	float Time, float Thickness, uint8 DepthPriority, uint32 BatchID, bool bDrawAxis, FVector YAxis, FVector ZAxis)
+{
+	FMatrix TransformMatrix;
+	TransformMatrix.SetOrigin(Location);
+	TransformMatrix.SetAxis(0, FVector(1,0,0));
+	TransformMatrix.SetAxis(1, YAxis);
+	TransformMatrix.SetAxis(2, ZAxis);
+	
+	int32 Segments = 20;
+	
+	if (ULineBatchComponent* const LineBatcher = GetDebugLineBatcher(World, Time, (DepthPriority == SDPG_Foreground)))
+	{
+		// Need at least 4 segments
+		Segments = FMath::Max(Segments, 4);
+		const float AngleStep = 2.f * UE_PI / float(Segments);
+
+		const FVector Center = TransformMatrix.GetOrigin();
+		const FVector AxisY = TransformMatrix.GetScaledAxis(EAxis::Y);
+		const FVector AxisZ = TransformMatrix.GetScaledAxis(EAxis::Z);
+
+		TArray<FBatchedLine> Lines;
+		Lines.Reserve(Segments);
+		
+		float Angle = 0.f;
+		while (Segments--)
+		{
+			const FVector Vertex1 = Center + Radius * (AxisY * FMath::Cos(Angle) + AxisZ * FMath::Sin(Angle));
+			Angle += AngleStep;
+			const FVector Vertex2 = Center + Radius * (AxisY * FMath::Cos(Angle) + AxisZ * FMath::Sin(Angle));
+			Lines.Add(FBatchedLine(Vertex1, Vertex2, Color, Time, Thickness, DepthPriority, BatchID));
+		}
+		
+		if (bDrawAxis)
+		{
+			Lines.Add(FBatchedLine(Center - Radius * AxisY, Center + Radius * AxisY, Color, Time, Thickness, DepthPriority, BatchID));
+			Lines.Add(FBatchedLine(Center - Radius * AxisZ, Center + Radius * AxisZ, Color, Time, Thickness, DepthPriority, BatchID));
+		}
+		
+		LineBatcher->DrawLines(Lines);
+	}
+}
+void FU::Draw::DrawDebugCircleFrame(const UWorld* World, const FVector& Location, float Radius, const FColor& Color, 
+	float Thickness, uint8 DepthPriority, uint32 BatchID, bool bDrawAxis, FVector YAxis, FVector ZAxis)
+{
+	FU::Draw::DrawDebugCircle(World, Location, Radius, Color, 0, Thickness, DepthPriority, BatchID, bDrawAxis, YAxis, ZAxis);
 }
 
 
@@ -44,7 +123,7 @@ void FU::Draw::DrawDebugBoxFrame(const UWorld* World, const FVector& Location, f
 
 
 void FU::Draw::DrawDebugLine(const UWorld* World, const FVector& StartLocation, const FVector& EndLocation,
-	FColor Color, float Time, float Thickness, uint8 DepthPriority)
+	FColor Color, float Time, float Thickness, uint8 DepthPriority, uint32 BatchID)
 {
 	// For some reasons if you try to draw debug an arrow/line with a depth priority above 1 for more than a frame (Time > 0) it will only be drawn for a single frame
 	// As a temporary fix we reset the DepthPriority to 0 so the drawing lasts as much as requested 
@@ -54,12 +133,17 @@ void FU::Draw::DrawDebugLine(const UWorld* World, const FVector& StartLocation, 
 		DepthPriority = 0;
 	}
 	
+	if (ULineBatchComponent* const LineBatcher = GetDebugLineBatcher(World, Time, (DepthPriority == SDPG_Foreground)))
+	{
+		LineBatcher->DrawLine(StartLocation, EndLocation, Color, DepthPriority, Thickness, Time, BatchID);
+	}
+	
 	DrawDebugLine(World, StartLocation, EndLocation, Color, false, Time, DepthPriority, Thickness);
 }
 void FU::Draw::DrawDebugLineFrame(const UWorld* World, const FVector& StartLocation, const FVector& EndLocation,
-	FColor Color, float Thickness, uint8 DepthPriority)
+	FColor Color, float Thickness, uint8 DepthPriority, uint32 BatchID)
 {
-	FU::Draw::DrawDebugLine(World, StartLocation, EndLocation, Color, 0, Thickness, DepthPriority);
+	FU::Draw::DrawDebugLine(World, StartLocation, EndLocation, Color, 0, Thickness, DepthPriority, BatchID);
 }
 
 
@@ -254,14 +338,18 @@ void FU::Draw::DrawDebugPlaneFrame(const UWorld* World, const FVector& Location,
 
 
 void FU::Draw::DrawDebugPoint(const UWorld* World, const FVector& Position, float Size, FColor Color,
-	float Time, uint8 DepthPriority)
+	float Time, uint8 DepthPriority, uint32 BatchID)
 {
+	if (ULineBatchComponent* const LineBatcher = GetDebugLineBatcher(World, Time, (DepthPriority == SDPG_Foreground)))
+	{
+		LineBatcher->DrawPoint(Position, Color, Size, DepthPriority, Time, BatchID);
+	}
 	DrawDebugPoint(World, Position, Size, Color, false, Time, DepthPriority);
 }
 void FU::Draw::DrawDebugPointFrame(const UWorld* World, const FVector& Position, float Size, FColor Color,
-	uint8 DepthPriority)
+	uint8 DepthPriority, uint32 BatchID)
 {
-	FU::Draw::DrawDebugPoint(World, Position, Size, Color, 0, DepthPriority);
+	FU::Draw::DrawDebugPoint(World, Position, Size, Color, 0, DepthPriority, BatchID);
 }
 
 

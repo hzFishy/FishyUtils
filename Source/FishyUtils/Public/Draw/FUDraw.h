@@ -7,11 +7,25 @@ class UCapsuleComponent;
 
 namespace FU::Draw
 {
+	ULineBatchComponent* GetDebugLineBatcher(const UWorld* InWorld, float LifeTime, bool bDepthIsForeground);
+	
+	/** Be sure to make your BatchID unique across all line batches type */
+	FISHYUTILS_API void ClearDrawDebugGroup(const UWorld* World, uint32 BatchID);
+	
+	
 	FISHYUTILS_API void DrawDebugSphere(const UWorld* World, const FVector& Location, float Radius, FColor Color,
-		float Time, float Thickness = 2, uint8 DepthPriority = 0);
+		float Time, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	FISHYUTILS_API void DrawDebugSphereFrame(const UWorld* World, const FVector& Location, float Radius, FColor Color,
 		float Thickness = 2, uint8 DepthPriority = 0);
 
+	
+	FISHYUTILS_API void DrawDebugCircle(const UWorld* World, const FVector& Location, float Radius, const FColor& Color, 
+		float Time, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0, bool bDrawAxis = false, 
+		FVector YAxis = FVector(0,1,0), FVector ZAxis = FVector(1,0,0));
+	FISHYUTILS_API void DrawDebugCircleFrame(const UWorld* World, const FVector& Location, float Radius, const FColor& Color,
+		float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0, bool bDrawAxis = false, 
+		FVector YAxis = FVector(0,1,0), FVector ZAxis = FVector(1,0,0));
+	
 	
 	FISHYUTILS_API void DrawDebugBox(const UWorld* World, const FVector& Location, const FVector& Extent,
 		const FQuat& Rotation, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0);
@@ -25,9 +39,9 @@ namespace FU::Draw
 
 	
 	FISHYUTILS_API void DrawDebugLine(const UWorld* World, const FVector& StartLocation, const FVector& EndLocation,
-		FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0);
+		FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	FISHYUTILS_API void DrawDebugLineFrame(const UWorld* World, const FVector& StartLocation, const FVector& EndLocation,
-		FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
+		FColor Color, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 
 	
 	FISHYUTILS_API void DrawDebugLineWithMiddleText(const UWorld* World, float Time, const FVector& LineStartLocation,
@@ -99,9 +113,9 @@ namespace FU::Draw
 
 
 	FISHYUTILS_API void DrawDebugPoint(const UWorld* World, const FVector& Position, float Size, FColor Color,
-		float Time, uint8 DepthPriority = 0);
+		float Time, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	FISHYUTILS_API void DrawDebugPointFrame(const UWorld* World, const FVector& Position, float Size, FColor Color,
-		uint8 DepthPriority = 0);
+		uint8 DepthPriority = 0, uint32 BatchID = 0);
 	
 	
 	/**
