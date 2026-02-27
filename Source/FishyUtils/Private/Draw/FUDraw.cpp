@@ -278,7 +278,7 @@ void FU::Draw::DrawDebugBodyInstanceFrame(const UWorld* World, const FBodyInstan
 
 
 void FU::Draw::DrawDebugPlane(const UWorld* World, const FVector& Location, const FVector2D& Extents,
-	FColor Color, float Time, uint8 DepthPriority, bool bDrawNormal, FColor NormalColor, float NormalArrowSize)
+	FColor Color, float Time, uint8 DepthPriority, bool bDrawNormal, FColor NormalColor, float NormalArrowSize,  uint32 BatchID)
 {
 	// main code copied from engine DrawDebugSolidPlane
 
@@ -302,10 +302,13 @@ void FU::Draw::DrawDebugPlane(const UWorld* World, const FVector& Location, cons
 	Indices.AddUninitialized(6);
 	Indices[0] = 0; Indices[1] = 2; Indices[2] = 1;
 	Indices[3] = 1; Indices[4] = 2; Indices[5] = 3;
-
+	
 	// plane quad
-	DrawDebugMesh(World, Verts, Indices, Color, false, Time, DepthPriority);
-
+	if (ULineBatchComponent* const LineBatcher = GetDebugLineBatcher(World, Time, false))
+	{
+		LineBatcher->DrawMesh(Verts, Indices, Color, DepthPriority, Time, BatchID);
+	}
+	
 	// arrow indicating normal
 	if (bDrawNormal)
 	{
@@ -320,20 +323,20 @@ void FU::Draw::DrawDebugPlane(const UWorld* World, const FVector& Location, cons
 	}
 }
 void FU::Draw::DrawDebugPlaneFrame(const UWorld* World, const FVector& Location,
-	const FVector2D& Extents, FColor Color, uint8 DepthPriority, bool bDrawNormal, FColor NormalColor, float NormalArrowSize)
+	const FVector2D& Extents, FColor Color, uint8 DepthPriority, bool bDrawNormal, FColor NormalColor, float NormalArrowSize,  uint32 BatchID)
 {
-	FU::Draw::DrawDebugPlane(World, Location, Extents, Color, 0, DepthPriority);
+	FU::Draw::DrawDebugPlane(World, Location, Extents, Color, 0, DepthPriority, bDrawNormal, NormalColor, NormalArrowSize, BatchID);
 }
 
 void FU::Draw::DrawDebugPlane(const UWorld* World, const FVector& Location, float Extents,
-	FColor Color, float Time, uint8 DepthPriority, bool bDrawNormal, FColor NormalColor, float NormalArrowSize)
+	FColor Color, float Time, uint8 DepthPriority, bool bDrawNormal, FColor NormalColor, float NormalArrowSize,  uint32 BatchID)
 {
-	FU::Draw::DrawDebugPlane(World, Location, FVector2D(Extents, Extents), Color, Time, DepthPriority);
+	FU::Draw::DrawDebugPlane(World, Location, FVector2D(Extents, Extents), Color, Time, DepthPriority, bDrawNormal, NormalColor, NormalArrowSize, BatchID);
 }
 void FU::Draw::DrawDebugPlaneFrame(const UWorld* World, const FVector& Location, float Extents,
-	FColor Color, uint8 DepthPriority, bool bDrawNormal, FColor NormalColor, float NormalArrowSize)
+	FColor Color, uint8 DepthPriority, bool bDrawNormal, FColor NormalColor, float NormalArrowSize,  uint32 BatchID)
 {
-	FU::Draw::DrawDebugPlane(World, Location, Extents, Color, 0, DepthPriority);
+	FU::Draw::DrawDebugPlane(World, Location, Extents, Color, 0, DepthPriority, bDrawNormal, NormalColor, NormalArrowSize, BatchID);
 }
 
 

@@ -99,17 +99,17 @@ namespace FU::Draw
 	
 	FISHYUTILS_API void DrawDebugPlane(const UWorld* World, const FVector& Location,
 		const FVector2D& Extents, FColor Color, float Time, uint8 DepthPriority = 0, bool bDrawNormal = false,
-		FColor NormalColor = FColor::White, float NormalArrowSize = 8);
+		FColor NormalColor = FColor::White, float NormalArrowSize = 8,  uint32 BatchID = 0);
 	FISHYUTILS_API void DrawDebugPlaneFrame(const UWorld* World, const FVector& Location,
 		const FVector2D& Extents, FColor Color, uint8 DepthPriority = 0, bool bDrawNormal = false,
-		FColor NormalColor = FColor::White, float NormalArrowSize = 8);
+		FColor NormalColor = FColor::White, float NormalArrowSize = 8,  uint32 BatchID = 0);
 	
 	FISHYUTILS_API void DrawDebugPlane(const UWorld* World, const FVector& Location,
 		float Extents, FColor Color, float Time, uint8 DepthPriority = 0, bool bDrawNormal = false,
-		FColor NormalColor = FColor::White, float NormalArrowSize = 8);
+		FColor NormalColor = FColor::White, float NormalArrowSize = 8,  uint32 BatchID = 0);
 	FISHYUTILS_API void DrawDebugPlaneFrame(const UWorld* World, const FVector& Location,
 		float Extents, FColor Color, uint8 DepthPriority = 0, bool bDrawNormal = false,
-		FColor NormalColor = FColor::White, float NormalArrowSize = 8);
+		FColor NormalColor = FColor::White, float NormalArrowSize = 8,  uint32 BatchID = 0);
 
 
 	FISHYUTILS_API void DrawDebugPoint(const UWorld* World, const FVector& Position, float Size, FColor Color,
