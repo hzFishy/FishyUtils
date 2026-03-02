@@ -4,6 +4,7 @@
 
 #include "GameplayTagContainer.h"
 #include "Engine/AssetManager.h"
+#include "Misc/EngineVersionComparison.h"
 
 
 namespace FU::Utils
@@ -120,11 +121,11 @@ namespace FU::Utils
 		
 		FFUMessageBuilder& Append(bool bCond, FString Text);
 		
-#if ENGINE_MINOR_VERSION > 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 6, 0)
 		template <typename... Types>
 		FFUMessageBuilder& Appendf(UE::Core::TCheckedFormatString<FString::FmtCharType, Types...> Fmt, Types... Args)
 		{
-			return Appendf(FString::Printf(Fmt, Args...));
+			return Append(FString::Printf(Fmt, Args...));
 		}
 #else
 		template <typename FmtType, typename... Types>
@@ -138,7 +139,7 @@ namespace FU::Utils
 		
 		FFUMessageBuilder& NewLine(bool bCond, FString Text);
 		
-#if ENGINE_MINOR_VERSION > 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 6, 0)
 		template <typename... Types>
 		FFUMessageBuilder& NewLinef(UE::Core::TCheckedFormatString<FString::FmtCharType, Types...> Fmt, Types... Args)
 		{
@@ -151,7 +152,7 @@ namespace FU::Utils
 			return NewLine(FString::Printf(Fmt, Args...));
 		}
 #endif
-		const FString GetMessage() const { return Message; }; 
+		const FString& GetMessage() const { return Message; }; 
 		
 	protected:
 		FString Message;

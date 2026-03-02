@@ -419,7 +419,7 @@ FU::Utils::FFUMessageBuilder::FFUMessageBuilder() {}
 
 FU::Utils::FFUMessageBuilder::FFUMessageBuilder(FString InitalText)
 {
-	Append(InitalText);
+	Message = InitalText;
 }
 
 FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::Append(FString Text)
