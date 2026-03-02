@@ -146,7 +146,7 @@ namespace FU_Console
 /** Get first instance of given actor class in editor/game world and run given function with optional args */
 #define FU_CMD_RUNFUNC_ACTOR_SINGLE(Id, Cmd, CmdHelp, ActorClass, FuncName, ...) \
     FU_Console::FFUAutoConsoleCommand C##Id(Cmd, CmdHelp, \
-        FConsoleCommandDelegate::CreateLambda([]() \
+        FConsoleCommandDelegate::CreateLambda([] () \
         { \
 			for (auto It = TActorIterator<ActorClass>(GWorld); It; ++It) \
 			{ \
@@ -162,7 +162,7 @@ namespace FU_Console
 /** Get all instances of given actor class in editor/game world and run given function with optional args */
 #define FU_CMD_RUNFUNC_ACTOR_ALL(Id, Cmd, CmdHelp, ActorClass, FuncName, ...) \
     FU_Console::FFUAutoConsoleCommand C##Id(Cmd, CmdHelp, \
-        FConsoleCommandDelegate::CreateLambda([]() \
+        FConsoleCommandDelegate::CreateLambda([] () \
         { \
 			for (auto It = TActorIterator<ActorClass>(GWorld); It; ++It) \
 			{ \
@@ -177,7 +177,7 @@ namespace FU_Console
 /** Get first instance of given UObject class in editor/game world (excludes CDOs and Archetypes) and run given function with optional args */
 #define FU_CMD_RUNFUNC_OBJECT_SINGLE(Id, Cmd, CmdHelp, ObjectClass, FuncName, ...) \
     FU_Console::FFUAutoConsoleCommand C##Id(Cmd, CmdHelp, \
-        FConsoleCommandDelegate::CreateLambda([]() \
+        FConsoleCommandDelegate::CreateLambda([] () \
         { \
 			for (auto It = TObjectIterator<ObjectClass>(EObjectFlags::RF_ClassDefaultObject | EObjectFlags::RF_ArchetypeObject); It; ++It) \
 			{ \
@@ -193,7 +193,7 @@ namespace FU_Console
 /** Get first instance of given UObject class in editor/game world (excludes CDOs and Archetypes) and run given function with optional args */
 #define FU_CMD_RUNFUNC_OBJECT_ALL(Id, Cmd, CmdHelp, ObjectClass, FuncName, ...) \
     FU_Console::FFUAutoConsoleCommand C##Id(Cmd, CmdHelp, \
-        FConsoleCommandDelegate::CreateLambda([]() \
+        FConsoleCommandDelegate::CreateLambda([] () \
         { \
 			for (auto It = TObjectIterator<ObjectClass>(EObjectFlags::RF_ClassDefaultObject | EObjectFlags::RF_ArchetypeObject); It; ++It) \
 			{ \
@@ -204,7 +204,38 @@ namespace FU_Console
 			} \
         }) \
     ); \
-
+    
+	/** Get first instance of given UObject class in editor/game world (excludes CDOs and Archetypes) and run given function with input args */
+#define FU_CMD_RUNFUNC_OBJECT_SINGLE_WITH_ARGS(Id, Cmd, CmdHelp, ObjectClass, FuncName) \
+    FU_Console::FFUAutoConsoleCommandWithArgs C##Id(Cmd, CmdHelp, \
+        FConsoleCommandWithArgsDelegate::CreateLambda([] (const TArray<FString>& Args) \
+        { \
+			for (auto It = TObjectIterator<ObjectClass>(EObjectFlags::RF_ClassDefaultObject | EObjectFlags::RF_ArchetypeObject); It; ++It) \
+			{ \
+				if (IsValid(*It) && It->GetWorld() == GWorld) \
+				{ \
+					It->FuncName(Args); \
+					break; \
+				} \
+			} \
+        }) \
+    ); \
+	
+	/** Get first instance of given UObject class in editor/game world (excludes CDOs and Archetypes) and run given function with input args */
+#define FU_CMD_RUNFUNC_OBJECT_ALL_WITH_ARGS(Id, Cmd, CmdHelp, ObjectClass, FuncName) \
+    FU_Console::FFUAutoConsoleCommandWithArgs C##Id(Cmd, CmdHelp, \
+        FConsoleCommandWithArgsDelegate::CreateLambda([] (const TArray<FString>& Args) \
+        { \
+			for (auto It = TObjectIterator<ObjectClass>(EObjectFlags::RF_ClassDefaultObject | EObjectFlags::RF_ArchetypeObject); It; ++It) \
+			{ \
+				if (IsValid(*It) && It->GetWorld() == GWorld) \
+				{ \
+					It->FuncName(Args); \
+				} \
+			} \
+        }) \
+    ); \
+	
 #define FU_CMD_RUNLAMBDA(Id, Cmd, CmdHelp, LambdaBody) \
     FU_Console::FFUAutoConsoleCommand C##Id(Cmd, CmdHelp, \
         FConsoleCommandDelegate::CreateLambda([]() \
