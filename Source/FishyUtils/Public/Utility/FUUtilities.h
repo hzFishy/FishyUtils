@@ -287,5 +287,24 @@ namespace FU::Utils
 		FISHYUTILS_API bool IsPointInSphere(const FVector& Center, float Radius, const FVector& Point);
 	}
 
-	FISHYUTILS_API void ArrayToString(const TArray<FString>& Array, FString& OutString, FString Separator);
+	FISHYUTILS_API void ArrayToString(const TArray<FString>& Array, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]");
+	
+	/** 
+	 * Example:
+	 * FU::Utils::ArrayToStringTemplate<FIntVector2>(CellsPath, [] (const FIntVector2 Coords) { return Coords.ToString(); }, CellPathString);
+	 */
+	template<typename T>
+	void ArrayToStringTemplate(const TArray<T>& Array, TFunction<FString(const T&)> ToStringFunc, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]")
+	{
+		OutString = Prefix;
+		for (int32 i = 0; i < Array.Num(); i++)
+		{
+			OutString += ToStringFunc(Array[i]);
+			if (i != Array.Num() - 1)
+			{
+				OutString += Separator;
+			}
+		}
+		OutString += Suffix;
+	}
 }

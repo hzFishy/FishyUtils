@@ -456,18 +456,10 @@ bool FU::Utils::IsTransformIdentity(const FTransform& Transform)
 	return Transform.GetLocation().IsZero() && Transform.GetRotation().IsIdentity() && Transform.GetScale3D() == FVector::OneVector;
 }
 
-void FU::Utils::ArrayToString(const TArray<FString>& Array, FString& OutString, FString Separator)
+void FU::Utils::ArrayToString(const TArray<FString>& Array, FString& OutString, const FString& Separator, const FString& Prefix, const FString& Suffix)
 {
-	for (int32 i = 0; i < Array.Num(); i++)
-	{
-		OutString += Array[i];
-		if (i != Array.Num() - 1)
-		{
-			OutString += Separator;
-		}
-	}
+	ArrayToStringTemplate<FString>(Array, [] (const FString& String) { return String; }, OutString, Separator, Prefix, Suffix);
 }
-
 
 bool FU::Utils::Math::IsPointInSphere(const FVector& Center, float Radius, const FVector& Point)
 {
