@@ -17,6 +17,30 @@ class FISHYUTILS_API UFUUtilityLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 	
 public:
+	UFUNCTION(BlueprintPure, meta=(DisplayName = "IntVector2 + IntVector2", CompactNodeTitle = "+", ScriptMethod = "Add", ScriptOperator = "+;+=", Keywords = "+ add plus", CommutativeAssociativeBinaryOperator = "true"), Category="Math|IntVector2")
+	static FIntVector2 Add_IntVector2IntVector2(FIntVector2 A, FIntVector2 B);
+
+	UFUNCTION(BlueprintPure, meta=(DisplayName = "IntVector2 - IntVector2", CompactNodeTitle = "-", ScriptMethod = "Subtract", ScriptOperator = "-;-=", Keywords = "- subtract minus", CommutativeAssociativeBinaryOperator = "true"), Category="Math|IntVector2")
+	static FIntVector2 Substract_IntVector2IntVector2(FIntVector2 A, FIntVector2 B);
+
+	UFUNCTION(BlueprintPure, meta=(DisplayName = "IntVector2 * IntVector2", CompactNodeTitle = "*", ScriptMethod = "Multiply", ScriptOperator = "*;*=", Keywords = "+ multiply", CommutativeAssociativeBinaryOperator = "true"), Category="Math|IntVector2")
+	static FIntVector2 Multiply_IntVector2IntVector2(FIntVector2 A, FIntVector2 B);
+
+	UFUNCTION(BlueprintPure, meta=(DisplayName = "IntVector2 / IntVector2", CompactNodeTitle = "/", ScriptMethod = "Divide", ScriptOperator = "/;/=", Keywords = "/ divide division", CommutativeAssociativeBinaryOperator = "true"), Category="Math|IntVector2")
+	static FIntVector2 Divide_IntVector2IntVector2(FIntVector2 A, FIntVector2 B);
+
+	UFUNCTION(BlueprintPure, meta=(DisplayName = "IntVector + IntVector", CompactNodeTitle = "+", ScriptMethod = "Add", ScriptOperator = "+;+=", Keywords = "+ add plus", CommutativeAssociativeBinaryOperator = "true"), Category="Math|IntVector")
+	static FIntVector Add_IntVectorIntVector(FIntVector A, FIntVector B);
+
+	UFUNCTION(BlueprintPure, meta=(DisplayName = "IntVector - IntVector", CompactNodeTitle = "-", ScriptMethod = "Subtract", ScriptOperator = "-;-=", Keywords = "- subtract minus", CommutativeAssociativeBinaryOperator = "true"), Category="Math|IntVector")
+	static FIntVector Substract_IntVectorIntVector(FIntVector A, FIntVector B);
+
+	UFUNCTION(BlueprintPure, meta=(DisplayName = "IntVector * IntVector", CompactNodeTitle = "*", ScriptMethod = "Multiply", ScriptOperator = "*;*=", Keywords = "+ multiply", CommutativeAssociativeBinaryOperator = "true"), Category="Math|IntVector")
+	static FIntVector Multiply_IntVectorIntVector(FIntVector A, FIntVector B);
+
+	UFUNCTION(BlueprintPure, meta=(DisplayName = "IntVector / IntVector", CompactNodeTitle = "/", ScriptMethod = "Divide", ScriptOperator = "/;/=", Keywords = "/ divide division", CommutativeAssociativeBinaryOperator = "true"), Category="Math|IntVector")
+	static FIntVector Divide_IntVectorIntVector(FIntVector A, FIntVector B);
+
 	UFUNCTION(BlueprintPure, meta=(DisplayName = "rotator + rotator", CompactNodeTitle = "+", ScriptMethod = "Add", ScriptOperator = "+;+=", Keywords = "+ add plus", CommutativeAssociativeBinaryOperator = "true"), Category="Math|Rotator")
 	static FRotator Add_RotatorRotator(FRotator A, FRotator B);
 

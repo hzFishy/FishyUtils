@@ -6,6 +6,46 @@
 #include "Kismet/GameplayStatics.h"
 
 
+FIntVector2 UFUUtilityLibrary::Add_IntVector2IntVector2(FIntVector2 A, FIntVector2 B)
+{
+	return A + B;
+}
+
+FIntVector2 UFUUtilityLibrary::Substract_IntVector2IntVector2(FIntVector2 A, FIntVector2 B)
+{
+	return A - B;
+}
+
+FIntVector2 UFUUtilityLibrary::Multiply_IntVector2IntVector2(FIntVector2 A, FIntVector2 B)
+{
+	return A * B;
+}
+
+FIntVector2 UFUUtilityLibrary::Divide_IntVector2IntVector2(FIntVector2 A, FIntVector2 B)
+{
+	return FIntVector2(A.X / B.X, A.Y / B.Y);
+}
+
+FIntVector UFUUtilityLibrary::Add_IntVectorIntVector(FIntVector A, FIntVector B)
+{
+	return A + B;
+}
+
+FIntVector UFUUtilityLibrary::Substract_IntVectorIntVector(FIntVector A, FIntVector B)
+{
+	return A - B;
+}
+
+FIntVector UFUUtilityLibrary::Multiply_IntVectorIntVector(FIntVector A, FIntVector B)
+{
+	return A * B;
+}
+
+FIntVector UFUUtilityLibrary::Divide_IntVectorIntVector(FIntVector A, FIntVector B)
+{
+	return FIntVector(A.X / B.X, A.Y / B.Y, A.Z / B.Z);
+}
+
 FRotator UFUUtilityLibrary::Add_RotatorRotator(FRotator A, FRotator B)
 {
 	return A + B;
