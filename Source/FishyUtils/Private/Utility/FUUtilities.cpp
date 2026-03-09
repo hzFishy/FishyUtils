@@ -64,16 +64,15 @@ FString FU::Utils::GetObjectDetailedName(const UObject* Object)
 	{
 		FString BaseString = "";
 
-		if (const AActor* Actor = Cast<AActor>(Object))
+		if (const auto* Actor = Cast<AActor>(Object))
 		{
 			// if we are an actor in dev build we can get the label
 			
 			BaseString += Actor->GetActorNameOrLabel();
 		}
-		else if (const UActorComponent* Component = Cast<UActorComponent>(Object))
+		else if (const auto* Component = Cast<UActorComponent>(Object))
 		{
 			// if we are an actor component we combine to ActorName-ComponentName
-			
 			const AActor* OwningActor = Component->GetOwner();
 			if (OwningActor)
 			{
@@ -81,6 +80,13 @@ FString FU::Utils::GetObjectDetailedName(const UObject* Object)
 				BaseString += "-";
 			}
 				
+			BaseString += Object->GetName();
+		}
+		else if (const auto* OwnerActor = Cast<AActor>(Object->GetOuter()))
+		{
+			// if we have an actor as owner we combine to ActorName-ObjectName
+			BaseString += OwnerActor->GetActorNameOrLabel();
+			BaseString += "-";
 			BaseString += Object->GetName();
 		}
 		else
