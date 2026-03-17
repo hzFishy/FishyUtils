@@ -9,6 +9,20 @@
 #include "Utility/FUOrientedBox.h"
 
 
+FU::Draw::FFURectangle::FFURectangle(): 
+	Corner1(FVector::ZeroVector), 
+	Corner2(FVector::ZeroVector), 
+	Corner3(FVector::ZeroVector), 
+	Corner4(FVector::ZeroVector)
+{}
+
+FU::Draw::FFURectangle::FFURectangle(FVector InCorner1, FVector InCorner2, FVector InCorner3, FVector InCorner4): 
+	Corner1(InCorner1), 
+	Corner2(InCorner2), 
+	Corner3(InCorner3), 
+	Corner4(InCorner4)
+{}
+
 ULineBatchComponent* FU::Draw::GetDebugLineBatcher(const UWorld* InWorld, float LifeTime, bool bDepthIsForeground)
 {
 	if (InWorld)
@@ -430,4 +444,33 @@ void FU::Draw::DrawDebugOrientedActorPrimitiveComponentsFrame(const UWorld* Worl
 	float Thickness, uint8 DepthPriority, TArray<UClass*>* IgnoredClasses)
 {
 	FU::Draw::DrawDebugOrientedActorPrimitiveComponents(World, Actor, Color, 0, Thickness, DepthPriority, IgnoredClasses);
+}
+
+void FU::Draw::DrawDebugRectangle(const UWorld* World, FFURectangle Rectangle, FColor Color, float Time, float Thickness, uint8 DepthPriority, uint32 BatchID)
+{
+	if (ULineBatchComponent* const LineBatcher = GetDebugLineBatcher(World, Time, (DepthPriority == SDPG_Foreground)))
+	{
+		LineBatcher->DrawLine(Rectangle.Corner1, Rectangle.Corner2, Color, DepthPriority, Thickness, Time, BatchID);
+		LineBatcher->DrawLine(Rectangle.Corner2, Rectangle.Corner3, Color, DepthPriority, Thickness, Time, BatchID);
+		LineBatcher->DrawLine(Rectangle.Corner3, Rectangle.Corner4, Color, DepthPriority, Thickness, Time, BatchID);
+		LineBatcher->DrawLine(Rectangle.Corner4, Rectangle.Corner1, Color, DepthPriority, Thickness, Time, BatchID);
+	}
+}
+
+void FU::Draw::DrawDebugRectangleFrame(const UWorld* World, FFURectangle Rectangle, FColor Color, float Thickness, uint8 DepthPriority, uint32 BatchID)
+{
+	FU::Draw::DrawDebugRectangle(World, Rectangle, Color, 0, Thickness, DepthPriority, BatchID);
+}
+
+void FU::Draw::DrawDebugRectangles(const UWorld* World, const TArray<FFURectangle>& Rectangles, FColor Color, float Time, float Thickness, uint8 DepthPriority, uint32 BatchID)
+{
+	for (auto& Rectangle : Rectangles)
+	{
+		FU::Draw::DrawDebugRectangle(World, Rectangle, Color, Time, Thickness, DepthPriority, BatchID);
+	}
+}
+
+void FU::Draw::DrawDebugRectanglesFrame(const UWorld* World, const TArray<FFURectangle>& Rectangles, FColor Color, float Thickness, uint8 DepthPriority, uint32 BatchID)
+{
+	FU::Draw::DrawDebugRectangles(World, Rectangles, Color, 0, Thickness, DepthPriority, BatchID);
 }
