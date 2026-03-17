@@ -13,7 +13,7 @@ ULineBatchComponent* FU::Draw::GetDebugLineBatcher(const UWorld* InWorld, float 
 {
 	if (InWorld)
 	{
-		if (LifeTime > 0)
+		if (LifeTime > 0 || LifeTime == -1)
 		{
 			return bDepthIsForeground ? InWorld->GetLineBatcher(UWorld::ELineBatcherType::ForegroundPersistent) : InWorld->GetLineBatcher(UWorld::ELineBatcherType::WorldPersistent);
 		}
