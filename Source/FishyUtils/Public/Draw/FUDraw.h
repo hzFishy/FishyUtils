@@ -39,14 +39,14 @@ namespace FU::Draw
 	
 	
 	FISHYUTILS_API void DrawDebugBox(const UWorld* World, const FVector& Location, const FVector& Extent,
-		const FQuat& Rotation, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0);
+		const FQuat& Rotation, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	FISHYUTILS_API void DrawDebugBoxFrame(const UWorld* World, const FVector& Location, const FVector& Extent,
-		const FQuat& Rotation, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
+		const FQuat& Rotation, FColor Color, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	
 	FISHYUTILS_API void DrawDebugBox(const UWorld* World, const FVector& Location, float HalfSize,
-		const FQuat& Rotation, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0);
+		const FQuat& Rotation, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	FISHYUTILS_API void DrawDebugBoxFrame(const UWorld* World, const FVector& Location, float HalfSize,
-		const FQuat& Rotation, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
+		const FQuat& Rotation, FColor Color, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 
 	
 	FISHYUTILS_API void DrawDebugLine(const UWorld* World, const FVector& StartLocation, const FVector& EndLocation,
