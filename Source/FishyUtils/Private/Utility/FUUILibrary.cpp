@@ -3,7 +3,9 @@
 
 #include "Utility/FUUILibrary.h"
 
+#include "Blueprint/UserWidget.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
+
 
 void UFUUILibrary::SetInputModeAndMouseVisibility(APlayerController* PlayerController, EFUInputMode NewInputMode,
 	EFUNewMouseVisibility NewMouseVisibility, bool bResetCursorToCenter)
@@ -39,7 +41,7 @@ void UFUUILibrary::SetInputModeAndMouseVisibility(APlayerController* PlayerContr
 			}
 			break;
 	}
-
+	
 	switch (NewMouseVisibility)
 	{
 		case EFUNewMouseVisibility::DontChange:
@@ -66,4 +68,64 @@ void UFUUILibrary::SetInputModeAndMouseVisibility(APlayerController* PlayerContr
 		int32 Y = FMath::TruncToInt(Size.Y / 2);
 		PlayerController->SetMouseLocation(X, Y);
 	}
+}
+
+void UFUUILibrary::SetMouseVisibility(APlayerController* PlayerController, EFUNewMouseVisibility NewMouseVisibility)
+{
+	switch (NewMouseVisibility)
+	{
+	case EFUNewMouseVisibility::DontChange:
+		{
+			
+		}
+		break;
+	case EFUNewMouseVisibility::Show:
+		{
+			PlayerController->SetShowMouseCursor(true);
+		}
+		break;
+	case EFUNewMouseVisibility::Hide:
+		{
+			PlayerController->SetShowMouseCursor(false);
+		}
+		break;
+	}
+}
+
+void UFUUILibrary::ResetMouseToCenter(APlayerController* PlayerController)
+{
+	FVector2D Size = UWidgetLayoutLibrary::GetViewportSize(PlayerController);
+	int32 X = FMath::TruncToInt(Size.X / 2);
+	int32 Y = FMath::TruncToInt(Size.Y / 2);
+	PlayerController->SetMouseLocation(X, Y);
+}
+
+void UFUUILibrary::SetUIOnlyInputMode(APlayerController* PlayerController, EMouseLockMode LockMouse, UUserWidget* WidgetToFocus)
+{
+	FInputModeUIOnly InputMode = FInputModeUIOnly();
+	InputMode.SetLockMouseToViewportBehavior(LockMouse);
+	if (IsValid(WidgetToFocus))
+	{
+		InputMode.SetWidgetToFocus(WidgetToFocus->GetCachedWidget());
+	}
+	PlayerController->SetInputMode(InputMode);
+}
+
+void UFUUILibrary::SetGameOnlyInputMode(APlayerController* PlayerController, bool bConsumeCaptureMouseDown)
+{
+	FInputModeGameOnly InputMode = FInputModeGameOnly();
+	InputMode.SetConsumeCaptureMouseDown(bConsumeCaptureMouseDown);
+	PlayerController->SetInputMode(InputMode);
+}
+
+void UFUUILibrary::SetGameAndUIInputMode(APlayerController* PlayerController, bool bHideCursorDuringCapture, EMouseLockMode LockMouse, UUserWidget* WidgetToFocus)
+{
+	FInputModeGameAndUI InputMode = FInputModeGameAndUI();
+	InputMode.SetHideCursorDuringCapture(bHideCursorDuringCapture);
+	InputMode.SetLockMouseToViewportBehavior(LockMouse);
+	if (IsValid(WidgetToFocus))
+	{
+		InputMode.SetWidgetToFocus(WidgetToFocus->GetCachedWidget());
+	}
+	PlayerController->SetInputMode(InputMode);
 }
