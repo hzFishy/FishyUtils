@@ -33,22 +33,22 @@ class FISHYUTILS_API UFUUILibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI", meta=(DefaultToSelf, HideSelfPin))
+	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI", meta=(DefaultToSelf=PlayerController, HideSelfPin))
 	static void SetInputModeAndMouseVisibility(APlayerController* PlayerController, EFUInputMode NewInputMode,
 		EFUNewMouseVisibility NewMouseVisibility, bool bResetCursorToCenter);
 	
-	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI", meta=(DefaultToSelf, HideSelfPin))
+	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI", meta=(DefaultToSelf=PlayerController, HideSelfPin))
 	static void SetMouseVisibility(APlayerController* PlayerController, EFUNewMouseVisibility NewMouseVisibility);
 	
-	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI", meta=(DefaultToSelf, HideSelfPin))
+	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI", meta=(DefaultToSelf=PlayerController, HideSelfPin))
 	static void ResetMouseToCenter(APlayerController* PlayerController);
 	
-	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI", meta=(DefaultToSelf, HideSelfPin))
+	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI", meta=(DefaultToSelf=PlayerController, HideSelfPin))
 	static void SetUIOnlyInputMode(APlayerController* PlayerController, EMouseLockMode LockMouse = EMouseLockMode::LockInFullscreen, UUserWidget* WidgetToFocus = nullptr);
 	
-	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI", meta=(DefaultToSelf, HideSelfPin))
+	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI", meta=(DefaultToSelf=PlayerController, HideSelfPin))
 	static void SetGameOnlyInputMode(APlayerController* PlayerController, bool bConsumeCaptureMouseDown = true);
 	
-	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI", meta=(DefaultToSelf, HideSelfPin))
+	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI", meta=(DefaultToSelf=PlayerController, HideSelfPin))
 	static void SetGameAndUIInputMode(APlayerController* PlayerController, bool bHideCursorDuringCapture = true, EMouseLockMode LockMouse = EMouseLockMode::DoNotLock, UUserWidget* WidgetToFocus = nullptr);
 };
