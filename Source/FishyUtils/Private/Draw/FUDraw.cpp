@@ -2,6 +2,8 @@
 
 
 #include "Draw/FUDraw.h"
+
+#include "MovieSceneSequencePlayer.h"
 #include "Components/BillboardComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/LineBatchComponent.h"
@@ -21,6 +23,13 @@ FU::Draw::FFURectangle::FFURectangle(FVector InCorner1, FVector InCorner2, FVect
 	Corner2(InCorner2), 
 	Corner3(InCorner3), 
 	Corner4(InCorner4)
+{}
+
+FU::Draw::FFUPolygon::FFUPolygon()
+{}
+
+FU::Draw::FFUPolygon::FFUPolygon(const TArray<FVector>& InOrderedCorners): 
+	OrderedCorners(InOrderedCorners)
 {}
 
 ULineBatchComponent* FU::Draw::GetDebugLineBatcher(const UWorld* InWorld, float LifeTime, bool bDepthIsForeground)
@@ -448,7 +457,7 @@ void FU::Draw::DrawDebugOrientedActorPrimitiveComponentsFrame(const UWorld* Worl
 	FU::Draw::DrawDebugOrientedActorPrimitiveComponents(World, Actor, Color, 0, Thickness, DepthPriority, IgnoredClasses);
 }
 
-void FU::Draw::DrawDebugRectangle(const UWorld* World, FFURectangle Rectangle, FColor Color, float Time, float Thickness, uint8 DepthPriority, uint32 BatchID)
+void FU::Draw::DrawDebugRectangle(const UWorld* World, const FFURectangle& Rectangle, FColor Color, float Time, float Thickness, uint8 DepthPriority, uint32 BatchID)
 {
 	if (ULineBatchComponent* const LineBatcher = GetDebugLineBatcher(World, Time, (DepthPriority == SDPG_Foreground)))
 	{
@@ -459,7 +468,7 @@ void FU::Draw::DrawDebugRectangle(const UWorld* World, FFURectangle Rectangle, F
 	}
 }
 
-void FU::Draw::DrawDebugRectangleFrame(const UWorld* World, FFURectangle Rectangle, FColor Color, float Thickness, uint8 DepthPriority, uint32 BatchID)
+void FU::Draw::DrawDebugRectangleFrame(const UWorld* World, const FFURectangle& Rectangle, FColor Color, float Thickness, uint8 DepthPriority, uint32 BatchID)
 {
 	FU::Draw::DrawDebugRectangle(World, Rectangle, Color, 0, Thickness, DepthPriority, BatchID);
 }
@@ -475,4 +484,45 @@ void FU::Draw::DrawDebugRectangles(const UWorld* World, const TArray<FFURectangl
 void FU::Draw::DrawDebugRectanglesFrame(const UWorld* World, const TArray<FFURectangle>& Rectangles, FColor Color, float Thickness, uint8 DepthPriority, uint32 BatchID)
 {
 	FU::Draw::DrawDebugRectangles(World, Rectangles, Color, 0, Thickness, DepthPriority, BatchID);
+}
+
+
+void FU::Draw::DrawDebugPloygon(const UWorld* World, const FFUPolygon& Polygon, FColor Color, float Time, float Thickness, uint8 DepthPriority, uint32 BatchID)
+{
+	if (ULineBatchComponent* const LineBatcher = GetDebugLineBatcher(World, Time, (DepthPriority == SDPG_Foreground)))
+	{
+		for (int32 i = 0; i < Polygon.OrderedCorners.Num(); ++i)
+		{
+			FVector CornerA = Polygon.OrderedCorners[i];
+			FVector CornerB;
+			if (Polygon.OrderedCorners.IsValidIndex(i + 1))
+			{
+				CornerB = Polygon.OrderedCorners[i+1];
+			}
+			else
+			{
+				CornerB = Polygon.OrderedCorners[0];
+			}
+			
+			LineBatcher->DrawLine(CornerA, CornerB, Color, DepthPriority, Thickness, Time, BatchID);
+		}
+	}
+}
+
+void FU::Draw::DrawDebugPolygonFrame(const UWorld* World, const FFUPolygon& Polygon, FColor Color, float Thickness, uint8 DepthPriority, uint32 BatchID)
+{
+	DrawDebugPloygon(World, Polygon, Color, 0, Thickness, DepthPriority, BatchID);
+}
+
+void FU::Draw::DrawDebugPloygons(const UWorld* World, const TArray<FFUPolygon>& Polygons, FColor Color, float Time, float Thickness, uint8 DepthPriority, uint32 BatchID)
+{
+	for (auto& Polygon : Polygons)
+	{
+		DrawDebugPloygon(World, Polygon, Color, Time, Thickness, DepthPriority, BatchID);
+	}
+}
+
+void FU::Draw::DrawDebugPolygonsFrame(const UWorld* World, const TArray<FFUPolygon>& Polygons, FColor Color, float Thickness, uint8 DepthPriority, uint32 BatchID)
+{
+	DrawDebugPloygons(World, Polygons, Color, 0, Thickness, DepthPriority, BatchID);
 }

@@ -18,6 +18,14 @@ namespace FU::Draw
 		FVector Corner4;
 	};
 	
+	struct FISHYUTILS_API FFUPolygon
+	{
+		FFUPolygon();
+		FFUPolygon(const TArray<FVector>& InOrderedCorners);
+		
+		TArray<FVector> OrderedCorners;
+	};
+	
 	ULineBatchComponent* GetDebugLineBatcher(const UWorld* InWorld, float LifeTime, bool bDepthIsForeground);
 	
 	/** Be sure to make your BatchID unique across all line batches type */
@@ -152,13 +160,23 @@ namespace FU::Draw
 		FColor Color, float Thickness = 2, uint8 DepthPriority = 0, TArray<UClass*>* IgnoredClasses = nullptr);
 	
 	
-	FISHYUTILS_API void DrawDebugRectangle(const UWorld* World, FFURectangle Rectangle, FColor Color, float Time, 
+	FISHYUTILS_API void DrawDebugRectangle(const UWorld* World, const FFURectangle& Rectangle, FColor Color, float Time, 
 		float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
-	FISHYUTILS_API void DrawDebugRectangleFrame(const UWorld* World, FFURectangle Rectangle, FColor Color, 
+	FISHYUTILS_API void DrawDebugRectangleFrame(const UWorld* World, const FFURectangle& Rectangle, FColor Color, 
 		float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	
 	FISHYUTILS_API void DrawDebugRectangles(const UWorld* World, const TArray<FFURectangle>& Rectangles, FColor Color, float Time, 
 		float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	FISHYUTILS_API void DrawDebugRectanglesFrame(const UWorld* World, const TArray<FFURectangle>& Rectangles, FColor Color, 
+		float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
+	
+	FISHYUTILS_API void DrawDebugPloygon(const UWorld* World, const FFUPolygon& Polygon, FColor Color, float Time, 
+		float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
+	FISHYUTILS_API void DrawDebugPolygonFrame(const UWorld* World, const FFUPolygon& Polygon, FColor Color, 
+		float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
+	
+	FISHYUTILS_API void DrawDebugPloygons(const UWorld* World, const TArray<FFUPolygon>& Polygons, FColor Color, float Time, 
+		float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
+	FISHYUTILS_API void DrawDebugPolygonsFrame(const UWorld* World, const TArray<FFUPolygon>& Polygons, FColor Color, 
 		float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 }
