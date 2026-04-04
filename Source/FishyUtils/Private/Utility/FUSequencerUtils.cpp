@@ -42,7 +42,7 @@ namespace FU::Sequencer
 
 		OutResult.LevelSequenceActor = Params.World->SpawnActor<ALevelSequenceActor>(Params.LevelSequenceActorClass, SpawnParams);
 
-		// ins some edge case like PIE stop the spawn of thsi actor can fail, abort
+		// in some edge case like PIE the spawn of this actor can fail
 		if (!OutResult.LevelSequenceActor.IsValid()) { return; }
 		
 		FMovieSceneSequencePlaybackSettings PlaybackSettings;
@@ -70,5 +70,3 @@ namespace FU::Sequencer
 		OutResult.LevelSequenceActor->FinishSpawning(DefaultTransform);
 	}
 }
-
-
