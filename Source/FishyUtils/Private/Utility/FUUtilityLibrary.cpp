@@ -26,6 +26,16 @@ FIntVector2 UFUUtilityLibrary::Divide_IntVector2IntVector2(FIntVector2 A, FIntVe
 	return FIntVector2(A.X / B.X, A.Y / B.Y);
 }
 
+bool UFUUtilityLibrary::Equal_IntVector2IntVector2(FIntVector2 A, FIntVector2 B)
+{
+	return A == B;
+}
+
+bool UFUUtilityLibrary::NotEqual_IntVector2IntVector2(FIntVector2 A, FIntVector2 B)
+{
+	return A != B;
+}
+
 FIntVector UFUUtilityLibrary::Add_IntVectorIntVector(FIntVector A, FIntVector B)
 {
 	return A + B;
@@ -44,6 +54,16 @@ FIntVector UFUUtilityLibrary::Multiply_IntVectorIntVector(FIntVector A, FIntVect
 FIntVector UFUUtilityLibrary::Divide_IntVectorIntVector(FIntVector A, FIntVector B)
 {
 	return FIntVector(A.X / B.X, A.Y / B.Y, A.Z / B.Z);
+}
+
+bool UFUUtilityLibrary::Equal_IntVectorIntVector(FIntVector A, FIntVector B)
+{
+	return A == B;
+}
+
+bool UFUUtilityLibrary::NotEqual_IntVectorIntVector(FIntVector A, FIntVector B)
+{
+	return A != B;
 }
 
 FRotator UFUUtilityLibrary::Add_RotatorRotator(FRotator A, FRotator B)
