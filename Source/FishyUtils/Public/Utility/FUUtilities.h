@@ -290,11 +290,13 @@ namespace FU::Utils
 	FISHYUTILS_API void ArrayToString(const TArray<FString>& Array, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]");
 	
 	/** 
+	 * Convert function uses a copy.
+	 * 
 	 * Example:
-	 * FU::Utils::ArrayToStringTemplate<FIntVector2>(CellsPath, [] (const FIntVector2 Coords) { return Coords.ToString(); }, CellPathString);
+	 * FU::Utils::ArrayToStringTemplate<FIntVector2>(MyArray, [] (FIntVector2 MyElement) { return MyElement.ToString(); }, MyArrayString);
 	 */
 	template<typename T>
-	void ArrayToStringTemplate(const TArray<T>& Array, TFunction<FString(const T&)> ToStringFunc, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]")
+	void ArrayToStringTemplate(const TArray<T>& Array, TFunction<FString(T)> ToStringFunc, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]")
 	{
 		OutString = Prefix;
 		for (int32 i = 0; i < Array.Num(); i++)
@@ -307,4 +309,28 @@ namespace FU::Utils
 		}
 		OutString += Suffix;
 	}
+	
+	
+	/** 
+	 * Convert function uses a const ref.
+	 * 
+	 * Example:
+	 * FU::Utils::ArrayToStringTemplate<FTransform>(MyArray, [] (const FTransform& MyElement) { return MyElement.ToString(); }, MyArrayString);
+	 */
+	template<typename T>
+	void ArrayToStringTemplateRef(const TArray<T>& Array, TFunction<FString(const T&)> ToStringFunc, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]")
+	{
+		OutString = Prefix;
+		for (int32 i = 0; i < Array.Num(); i++)
+		{
+			OutString += ToStringFunc(Array[i]);
+			if (i != Array.Num() - 1)
+			{
+				OutString += Separator;
+			}
+		}
+		OutString += Suffix;
+	}
+	
+	
 }

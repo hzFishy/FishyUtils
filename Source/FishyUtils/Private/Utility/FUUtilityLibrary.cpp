@@ -101,7 +101,32 @@ float UFUUtilityLibrary::FindDeltaAngleDegrees(float A, float B)
 	return FMath::FindDeltaAngleDegrees(A, B);
 }
 
-void UFUUtilityLibrary::ArrayToString(const TArray<FString>& Array, FString& OutString, const FString& Separator, const FString& Prefix, const FString& Suffix)
+void UFUUtilityLibrary::StringArrayToString(const TArray<FString>& Array, FString& OutString, const FString& Separator, const FString& Prefix, const FString& Suffix)
 {
 	FU::Utils::ArrayToString(Array, OutString, Separator, Prefix, Suffix);
+}
+
+void UFUUtilityLibrary::IntVectorArrayToString(const TArray<FIntVector>& Array, FString& OutString, const FString& Separator, const FString& Prefix, const FString& Suffix)
+{
+	FU::Utils::ArrayToStringTemplate<FIntVector>(Array, [] (FIntVector Item) { return Item.ToString(); }, OutString, Separator, Prefix, Suffix);
+}
+
+void UFUUtilityLibrary::IntVector2ArrayToString(const TArray<FIntVector2>& Array, FString& OutString, const FString& Separator, const FString& Prefix, const FString& Suffix)
+{
+	FU::Utils::ArrayToStringTemplate<FIntVector2>(Array, [] (FIntVector2 Item) { return Item.ToString(); }, OutString, Separator, Prefix, Suffix);
+}
+
+void UFUUtilityLibrary::VectorArrayToString(const TArray<FVector>& Array, FString& OutString, const FString& Separator, const FString& Prefix, const FString& Suffix)
+{
+	FU::Utils::ArrayToStringTemplate<FVector>(Array, [] (FVector Item) { return FU::Utils::PrintCompactVector(Item); }, OutString, Separator, Prefix, Suffix);
+}
+
+void UFUUtilityLibrary::RotatorArrayToString(const TArray<FRotator>& Array, FString& OutString, const FString& Separator, const FString& Prefix, const FString& Suffix)
+{
+	FU::Utils::ArrayToStringTemplate<FRotator>(Array, [] (FRotator Item) { return FU::Utils::PrintCompactRotator(Item); }, OutString, Separator, Prefix, Suffix);
+}
+
+void UFUUtilityLibrary::TransformArrayToString(const TArray<FTransform>& Array, FString& OutString, const FString& Separator, const FString& Prefix, const FString& Suffix)
+{
+	FU::Utils::ArrayToStringTemplateRef<FTransform>(Array, [] (const FTransform& Item) { return Item.ToString(); }, OutString, Separator, Prefix, Suffix);
 }

@@ -79,5 +79,20 @@ public:
 	static float FindDeltaAngleDegrees(float A, float B);
 	
 	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility")
-	static void ArrayToString(const TArray<FString>& Array, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]");
+	static void StringArrayToString(const TArray<FString>& Array, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]");
+	
+	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility")
+	static void IntVectorArrayToString(const TArray<FIntVector>& Array, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]");
+	
+	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility")
+	static void IntVector2ArrayToString(const TArray<FIntVector2>& Array, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]");
+	
+	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility")
+	static void VectorArrayToString(const TArray<FVector>& Array, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]");
+	
+	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility")
+	static void RotatorArrayToString(const TArray<FRotator>& Array, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]");
+	
+	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility")
+	static void TransformArrayToString(const TArray<FTransform>& Array, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]");
 };
