@@ -4,6 +4,7 @@
 #include "Utility/FUUtilityLibrary.h"
 #include "Engine/AssetManager.h"
 #include "Kismet/GameplayStatics.h"
+#include "Utility/FUUtilities.h"
 
 
 FIntVector2 UFUUtilityLibrary::Add_IntVector2IntVector2(FIntVector2 A, FIntVector2 B)
@@ -98,4 +99,9 @@ bool UFUUtilityLibrary::AsyncOpenLevel(const UObject* WorldContextObject, const 
 float UFUUtilityLibrary::FindDeltaAngleDegrees(float A, float B)
 {
 	return FMath::FindDeltaAngleDegrees(A, B);
+}
+
+void UFUUtilityLibrary::ArrayToString(const TArray<FString>& Array, FString& OutString, const FString& Separator, const FString& Prefix, const FString& Suffix)
+{
+	FU::Utils::ArrayToString(Array, OutString, Separator, Prefix, Suffix);
 }

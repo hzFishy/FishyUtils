@@ -77,4 +77,7 @@ public:
 	 */
 	UFUNCTION(BlueprintPure, Category="FishyUtils|Utility|Math")
 	static float FindDeltaAngleDegrees(float A, float B);
+	
+	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility")
+	static void ArrayToString(const TArray<FString>& Array, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]");
 };
