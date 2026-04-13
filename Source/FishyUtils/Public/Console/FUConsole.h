@@ -2,6 +2,9 @@
 
 #pragma once
 
+#include "EngineUtils.h"
+
+
 // use FU_WITH_CONSOLE to control when we want to have access to console namespace
 #if UE_BUILD_SHIPPING || NO_CVARS
 	#define FU_WITH_CONSOLE 0
