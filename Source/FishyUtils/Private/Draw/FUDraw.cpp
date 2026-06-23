@@ -2,12 +2,12 @@
 
 
 #include "Draw/FUDraw.h"
-
-#include "MovieSceneSequencePlayer.h"
+#include "EngineUtils.h"
 #include "Components/BillboardComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/LineBatchComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Draw/FUDrawProxy.h"
 #include "Utility/FUOrientedBox.h"
 
 
@@ -55,6 +55,100 @@ void FU::Draw::ClearDrawDebugGroup(const UWorld* World, uint32 BatchID)
 	World->GetLineBatcher(UWorld::ELineBatcherType::WorldPersistent)->ClearBatch(BatchID);
 	World->GetLineBatcher(UWorld::ELineBatcherType::Foreground)->ClearBatch(BatchID);
 	World->GetLineBatcher(UWorld::ELineBatcherType::World)->ClearBatch(BatchID);
+}
+
+
+UFUDrawComponent* FU::Draw::Advanced::GetProxyComponent(const UWorld* World)
+{
+	// find
+	for (TActorIterator<AFUDrawProxyActor> It(World); It; ++It)
+	{
+		AFUDrawProxyActor* Actor = *It;
+		return Actor->DrawComponent.Get();
+	}
+	
+	// create
+	FActorSpawnParameters SpawnParameters;
+	SpawnParameters.bNoFail = true;
+	SpawnParameters.bHideFromSceneOutliner = true;
+	
+	auto* MutableWorld = const_cast<UWorld*>(World);
+	auto* ProxyActor = MutableWorld->SpawnActor<AFUDrawProxyActor>(SpawnParameters);
+	return ProxyActor->DrawComponent.Get();
+}
+
+void FU::Draw::Advanced::ClearForId(const UWorld* World, uint32 Id)
+{
+	if (auto* DrawProxy = GetProxyComponent(World))
+	{
+		DrawProxy->ClearForId(Id);
+	}
+}
+
+void FU::Draw::Advanced::ClearAll(const UWorld* World)
+{
+	if (auto* DrawProxy = GetProxyComponent(World))
+	{
+		DrawProxy->ClearAll();
+	}
+}
+
+void FU::Draw::Advanced::DrawDebugText(const UWorld* World, const FVector& Location, const FString& Text,
+	FColor Color, float Time, float InTextSize, uint32 Id)
+{
+	if (auto* DrawProxy = GetProxyComponent(World))
+	{
+		DrawProxy->DrawDebugText(Location, Text, Color, Time, InTextSize, Id);
+	}
+}
+void FU::Draw::Advanced::DrawDebugTextFrame(const UWorld* World, const FVector& Location, const FString& Text,
+	FColor Color, float InTextSize, uint32 Id)
+{
+	FU::Draw::Advanced::DrawDebugText(World, Location, Text, Color, 0, InTextSize, Id);
+}
+
+void FU::Draw::Advanced::DrawDebugSolidLine(const UWorld* World, const FVector& StartLocation, const FVector& EndLocation,
+	FColor Color, float Time, float Thickness, uint32 Id)
+{
+	if (auto* DrawProxy = GetProxyComponent(World))
+	{
+		DrawProxy->DrawDebugSolidLine(StartLocation, EndLocation, Color, Time, Thickness, Id);
+	}
+}
+void FU::Draw::Advanced::DrawDebugSolidLineFrame(const UWorld* World, const FVector& StartLocation,
+	const FVector& EndLocation, FColor Color, float Thickness, uint32 Id)
+{
+	FU::Draw::Advanced::DrawDebugSolidLine(World, StartLocation, EndLocation, Color, 0, Thickness, Id);
+}
+
+void FU::Draw::Advanced::DrawDebugSphere(const UWorld* World, const FVector& Location, float Radius, FColor Color,
+	float Time, float Thickness, FDebugRenderSceneProxy::EDrawType InDrawTypeOverride, uint32 Id)
+{
+	if (auto* DrawProxy = GetProxyComponent(World))
+	{
+		DrawProxy->DrawDebugSphere(Location, Radius, Color, Time, Thickness, InDrawTypeOverride, Id);
+	}
+}
+
+void FU::Draw::Advanced::DrawDebugSphereFrame(const UWorld* World, const FVector& Location, float Radius, FColor Color,
+	float Thickness, FDebugRenderSceneProxy::EDrawType InDrawTypeOverride, uint32 Id)
+{
+	FU::Draw::Advanced::DrawDebugSphere(World, Location, Radius, Color, 0, Thickness, InDrawTypeOverride, Id);
+}
+
+void FU::Draw::Advanced::DrawDebugDirectionalArrow(const UWorld* World, const FVector& StartLocation,
+	const FVector& EndLocation, FColor Color, float Time, float ArrowSize, float Thickness, uint8 Id)
+{
+	if (auto* DrawProxy = GetProxyComponent(World))
+	{
+		DrawProxy->DrawDebugDirectionalArrow(StartLocation, EndLocation, Color, Time, ArrowSize, Thickness, Id);
+	}
+}
+void FU::Draw::Advanced::DrawDebugDirectionalArrowFrame(const UWorld* World, const FVector& StartLocation,
+	const FVector& EndLocation, FColor Color, float ArrowSize, float Thickness, uint8 Id)
+{
+	FU::Draw::Advanced::DrawDebugDirectionalArrow(World, StartLocation, EndLocation, Color, 0, ArrowSize, 
+		Thickness, Id);
 }
 
 

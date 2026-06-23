@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "DebugRenderSceneProxy.h"
+class UFUDrawComponent;
 class UCapsuleComponent;
 
 
@@ -30,13 +32,45 @@ namespace FU::Draw
 	
 	/** Be sure to make your BatchID unique across all line batches type */
 	FISHYUTILS_API void ClearDrawDebugGroup(const UWorld* World, uint32 BatchID);
-	
+
+	/** Use advanced debug primitive scene proxy */
+	namespace Advanced
+	{
+		UFUDrawComponent* GetProxyComponent(const UWorld* World);
+		
+		FISHYUTILS_API void ClearForId(const UWorld* World, uint32 Id);
+		
+		FISHYUTILS_API void ClearAll(const UWorld* World);
+		
+		FISHYUTILS_API void DrawDebugText(const UWorld* World, const FVector& Location, const FString& Text,
+		FColor Color, float Time, float InTextSize = 1,uint32 Id = 0);
+		FISHYUTILS_API void DrawDebugTextFrame(const UWorld* World, const FVector& Location, const FString& Text,
+			FColor Color, float InTextSize = 1, uint32 Id = 0);
+		
+		FISHYUTILS_API void DrawDebugSolidLine(const UWorld* World, const FVector& StartLocation, const FVector& EndLocation,
+		FColor Color, float Time, float Thickness = 2, uint32 Id = 0);
+		FISHYUTILS_API void DrawDebugSolidLineFrame(const UWorld* World, const FVector& StartLocation, const FVector& EndLocation,
+			FColor Color, float Thickness = 2, uint32 Id = 0);
+		
+		FISHYUTILS_API void DrawDebugSphere(const UWorld* World, const FVector& Location, float Radius, FColor Color, 
+			float Time, float Thickness = 2, FDebugRenderSceneProxy::EDrawType InDrawTypeOverride = FDebugRenderSceneProxy::EDrawType::WireMesh, 
+			uint32 Id = 0);
+		FISHYUTILS_API void DrawDebugSphereFrame(const UWorld* World, const FVector& Location, float Radius, FColor Color, 
+			float Thickness = 2, FDebugRenderSceneProxy::EDrawType InDrawTypeOverride = FDebugRenderSceneProxy::EDrawType::WireMesh, 
+			uint32 Id = 0);
+		
+		FISHYUTILS_API void DrawDebugDirectionalArrow(const UWorld* World, const FVector& StartLocation,
+			const FVector& EndLocation, FColor Color, float Time, float ArrowSize = 2, float Thickness = 2, 
+			uint8 Id = 0);
+		FISHYUTILS_API void DrawDebugDirectionalArrowFrame(const UWorld* World, const FVector& StartLocation,
+			const FVector& EndLocation, FColor Color, float ArrowSize = 2, float Thickness = 2, uint8 Id = 0);
+	}
 	
 	FISHYUTILS_API void DrawDebugSphere(const UWorld* World, const FVector& Location, float Radius, FColor Color,
 		float Time, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	FISHYUTILS_API void DrawDebugSphereFrame(const UWorld* World, const FVector& Location, float Radius, FColor Color,
 		float Thickness = 2, uint8 DepthPriority = 0);
-
+	
 	
 	FISHYUTILS_API void DrawDebugCircle(const UWorld* World, const FVector& Location, float Radius, const FColor& Color, 
 		float Time, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0, bool bDrawAxis = false, 
@@ -61,7 +95,7 @@ namespace FU::Draw
 		FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	FISHYUTILS_API void DrawDebugLineFrame(const UWorld* World, const FVector& StartLocation, const FVector& EndLocation,
 		FColor Color, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
-
+	
 	
 	FISHYUTILS_API void DrawDebugLineWithMiddleText(const UWorld* World, float Time, const FVector& LineStartLocation,
 		const FVector& LineEndLocation, FColor LineColor, const FString& Text, FColor TextColor,
