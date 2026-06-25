@@ -120,7 +120,7 @@ void FFUDrawProxySceneProxy::GetDynamicMeshElementsForView(const FSceneView* Vie
 	
 	FPrimitiveDrawInterface* PDI = Collector.GetPDI(ViewIndex);
 	
-	const bool bAllowFrustumCulling = true;
+	constexpr bool bAllowFrustumCulling = true;
 	const FConvexVolume AdjustedFrustum = AdjustViewFrustumForFarClipping(View, FarClippingDistance);;
 	
 	// Draw ADVANCED Lines
@@ -317,8 +317,6 @@ void FFUDrawProxyDelegateHelper::DrawDebugLabels(UCanvas* Canvas, APlayerControl
 	const FColor OldDrawColor = Canvas->DrawColor;
 	const FFontRenderInfo FontRenderInfo = Canvas->CreateFontRenderInfo(true, false);
 	const FFontRenderInfo FontRenderInfoWithShadow = Canvas->CreateFontRenderInfo(true, true);
-	
-	Canvas->SetDrawColor(FColor::White);
 	
 	UFont* RenderFont = GEngine->GetSmallFont();
 	
