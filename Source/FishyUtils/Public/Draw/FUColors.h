@@ -6,6 +6,9 @@
 
 namespace FU::Colors
 {
+	/** Pick a random colors (excluded white, black and in betweens) */
+	FISHYUTILS_API FColor Random();
+	
 	// Basics
 	inline constexpr FColor Black       			= FColor(0, 0, 0, 255);
 	inline constexpr FColor White       			= FColor(255, 255, 255, 255);
