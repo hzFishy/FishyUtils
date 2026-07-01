@@ -2,11 +2,10 @@
 
 
 #include "Draw/FUDrawProxy.h"
-
 #include "Engine/Canvas.h"
 
 inline const TCHAR* TargetShowFlagName = TEXT("FU_Draw");  
-inline TCustomShowFlag<EShowFlagShippingValue::ForceDisabled> TargetShowFlag(TargetShowFlagName, true, SFG_Normal);
+inline TCustomShowFlag<EShowFlagShippingValue::ForceDisabled> TargetShowFlag(TargetShowFlagName, true, SFG_Advanced, INVTEXT("FishyUtils: Advanced Draw"));
 
 
 	
@@ -15,21 +14,18 @@ inline TCustomShowFlag<EShowFlagShippingValue::ForceDisabled> TargetShowFlag(Tar
 	----------------------------------------------------------------------------*/
 FFUDrawProxyElement::FFUDrawProxyElement(FColor InColor, float InTime, uint8 InDepthPriority, uint32 InId):
 	Color(InColor),
+	RemainingTime(InTime),
 	DepthPriority(InDepthPriority),
 	Id(InId)
-{
-	if (InTime > 0)
-	{
-		RemaningTime = InTime;
-	}
-}
+{}
 
 bool FFUDrawProxyElement::Tick(float DeltaTime)
 {
-	if (float* Value = RemaningTime.GetPtrOrNull())
+	if (RemainingTime >= 0)
 	{
-		*Value -= DeltaTime;
-		return (*Value) > 0;
+		RemainingTime -= DeltaTime;
+		
+		return RemainingTime > 0;
 	}
 	return true;
 }
@@ -375,7 +371,7 @@ void UFUDrawComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, 
 	{
 		if (!Texts[i].Tick(DeltaTime))
 		{
-			Texts.RemoveAtSwap(i);
+			Texts.RemoveAtSwap(i--);
 			bElementChanged = true;
 		}
 	}
@@ -384,7 +380,7 @@ void UFUDrawComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, 
 	{
 		if (!SolidLines[i].Tick(DeltaTime))
 		{
-			SolidLines.RemoveAtSwap(i);
+			SolidLines.RemoveAtSwap(i--);
 			bElementChanged = true;
 		}
 	}
@@ -393,7 +389,7 @@ void UFUDrawComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, 
 	{
 		if (!Spheres[i].Tick(DeltaTime))
 		{
-			Spheres.RemoveAtSwap(i);
+			Spheres.RemoveAtSwap(i--);
 			bElementChanged = true;
 		}
 	}
@@ -402,7 +398,7 @@ void UFUDrawComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, 
 	{
 		if (!Arrows[i].Tick(DeltaTime))
 		{
-			Arrows.RemoveAtSwap(i);
+			Arrows.RemoveAtSwap(i--);
 			bElementChanged = true;
 		}
 	}
@@ -459,7 +455,7 @@ void UFUDrawComponent::ClearForId(uint32 Id)
 	{
 		if (Texts[i].Id == Id)
 		{
-			Texts.RemoveAtSwap(i);
+			Texts.RemoveAtSwap(i--);
 			bElementChanged = true;
 		}
 	}
@@ -468,7 +464,7 @@ void UFUDrawComponent::ClearForId(uint32 Id)
 	{
 		if (SolidLines[i].Id == Id)
 		{
-			SolidLines.RemoveAtSwap(i);
+			SolidLines.RemoveAtSwap(i--);
 			bElementChanged = true;
 		}
 	}
@@ -477,7 +473,7 @@ void UFUDrawComponent::ClearForId(uint32 Id)
 	{
 		if (Spheres[i].Id == Id)
 		{
-			Spheres.RemoveAtSwap(i);
+			Spheres.RemoveAtSwap(i--);
 			bElementChanged = true;
 		}
 	}
@@ -486,7 +482,7 @@ void UFUDrawComponent::ClearForId(uint32 Id)
 	{
 		if (Arrows[i].Id == Id)
 		{
-			Arrows.RemoveAtSwap(i);
+			Arrows.RemoveAtSwap(i--);
 			bElementChanged = true;
 		}
 	}

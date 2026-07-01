@@ -13,8 +13,8 @@ struct FFUDrawProxyElement
 	FFUDrawProxyElement(FColor InColor, float InTime, uint8 InDepthPriority = 0, uint32 InId = 0);
 	
 	FColor Color;
-	/** If not set this is an infinite text */
-	TOptional<float> RemaningTime;
+	/** If not set this is infinite */
+	float RemainingTime;
 	uint8 DepthPriority;
 	uint32 Id;
 	
