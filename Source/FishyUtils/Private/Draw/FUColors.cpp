@@ -4,8 +4,10 @@
 #include "Draw/FUColors.h"
 
 
-FColor FU::Colors::Random()
+FColor FU::Colors::PickRandomColor()
 {
+	static int32 LastIndex = -1;
+	
 	static TArray<FColor, TInlineAllocator<80>> Colors = {
 		Red,
 		Tomato,
@@ -52,5 +54,16 @@ FColor FU::Colors::Random()
 		ToxicSlime
 	};
 	
-	return Colors[FMath::RandRange(0, Colors.Num() - 1)];
+	const int32 RandIndex = FMath::RandRange(0, Colors.Num() - 1);
+	
+	if (RandIndex != LastIndex)
+	{
+		LastIndex = RandIndex;
+		return Colors[LastIndex];
+	}
+	else
+	{
+		// reroll
+		return PickRandomColor();
+	}
 }
