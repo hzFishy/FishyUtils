@@ -257,8 +257,6 @@ void FU::Draw::DrawDebugLine(const UWorld* World, const FVector& StartLocation, 
 	{
 		LineBatcher->DrawLine(StartLocation, EndLocation, Color, DepthPriority, Thickness, Time, BatchID);
 	}
-	
-	DrawDebugLine(World, StartLocation, EndLocation, Color, false, Time, DepthPriority, Thickness);
 }
 void FU::Draw::DrawDebugLineFrame(const UWorld* World, const FVector& StartLocation, const FVector& EndLocation,
 	FColor Color, float Thickness, uint8 DepthPriority, uint32 BatchID)
@@ -476,7 +474,7 @@ void FU::Draw::DrawDebugPointFrame(const UWorld* World, const FVector& Position,
 
 
 void FU::Draw::DrawDebugPrimitiveComponent(const UWorld* World, const UPrimitiveComponent* PrimitiveComponent,
-                                           FColor Color, float Time, float Thickness, uint8 DepthPriority)
+	FColor Color, float Time, float Thickness, uint8 DepthPriority)
 {
 	if (!IsValid(PrimitiveComponent)) { return; }
 

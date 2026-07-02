@@ -7,8 +7,7 @@
 inline const TCHAR* TargetShowFlagName = TEXT("FU_Draw");  
 inline TCustomShowFlag<EShowFlagShippingValue::ForceDisabled> TargetShowFlag(TargetShowFlagName, true, SFG_Advanced, INVTEXT("FishyUtils: Advanced Draw"));
 
-
-	
+		
 	/*----------------------------------------------------------------------------
 		Proxy Element
 	----------------------------------------------------------------------------*/
@@ -350,7 +349,7 @@ UFUDrawComponent::UFUDrawComponent()
 	SetGenerateOverlapEvents(false);
 	
 	bUseEditorCompositing = true;
-
+	
 	// Ignore streaming updates since GetUsedMaterials() is not implemented.
 	bIgnoreStreamingManagerUpdate = true;
 	
