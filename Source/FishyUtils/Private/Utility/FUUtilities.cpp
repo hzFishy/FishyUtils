@@ -434,7 +434,7 @@ FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::Append(FString Text)
 	return *this;
 }
 
-FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::Append(bool bCond, FString Text)
+FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::AppendC(bool bCond, FString Text)
 {
 	if (bCond)
 	{
@@ -443,16 +443,34 @@ FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::Append(bool bCond, F
 	return *this;
 }
 
-FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::NewLine(FString Text)
+void FU::Utils::FFUMessageBuilder::Reset()
 {
-	return Append("\n" + Text);
+	Message.Empty();
 }
 
-FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::NewLine(bool bCond, FString Text)
+FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::Reset(FString Text)
+{
+	Message = Text;
+	return *this;
+}
+
+FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::NewLine(FString Text, bool bIgnoreIfEmpty)
+{
+	if (bIgnoreIfEmpty && Message.IsEmpty())
+	{
+		return Append(Text);
+	}
+	else
+	{
+		return Append("\n" + Text);
+	}
+}
+
+FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::NewLineC(bool bCond, FString Text, bool bIgnoreIfEmpty)
 {
 	if (bCond)
 	{
-		return NewLine(Text);
+		return NewLine(Text, bIgnoreIfEmpty);
 	}
 	return *this;
 }

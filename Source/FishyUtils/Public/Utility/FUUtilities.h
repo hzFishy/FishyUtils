@@ -119,7 +119,28 @@ namespace FU::Utils
 		
 		FFUMessageBuilder& Append(FString Text);
 		
-		FFUMessageBuilder& Append(bool bCond, FString Text);
+		/** 
+		 *  @param bCond If true the text is addeds 
+		 */
+		FFUMessageBuilder& AppendC(bool bCond, FString Text);
+		
+		void Reset();
+		
+		FFUMessageBuilder& Reset(FString Text);
+		
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 6, 0)
+		template <typename... Types>
+		FFUMessageBuilder& Resetf(UE::Core::TCheckedFormatString<FString::FmtCharType, Types...> Fmt, Types... Args)
+		{
+			return Reset(FString::Printf(Fmt, Args...));
+		}
+#else
+		template <typename FmtType, typename... Types>
+		FFUMessageBuilder& Resetf(const FmtType& Fmt, Types... Args)
+		{
+			return Reset(FString::Printf(Fmt, Args...));
+		}
+#endif
 		
 #if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 6, 0)
 		template <typename... Types>
@@ -127,17 +148,36 @@ namespace FU::Utils
 		{
 			return Append(FString::Printf(Fmt, Args...));
 		}
+		
+		template <typename... Types>
+		FFUMessageBuilder& AppendCf(bool bCond, UE::Core::TCheckedFormatString<FString::FmtCharType, Types...> Fmt, Types... Args)
+		{
+			return AppendC(bCond, FString::Printf(Fmt, Args...));
+		}
 #else
 		template <typename FmtType, typename... Types>
 		FFUMessageBuilder& Appendf(const FmtType& Fmt, Types... Args)
 		{
 			return Append(FString::Printf(Fmt, Args...));
 		}
+		
+		template <typename FmtType, typename... Types>
+		FFUMessageBuilder& AppendCf(bool bCond, const FmtType& Fmt, Types... Args)
+		{
+			return AppendC(bCond, FString::Printf(Fmt, Args...));
+		}
 #endif
 		
-		FFUMessageBuilder& NewLine(FString Text);
+		/** 
+		 *  @param bIgnoreIfEmpty If true we won't add a new line if the message is current empty (to avoid a empty line)
+		 */
+		FFUMessageBuilder& NewLine(FString Text, bool bIgnoreIfEmpty = true);
 		
-		FFUMessageBuilder& NewLine(bool bCond, FString Text);
+		/** 
+		 *  @param bCond If true the text is addeds 
+		 *  @param bIgnoreIfEmpty If true we won't add a new line if the message is current empty (to avoid a empty line)
+		 */
+		FFUMessageBuilder& NewLineC(bool bCond, FString Text, bool bIgnoreIfEmpty = true);
 		
 #if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 6, 0)
 		template <typename... Types>
@@ -145,14 +185,27 @@ namespace FU::Utils
 		{
 			return NewLine(FString::Printf(Fmt, Args...));
 		}
+		
+		template <typename... Types>
+		FFUMessageBuilder& NewLineCf(bool bCond, UE::Core::TCheckedFormatString<FString::FmtCharType, Types...> Fmt, Types... Args)
+		{
+			return NewLineC(bCond, FString::Printf(Fmt, Args...));
+		}
 #else
 		template <typename FmtType, typename... Types>
 		FFUMessageBuilder& NewLinef(const FmtType& Fmt, Types... Args)
 		{
 			return NewLine(FString::Printf(Fmt, Args...));
 		}
+		
+		template <typename FmtType, typename... Types>
+		FFUMessageBuilder& NewLineCf(bool bCond, const FmtType& Fmt, Types... Args)
+		{
+			return NewLineC(bCond, FString::Printf(Fmt, Args...));
+		}
 #endif
-		const FString& GetMessage() const { return Message; }; 
+		
+		const FString& GetMessage() const { return Message; };
 		
 	protected:
 		FString Message;
