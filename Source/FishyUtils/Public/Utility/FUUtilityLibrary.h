@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "FUOrientedBox.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "FUUtilityLibrary.generated.h"
 

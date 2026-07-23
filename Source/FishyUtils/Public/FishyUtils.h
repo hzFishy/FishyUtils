@@ -8,6 +8,10 @@
 class FFishyUtilsModule : public IModuleInterface
 {
 
+	
+	/*----------------------------------------------------------------------------
+		Defaults
+	----------------------------------------------------------------------------*/
 public:
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;

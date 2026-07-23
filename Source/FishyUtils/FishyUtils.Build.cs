@@ -27,7 +27,8 @@ public class FishyUtils : ModuleRules
 				"Slate", "SlateCore",
 				"InputCore",
 				"GameplayTags", 
-				"LevelSequence", "MovieScene"
+				"LevelSequence", "MovieScene",
+				"LogVisualizer"
 			}
 		);
 		
