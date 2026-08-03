@@ -196,7 +196,7 @@ namespace FU::VisualLogger
 		const float HalfHeight = FU::VisualLogger::GetCapsuleHalfHeight(CapsuleComponent); \
 		const float Radius = FU::VisualLogger::GetCapsuleRadius(CapsuleComponent); \
 		const FQuat Rotation = FU::VisualLogger::GetCapsuleRotation(CapsuleComponent); \
-		FU_VLOG_CAPSULEWIRED_TEXT(LogOwner, CategoryName, Verbosity, Center, HalfHeight, Radius, Rotation, Color, Format, ##__VA_ARGS__); \
+		FU_VLOG_CAPSULEWIRED_TEXT(LogOwner, CategoryName, Verbosity, Center, HalfHeight, Radius, Rotation, Color, TextLocationOffset, Format, ##__VA_ARGS__); \
 	} \
 
 /** Draw wired capsule with no text from UCapsuleComponent with override location*/
@@ -216,7 +216,7 @@ namespace FU::VisualLogger
 		const float HalfHeight = FU::VisualLogger::GetCapsuleHalfHeight(CapsuleComponent); \
 		const float Radius = FU::VisualLogger::GetCapsuleRadius(CapsuleComponent); \
 		const FQuat Rotation = FU::VisualLogger::GetCapsuleRotation(CapsuleComponent); \
-		FU_VLOG_CAPSULEWIRED(LogOwner, CategoryName, Verbosity, Center, HalfHeight, Radius, Rotation, Color, Format, ##__VA_ARGS__); \
+		FU_VLOG_CAPSULEWIRED_TEXT(LogOwner, CategoryName, Verbosity, Center, HalfHeight, Radius, Rotation, Color, TextLocationOffset, Format, ##__VA_ARGS__); \
 	} \
 
 
