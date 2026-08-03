@@ -37,17 +37,17 @@ namespace FU::VisualLogger
 /** Draw arrow using ScaledDirection. With text draw at the start */
 #define FU_VLOG_ARROW_DIR_TEXT_START(LogOwner, CategoryName, Verbosity, SegmentStart, ScaledDirection, Color, TextLocationOffset, Format, ...) \
 	UE_VLOG_ARROW(LogOwner, CategoryName, Verbosity, SegmentStart, SegmentStart + ScaledDirection, Color, TEXT_EMPTY); \
-	_FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, SegmentStart + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
+	FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, SegmentStart + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
 	
 /** Draw arrow using ScaledDirection. With text draw at the middle */
 #define FU_VLOG_ARROW_DIR_TEXT_MID(LogOwner, CategoryName, Verbosity, SegmentStart, ScaledDirection, Color, TextLocationOffset, Format, ...) \
 	UE_VLOG_ARROW(LogOwner, CategoryName, Verbosity, SegmentStart, SegmentStart + ScaledDirection, Color, TEXT_EMPTY); \
-	_FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, (SegmentStart + SegmentStart + ScaledDirection) / 2 + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
+	FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, (SegmentStart + SegmentStart + ScaledDirection) / 2 + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
 	
 /** Draw arrow using ScaledDirection. With text draw at the end*/
 #define FU_VLOG_ARROW_DIR_TEXT_END(LogOwner, CategoryName, Verbosity, SegmentStart, ScaledDirection, Color, TextLocationOffset, Format, ...) \
 	UE_VLOG_ARROW(LogOwner, CategoryName, Verbosity, SegmentStart, SegmentStart + ScaledDirection, Color, TEXT_EMPTY); \
-	_FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, SegmentStart + ScaledDirection + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
+	FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, SegmentStart + ScaledDirection + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
 
 
 /** Draw arrow using default SegmentEnd. With no text */
@@ -57,19 +57,19 @@ namespace FU::VisualLogger
 /** Draw arrow using default SegmentEnd. With text draw at the start */
 #define FU_VLOG_ARROW_TEXT_START(LogOwner, CategoryName, Verbosity, SegmentStart, SegmentEnd, Color, TextLocationOffset, Format, ...) \
 	UE_VLOG_ARROW(LogOwner, CategoryName, Verbosity, SegmentStart, SegmentEnd, Color, TEXT_EMPTY); \
-	_FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, SegmentStart + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
+	FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, SegmentStart + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
 
 
 /** Draw arrow using default SegmentEnd. With text draw at the middle */
 #define FU_VLOG_ARROW_TEXT_MID(LogOwner, CategoryName, Verbosity, SegmentStart, SegmentEnd, Color, TextLocationOffset, Format, ...) \
 	UE_VLOG_ARROW(LogOwner, CategoryName, Verbosity, SegmentStart, SegmentEnd, Color, TEXT_EMPTY); \
-	_FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, (SegmentStart + SegmentEnd) / 2 + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
+	FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, (SegmentStart + SegmentEnd) / 2 + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
 
 
 /** Draw arrow using default SegmentEnd. With text draw at the end */
 #define FU_VLOG_ARROW_TEXT_END(LogOwner, CategoryName, Verbosity, SegmentStart, SegmentEnd, Color, TextLocationOffset, Format, ...) \
 	UE_VLOG_ARROW(LogOwner, CategoryName, Verbosity, SegmentStart, SegmentEnd, Color, TEXT_EMPTY); \
-	_FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, SegmentEnd + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
+	FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, SegmentEnd + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
 
 	
 	/*----------------------------------------------------------------------------
@@ -82,17 +82,17 @@ namespace FU::VisualLogger
 /** Draw a segment with text at the start */
 #define FU_VLOG_SEGMENT_TEXT_START(LogOwner, CategoryName, Verbosity, SegmentStart, SegmentEnd, Color, Thickness, TextLocationOffset, Format, ...) \
 	UE_VLOG_SEGMENT_THICK(LogOwner, CategoryName, Verbosity, SegmentStart, SegmentEnd, Color, Thickness, TEXT_EMPTY); \
-	_FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, SegmentStart + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
+	FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, SegmentStart + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
 
 /** Draw a segment with text at the middle */
 #define FU_VLOG_SEGMENT_TEXT_MID(LogOwner, CategoryName, Verbosity, SegmentStart, SegmentEnd, Color, Thickness, TextLocationOffset, Format, ...) \
 	UE_VLOG_SEGMENT_THICK(LogOwner, CategoryName, Verbosity, SegmentStart, SegmentEnd, Color, Thickness, TEXT_EMPTY); \
-	_FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, (SegmentStart + SegmentEnd) / 2 + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
+	FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, (SegmentStart + SegmentEnd) / 2 + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
 
 /** Draw a segment with text at the end */
 #define FU_VLOG_SEGMENT_TEXT_END(LogOwner, CategoryName, Verbosity, SegmentStart, SegmentEnd, Color, Thickness, TextLocationOffset, Format, ...) \
 	UE_VLOG_SEGMENT_THICK(LogOwner, CategoryName, Verbosity, SegmentStart, SegmentEnd, Color, Thickness, TEXT_EMPTY); \
-	_FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, SegmentEnd + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
+	FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, SegmentEnd + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
 
 	
 	/*----------------------------------------------------------------------------
@@ -105,7 +105,7 @@ namespace FU::VisualLogger
 /** Draw a sphere with text */
 #define FU_VLOG_SPHERE_TEXT(LogOwner, CategoryName, Verbosity, Location, Radius, Color, TextLocationOffset, Format, ...) \
 	UE_VLOG_SPHERE(LogOwner, CategoryName, Verbosity, Location, Radius, Color, TEXT_EMPTY); \
-	_FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, Location + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
+	FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, Location + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
 
 /** Draw a wired sphere with no text */
 #define FU_VLOG_SPHEREWIRED(LogOwner, CategoryName, Verbosity, Location, Radius, Color) \
@@ -114,7 +114,7 @@ namespace FU::VisualLogger
 /** Draw a wired sphere with text */
 #define FU_VLOG_SPHEREWIRED_TEXT(LogOwner, CategoryName, Verbosity, Location, Radius, Color, TextLocationOffset, Format, ...) \
 	UE_VLOG_WIRESPHERE(LogOwner, CategoryName, Verbosity, Location, Radius, Color, TEXT_EMPTY); \
-	_FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, Location + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
+	FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, Location + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__);
 
 	
 	/*----------------------------------------------------------------------------
@@ -199,4 +199,4 @@ namespace FU::VisualLogger
 #define FU_VLOG_CONCAT_SPHEREWIRED_WITHCENTER_TEXT(LogOwner, CategoryName, Verbosity, Location, Radius, Color, TextLocationOffset, Format, ...) \
 	UE_VLOG_WIRESPHERE(LogOwner, CategoryName, Verbosity, Location, Radius, Color, TEXT_EMPTY); \
 	UE_VLOG_SPHERE(LogOwner, CategoryName, Verbosity, Location, 5, Color, TEXT_EMPTY); \
-	_FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, Location + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__); \
+	FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, Location + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__); \
