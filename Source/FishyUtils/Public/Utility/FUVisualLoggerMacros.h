@@ -6,39 +6,12 @@
 class UCapsuleComponent;
 
 
-	/*----------------------------------------------------------------------------
-		Internals
-	----------------------------------------------------------------------------*/
-#define _FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, TextLocation, Color, Format, ...) \
-	UE_VLOG_SPHERE(LogOwner, CategoryName, Verbosity, TextLocation, 0, Color, Format, ##__VA_ARGS__); \
-
-
 namespace FU::VisualLogger
 {
-	template <typename T>
-	inline FVector GetTextLocOffset(T Offset)
-	{
-		if constexpr (std::is_same_v<T, FVector>)
-		{
-			return Offset;
-		}
-		else if constexpr (std::is_same_v<T, float>)
-		{
-			return FVector(0, 0, Offset);
-		}
-		else if constexpr (std::is_same_v<T, double>)
-		{
-			return FVector(0, 0, Offset);
-		}
-		else if constexpr (std::is_same_v<T, int32>)
-		{
-			return FVector(0, 0, Offset);
-		}
-		else
-		{
-			return FVector::ZeroVector;
-		}
-	}
+	inline FVector GetTextLocOffset(float ZOffset) { return FVector(0, 0, ZOffset); }
+	inline FVector GetTextLocOffset(double ZOffset) { return FVector(0, 0, ZOffset); }
+	inline FVector GetTextLocOffset(int32 ZOffset) { return FVector(0, 0, ZOffset); }
+	inline FVector GetTextLocOffset(FVector Offset) { return Offset; }
 	
 	FISHYUTILS_API float GetCapsuleHalfHeight(const UCapsuleComponent* Capsule);
 	FISHYUTILS_API float GetCapsuleRadius(const UCapsuleComponent* Capsule);
@@ -48,9 +21,10 @@ namespace FU::VisualLogger
 
 	
 	/*----------------------------------------------------------------------------
-		Base replacements of engine VLOG for shapes but with a custom location for the text.
-		TextLocationOffset can be a float, int32 or a FVector. If its a single value we consider it as a Z value.
+		Text
 	----------------------------------------------------------------------------*/
+#define FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, TextLocation, Color, Format, ...) \
+	UE_VLOG_SPHERE(LogOwner, CategoryName, Verbosity, TextLocation, 0, Color, Format, ##__VA_ARGS__); \
 
 	
 	/*----------------------------------------------------------------------------
@@ -211,7 +185,7 @@ namespace FU::VisualLogger
 
 
 /** 
- *  Internaly use UE_VLOG_WIRESPHERE and UE_VLOG_SPHERE to draw a sphere of the given radius and text and a smaller sphere acting like the center of it.
+ *  Draw a wired sphere of the given radius and a smaller sphere acting like the center of it.
  *  No text.
  */
 #define FU_VLOG_CONCAT_SPHEREWIRED_WITHCENTER(LogOwner, CategoryName, Verbosity, Location, Radius, Color) \
@@ -219,7 +193,7 @@ namespace FU::VisualLogger
 	UE_VLOG_SPHERE(LogOwner, CategoryName, Verbosity, Location, 5, Color, TEXT_EMPTY); \
 	
 /** 
-*  Internaly use UE_VLOG_WIRESPHERE and UE_VLOG_SPHERE to draw a sphere of the given radius and text and a smaller sphere acting like the center of it.
+*  Draw a wired sphere of the given radius and text and a smaller sphere acting like the center of it.
 *  With text.
 */
 #define FU_VLOG_CONCAT_SPHEREWIRED_WITHCENTER_TEXT(LogOwner, CategoryName, Verbosity, Location, Radius, Color, TextLocationOffset, Format, ...) \
