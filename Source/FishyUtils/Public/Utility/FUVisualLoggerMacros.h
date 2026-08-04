@@ -199,7 +199,7 @@ namespace FU::VisualLogger
 		FU_VLOG_CAPSULEWIRED_TEXT(LogOwner, CategoryName, Verbosity, Center, HalfHeight, Radius, Rotation, Color, TextLocationOffset, Format, ##__VA_ARGS__); \
 	} \
 
-/** Draw wired capsule with no text from UCapsuleComponent with override location*/
+/** Draw wired capsule with no text from UCapsuleComponent with override location */
 #define FU_VLOG_CAPSULEWIRED_WITHCOMPONENT_LOCATIONOVERRIDE(LogOwner, CategoryName, Verbosity, CapsuleComponent, CenterLocation, Color) \
 	{ \
 		const FVector Center = CenterLocation; \
@@ -209,7 +209,7 @@ namespace FU::VisualLogger
 		FU_VLOG_CAPSULEWIRED(LogOwner, CategoryName, Verbosity, Center, HalfHeight, Radius, Rotation, Color); \
 	} \
 
-/** Draw wired capsule with text from UCapsuleComponent with override location*/
+/** Draw wired capsule with text from UCapsuleComponent with override location */
 #define FU_VLOG_CAPSULEWIRED_WITHCOMPONENT_LOCATIONOVERRIDE_TEXT(LogOwner, CategoryName, Verbosity, CapsuleComponent, CenterLocation, Color, TextLocationOffset, Format, ...) \
 	{ \
 		const FVector Center = CenterLocation; \
@@ -219,6 +219,27 @@ namespace FU::VisualLogger
 		FU_VLOG_CAPSULEWIRED_TEXT(LogOwner, CategoryName, Verbosity, Center, HalfHeight, Radius, Rotation, Color, TextLocationOffset, Format, ##__VA_ARGS__); \
 	} \
 
+
+/** Draw wired capsule with no text from UCapsuleComponent with override location and rotation */
+#define FU_VLOG_CAPSULEWIRED_WITHCOMPONENT_LOCATIONROTATIONOVERRIDE(LogOwner, CategoryName, Verbosity, CapsuleComponent, CenterLocation, Rotation, Color) \
+	{ \
+	const FVector Center = CenterLocation; \
+	const float HalfHeight = FU::VisualLogger::GetCapsuleHalfHeight(CapsuleComponent); \
+	const float Radius = FU::VisualLogger::GetCapsuleRadius(CapsuleComponent); \
+	const FQuat QRotation = Rotation.Quaternion(); \
+	FU_VLOG_CAPSULEWIRED(LogOwner, CategoryName, Verbosity, Center, HalfHeight, Radius, QRotation, Color); \
+	} \
+
+
+/** Draw wired capsule with text from UCapsuleComponent with override location and rotation */
+#define FU_VLOG_CAPSULEWIRED_WITHCOMPONENT_LOCATIONROTATIONOVERRIDE_TEXT(LogOwner, CategoryName, Verbosity, CapsuleComponent, CenterLocation, Rotation, Color, TextLocationOffset, Format, ...) \
+	{ \
+	const FVector Center = CenterLocation; \
+	const float HalfHeight = FU::VisualLogger::GetCapsuleHalfHeight(CapsuleComponent); \
+	const float Radius = FU::VisualLogger::GetCapsuleRadius(CapsuleComponent); \
+	const FQuat QRotation = Rotation.Quaternion(); \
+	FU_VLOG_CAPSULEWIRED_TEXT(LogOwner, CategoryName, Verbosity, Center, HalfHeight, Radius, QRotation, Color, TextLocationOffset, Format, ##__VA_ARGS__); \
+	} \
 
 
 /* 
