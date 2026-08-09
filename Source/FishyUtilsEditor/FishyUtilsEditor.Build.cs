@@ -24,7 +24,7 @@ public class FishyUtilsEditor : ModuleRules
                 "Slate", "SlateCore", "UMG", "InputCore",
                 "FishyUtils", "PropertyEditor",
                 "SceneOutliner",
-                "ToolMenus", "UnrealEd"
+                "ToolMenus", "UnrealEd", "MessageLog"
             }
         );
     }

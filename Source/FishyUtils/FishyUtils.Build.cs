@@ -27,8 +27,7 @@ public class FishyUtils : ModuleRules
 				"Slate", "SlateCore",
 				"InputCore",
 				"GameplayTags", 
-				"LevelSequence", "MovieScene",
-				"LogVisualizer"
+				"LevelSequence", "MovieScene"
 			}
 		);
 		
@@ -38,7 +37,7 @@ public class FishyUtils : ModuleRules
 			
 			PrivateDependencyModuleNames.AddRange(new string[]
 			{
-				"UnrealEd",
+				"UnrealEd", "LogVisualizer"
 			});
 		}
 	}

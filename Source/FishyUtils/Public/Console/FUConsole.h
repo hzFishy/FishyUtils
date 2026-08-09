@@ -247,6 +247,14 @@ namespace FU_Console
         }) \
     ); \
 
+#define FU_CMD_RUNLAMBDA_WITHARGS(Id, Cmd, CmdHelp, LambdaBody) \
+    FU_Console::FFUAutoConsoleCommandWithArgs C##Id(Cmd, CmdHelp, \
+        FConsoleCommandWithArgsDelegate::CreateLambda([] (const TArray<FString>& Args) \
+        { \
+			LambdaBody \
+        }) \
+    ); \
+
 #define FU_CMD_RUNLAMBDA_WORLD_FLOAT0(Id, Cmd, CmdHelp, LambdaBody) \
 	FU_Console::FFUAutoConsoleCommandWithWorldAndArgs C##Id(Cmd, CmdHelp, \
 		FConsoleCommandWithWorldAndArgsDelegate::CreateLambda([] (const TArray<FString>& Args, UWorld* World) \

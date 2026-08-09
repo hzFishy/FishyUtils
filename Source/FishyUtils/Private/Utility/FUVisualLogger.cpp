@@ -2,7 +2,7 @@
 
 
 #include "Utility/FUVisualLogger.h"
-#if ENABLE_VISUAL_LOG
+#if ENABLE_VISUAL_LOG && WITH_EDITOR
 #include "LogVisualizerSettings.h"
 #endif
 

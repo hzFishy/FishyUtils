@@ -3,82 +3,227 @@
 #pragma once
 
 #include "Utility/FUEditorUtilities.h"
-
+#include "EditorCategoryUtils.h"
 #include "EngineUtils.h"
 #include "LevelEditor.h"
 #include "Selection.h"
+#include "Misc/UObjectToken.h"
 
 #define LOCTEXT_NAMESPACE "FFishyUtilsModule"
 
-void FU_EditorUtilities::GetAllGenerateOverlapEventsComponents(FU::Utils::FFUMessageBuilder& Builder)
+
+namespace FU_EditorUtilities
 {
-	Builder.Append("All info about UPrimitiveComponents with GenerateOverlapEvents enabled");
+	static int32 PrintAllGenerateOverlapEventsComponentsFromAssetsCount = 0;
+	static TMap<FString, int32> PrintAllGenerateOverlapEventsComponentsFromPathCount;
+	static TMap<const UWorld*, int32> PrintAllGenerateOverlapEventsComponentsFromWorldCount;
 	
-	auto& AssetRegistryModule = FModuleManager::Get().LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
-	
-	TArray<FAssetData> ObjectList;
-	AssetRegistryModule.Get().GetAssetsByClass(UBlueprint::StaticClass()->GetClassPathName(), ObjectList, true);
-	for (auto ObjIter = ObjectList.CreateConstIterator(); ObjIter; ++ObjIter) 
+	FString GenerateOverlapEventsResultToString(EFUGenerateOverlapEventsResult Result)
 	{
-		const FAssetData& Asset = *ObjIter;
-		
-		if (Asset.GetSoftObjectPath().ToString().Contains("/Game"))
+		switch (Result) 
 		{
-			UBlueprint* BP = Cast<UBlueprint>(Asset.GetAsset());
-			UClass* AssetClass = BP->GeneratedClass;
-			
-			if (AssetClass->IsChildOf<AActor>())
+		case GenerateOverlapEnabled:
+			return "GenerateOverlapEvents is enabled";
+		case NoCollision:
+			return "GenerateOverlapEvents is enabled but the profile is set to NoCollision";
+		case OverlapCollisionResponseUsedOnly:
+			return "GenerateOverlapEvents is enabled and Overlap is used as a Collision Response";
+		case GenerateOverlapDisabled:
+			return "GenerateOverlapEvents is disabled";
+		case OverlapCollisionResponseUsedAndDelegatesBound:
+			return "GenerateOverlapEvents is enabled, Overlap is used as a Collision Response and Begin/End overlap delegates are bound";
+		case DelegatesBoundOnly:
+			return "GenerateOverlapEvents is enabled and Begin/End overlap delegates are bound";
+		}
+		
+		return "N/A";
+	}
+	
+	void PrintAllGenerateOverlapEventsComponentsFromAssets()
+	{
+		PrintAllGenerateOverlapEventsComponentsFromAssetsCount++;
+		
+		FMessageLog("FishyUtils").NewPage(FText::FromString(FString::Printf(TEXT("PrintAllGenerateOverlapEventsComponentsFromAssets (%i)"), 
+			PrintAllGenerateOverlapEventsComponentsFromAssetsCount)));
+		FMessageLog("FishyUtils").Info()
+			->AddText(INVTEXT("All info about Primitive Components with bGenerateOverlapEvents enabled for all project assets"));
+		
+		auto& AssetRegistryModule = FModuleManager::Get().LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
+		
+		// TODO: order by result
+		
+		TArray<FAssetData> ObjectList;
+		AssetRegistryModule.Get().GetAssetsByClass(UBlueprint::StaticClass()->GetClassPathName(), ObjectList, true);
+		for (auto ObjIter = ObjectList.CreateConstIterator(); ObjIter; ++ObjIter) 
+		{
+			const FAssetData& Asset = *ObjIter;
+			if (Asset.GetSoftObjectPath().ToString().Contains("/Game"))
 			{
-				TArray<const UPrimitiveComponent*> Components;
-				AActor::GetActorClassDefaultComponents<UPrimitiveComponent>(AssetClass, Components);
+				UBlueprint* BP = Cast<UBlueprint>(Asset.GetAsset());
+				UClass* AssetClass = BP->GeneratedClass;
 				
-				if (!Components.IsEmpty())
+				if (AssetClass->IsChildOf<AActor>())
 				{
-					GetAllGenerateOverlapEventsComponentsImpl(Builder, Components);
+					TArray<const UPrimitiveComponent*> Components;
+					AActor::GetActorClassDefaultComponents<UPrimitiveComponent>(AssetClass, Components);
+					
+					if (!Components.IsEmpty())
+					{
+						for (auto* Component : Components)
+						{
+							if (ShouldGenerateOverlapEventsComponentBeIgnored(Component))
+							{
+								continue;
+							}
+							
+							EFUGenerateOverlapEventsResult Result = GetGenerateOverlapEventsInfoForComponent(Component);
+							
+							if (Result == EFUGenerateOverlapEventsResult::GenerateOverlapDisabled)
+							{
+								continue;
+							}
+							
+							BuildMessageForGenerateOverlapEventsForComponent(Component, Asset, Result);
+						}
+					}
 				}
 			}
 		}
 	}
-}
-
-void FU_EditorUtilities::GetAllGenerateOverlapEventsComponentsForWorld(FU::Utils::FFUMessageBuilder& Builder, UWorld* World)
-{
-	for (auto It = TActorIterator<AActor>(World, AActor::StaticClass()); It; ++It)
+	
+	void FU_EditorUtilities::PrintAllGenerateOverlapEventsComponentsFromWorld(UWorld* World)
 	{
-		TArray<UPrimitiveComponent*> RawComponents;
-		(*It)->GetComponents<UPrimitiveComponent>(RawComponents);
-		
-		if (!RawComponents.IsEmpty())
+		if (PrintAllGenerateOverlapEventsComponentsFromWorldCount.Contains(World))
 		{
-			TArray<const UPrimitiveComponent*> ConstComponents;
-			ConstComponents.Reserve(RawComponents.Num());
+			PrintAllGenerateOverlapEventsComponentsFromWorldCount[World] += 1;
+		}
+		else
+		{
+			PrintAllGenerateOverlapEventsComponentsFromWorldCount.Add(World, 1);
+		}
+		
+		FMessageLog("FishyUtils").NewPage(FText::FromString(FString::Printf(TEXT("PrintAllGenerateOverlapEventsComponentsFromWorld (%s) (%i)"), 
+			*World->GetName(), PrintAllGenerateOverlapEventsComponentsFromWorldCount[World])));
+		FMessageLog("FishyUtils").Info()
+			->AddText(FText::FromString(FString::Printf(TEXT("All info about Primitive Components with bGenerateOverlapEvents enabled for all actors in world %s"), *World->GetName())));
+		
+		for (auto It = TActorIterator<AActor>(World, AActor::StaticClass()); It; ++It)
+		{
+			AActor* Actor = *It;
+			TArray<UPrimitiveComponent*> RawComponents;
+			Actor->GetComponents<UPrimitiveComponent>(RawComponents);
 			
-			for (UPrimitiveComponent* Component : RawComponents)
+			if (!RawComponents.IsEmpty())
 			{
-				ConstComponents.Emplace(Component);
+				for (UPrimitiveComponent* Component : RawComponents)
+				{
+					if (ShouldGenerateOverlapEventsComponentBeIgnored(Component))
+					{
+						continue;
+					}
+					
+					EFUGenerateOverlapEventsResult Result = GetGenerateOverlapEventsInfoForComponent(Component);
+					
+					if (Result == EFUGenerateOverlapEventsResult::GenerateOverlapDisabled)
+					{
+						continue;
+					}
+					
+					auto* BPAsset = Actor->GetClass()->ClassGeneratedBy.Get();
+					
+					FMessageLog("FishyUtils").Info()
+						->AddText(FText::FromString(FString::Printf(TEXT("[%s] %s - "), *GenerateOverlapEventsResultToString(Result), *FU::Utils::GetObjectDetailedName(Component))))
+						->AddToken(FActorToken::Create(Actor->GetPathName(), Actor->GetActorGuid(), INVTEXT("Focus Actor")))
+						->AddToken(FActionToken::Create(INVTEXT("Open Blueprint"), INVTEXT("Open Blueprint"), FOnActionTokenExecuted::CreateLambda([BPAsset] ()
+						{
+							GEditor->GetEditorSubsystem<UAssetEditorSubsystem>()->OpenEditorForAsset(BPAsset);
+						}), FCanExecuteActionToken::CreateLambda([BPAsset] ()
+						{
+							return IsValid(BPAsset);
+						})))
+						->AddToken(FActionToken::Create(INVTEXT("Disable GenerateOverlapEvents on instance"), INVTEXT("Disable GenerateOverlapEvents"), FOnActionTokenExecuted::CreateLambda([Component] ()
+						{
+							auto* MutableComponent = const_cast<UPrimitiveComponent*>(Component);
+							MutableComponent->SetGenerateOverlapEvents(false);
+							MutableComponent->MarkPackageDirty();
+						}), true))
+					;
+				}
 			}
-			
-			GetAllGenerateOverlapEventsComponentsImpl(Builder, ConstComponents);
 		}
 	}
-}
 
-void FU_EditorUtilities::GetAllGenerateOverlapEventsComponentsImpl(FU::Utils::FFUMessageBuilder& Builder, const TArray<const UPrimitiveComponent*>& Components)
-{
-	for (auto* Component : Components)
+	void FU_EditorUtilities::PrintAllGenerateOverlapEventsComponentsFromPath(const FString& Path)
+	{
+		if (PrintAllGenerateOverlapEventsComponentsFromPathCount.Contains(Path))
+		{
+			PrintAllGenerateOverlapEventsComponentsFromPathCount[Path] += 1;
+		}
+		else
+		{
+			PrintAllGenerateOverlapEventsComponentsFromPathCount.Add(Path, 1);
+		}
+		
+		FMessageLog("FishyUtils").NewPage(FText::FromString(FString::Printf(TEXT("PrintAllGenerateOverlapEventsComponentsFromPath (%s) (%i)"), 
+			*Path, PrintAllGenerateOverlapEventsComponentsFromPathCount[Path])));
+		FMessageLog("FishyUtils").Info()
+			->AddText(FText::FromString(FString::Printf(TEXT("All info about Primitive Components with bGenerateOverlapEvents enabled for all project assets in root folder %s"), *Path)));
+		
+		auto& AssetRegistryModule = FModuleManager::Get().LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
+		
+		// TODO: order by result
+		
+		TArray<FAssetData> ObjectList;
+		AssetRegistryModule.Get().GetAssetsByPath(FName(Path), ObjectList, true);
+		for (auto ObjIter = ObjectList.CreateConstIterator(); ObjIter; ++ObjIter) 
+		{
+			const FAssetData& Asset = *ObjIter;
+			if (UBlueprint* BP = Cast<UBlueprint>(Asset.GetAsset()))
+			{
+				UClass* AssetClass = BP->GeneratedClass;
+			
+				if (AssetClass->IsChildOf<AActor>())
+				{
+					TArray<const UPrimitiveComponent*> Components;
+					AActor::GetActorClassDefaultComponents<UPrimitiveComponent>(AssetClass, Components);
+				
+					if (!Components.IsEmpty())
+					{
+						for (auto* Component : Components)
+						{
+							if (ShouldGenerateOverlapEventsComponentBeIgnored(Component))
+							{
+								continue;
+							}
+							
+							EFUGenerateOverlapEventsResult Result = GetGenerateOverlapEventsInfoForComponent(Component);
+							
+							if (Result == EFUGenerateOverlapEventsResult::GenerateOverlapDisabled)
+							{
+								continue;
+							}
+							
+							BuildMessageForGenerateOverlapEventsForComponent(Component, Asset, Result);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	EFUGenerateOverlapEventsResult GetGenerateOverlapEventsInfoForComponent(const UPrimitiveComponent* Component)
 	{
 		if (Component->GetGenerateOverlapEvents())
 		{
 			if (Component->GetCollisionEnabled() == ECollisionEnabled::NoCollision)
 			{
-				Builder.NewLinef(TEXT("- [NoCollision] %s"), *FU::Utils::GetObjectDetailedName(Component));
+				return EFUGenerateOverlapEventsResult::NoCollision;
 			}
 			else
 			{
+				// check if we are using ECR_Response for a channel
 				auto& Resps = Component->GetCollisionResponseToChannels();
-				
 				bool bAnyOverlapResp = false;
-				
 				for (int32 i = 0; i < std::size(Resps.EnumArray); ++i)
 				{
 					if (Resps.GetResponse(static_cast<ECollisionChannel>(i)) == ECR_Overlap)
@@ -88,16 +233,61 @@ void FU_EditorUtilities::GetAllGenerateOverlapEventsComponentsImpl(FU::Utils::FF
 					}
 				}
 				
-				if (bAnyOverlapResp)
+				// TODO: fix
+				// check if bounds delegates
+				const bool bDelegateBound = Component->OnComponentBeginOverlap.IsBound() || Component->OnComponentEndOverlap.IsBound();
+				
+				if (bAnyOverlapResp && bDelegateBound)
 				{
-					Builder.NewLinef(TEXT("- [Overlap Response used] %s"), *FU::Utils::GetObjectDetailedName(Component));
+					return EFUGenerateOverlapEventsResult::OverlapCollisionResponseUsedAndDelegatesBound;
 				}
-				else
+				else if (bAnyOverlapResp)
 				{
-					Builder.NewLinef(TEXT("- [None] %s"), *FU::Utils::GetObjectDetailedName(Component));
+					return EFUGenerateOverlapEventsResult::OverlapCollisionResponseUsedOnly;
+				}
+				else if (bDelegateBound)
+				{
+					return EFUGenerateOverlapEventsResult::DelegatesBoundOnly;
 				}
 			}
 		}
+		else
+		{
+			return EFUGenerateOverlapEventsResult::GenerateOverlapDisabled;
+		}
+		
+		return EFUGenerateOverlapEventsResult::GenerateOverlapEnabled;
+	}
+
+	bool ShouldGenerateOverlapEventsComponentBeIgnored(const UPrimitiveComponent* Component)
+	{
+		TArray<FString> HideCategoriesArray;
+		FEditorCategoryUtils::GetClassHideCategories(Component->GetClass(), HideCategoriesArray);
+							
+		// ignore the component if its collision properties are hidden
+		if (!HideCategoriesArray.IsEmpty() && (HideCategoriesArray.Contains("Collision") || HideCategoriesArray.Contains("Physics")))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	void BuildMessageForGenerateOverlapEventsForComponent(const UPrimitiveComponent* Component, const FAssetData& Asset, EFUGenerateOverlapEventsResult Result)
+	{
+		FMessageLog("FishyUtils").Info()
+			->AddText(FText::FromString(FString::Printf(TEXT("[%s] %s - "), *GenerateOverlapEventsResultToString(Result), *FU::Utils::GetObjectDetailedName(Component))))
+			->AddToken(FUObjectToken::Create(Asset.GetAsset(), INVTEXT("Select in Content Browser")))
+			->AddToken(FActionToken::Create(INVTEXT("Open Blueprint"), INVTEXT("Open Blueprint"), FOnActionTokenExecuted::CreateLambda([Asset] ()
+			{
+				GEditor->GetEditorSubsystem<UAssetEditorSubsystem>()->OpenEditorForAsset(Asset.GetAsset());
+			})))
+			->AddToken(FActionToken::Create(INVTEXT("Disable GenerateOverlapEvents"), INVTEXT("Disable GenerateOverlapEvents"), FOnActionTokenExecuted::CreateLambda([Component] ()
+			{
+				auto* MutableComponent = const_cast<UPrimitiveComponent*>(Component);
+				MutableComponent->SetGenerateOverlapEvents(false);
+				MutableComponent->MarkPackageDirty();
+			}), true))
+		;
 	}
 }
 

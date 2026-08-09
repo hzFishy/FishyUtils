@@ -70,7 +70,9 @@ UFUDrawComponent* FU::Draw::Advanced::GetProxyComponent(const UWorld* World)
 	// create
 	FActorSpawnParameters SpawnParameters;
 	SpawnParameters.bNoFail = true;
+#if WITH_EDITOR
 	SpawnParameters.bHideFromSceneOutliner = true;
+#endif
 	
 	auto* MutableWorld = const_cast<UWorld*>(World);
 	auto* ProxyActor = MutableWorld->SpawnActor<AFUDrawProxyActor>(SpawnParameters);

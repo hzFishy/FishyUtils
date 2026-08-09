@@ -11,6 +11,24 @@
 
 namespace FU_EditorUtilities
 {
+	enum EFUGenerateOverlapEventsResult
+	{
+		/** GenerateOverlapEvents is disabled */
+		GenerateOverlapDisabled,
+		/** GenerateOverlapEvents is enabled but the profile is set to NoCollision */
+		NoCollision,
+		/** GenerateOverlapEvents is enabled and Overlap is used as a Collision Response */
+		OverlapCollisionResponseUsedOnly,
+		/** GenerateOverlapEvents is enabled, Overlap is used as a Collision Response and Begin/End overlap delegates are bound */
+		OverlapCollisionResponseUsedAndDelegatesBound,
+		/** GenerateOverlapEvents is enabled and Begin/End overlap delegates are bound */
+		DelegatesBoundOnly,
+		/** GenerateOverlapEvents is enabled */
+		GenerateOverlapEnabled
+	};
+	
+	FString GenerateOverlapEventsResultToString(EFUGenerateOverlapEventsResult Result);
+	
 	template<class ActorType>
 	ActorType* GetEditorWorldCounterpartActor(ActorType* PIEActor)
 	{
@@ -47,30 +65,45 @@ namespace FU_EditorUtilities
 	}
 	
 	
-	void GetAllGenerateOverlapEventsComponents(FU::Utils::FFUMessageBuilder& Builder);
+	void PrintAllGenerateOverlapEventsComponentsFromAssets();
 	
-	void GetAllGenerateOverlapEventsComponentsForWorld(FU::Utils::FFUMessageBuilder& Builder, UWorld* World);
+	void PrintAllGenerateOverlapEventsComponentsFromWorld(UWorld* World); 
 	
-	void GetAllGenerateOverlapEventsComponentsImpl(FU::Utils::FFUMessageBuilder& Builder, const TArray<const UPrimitiveComponent*>& Components);
+	void PrintAllGenerateOverlapEventsComponentsFromPath(const FString& Path);
+	
+	EFUGenerateOverlapEventsResult GetGenerateOverlapEventsInfoForComponent(const UPrimitiveComponent* Component);
+	
+	bool ShouldGenerateOverlapEventsComponentBeIgnored(const UPrimitiveComponent* Component);
+	
+	void BuildMessageForGenerateOverlapEventsForComponent(const UPrimitiveComponent* Component, const FAssetData& Asset, EFUGenerateOverlapEventsResult Result);
 	
 	FU_CMD_RUNLAMBDA(GetAllGenerateOverlapEventsComponentsCmd, 
-		"FU.Editor.GetAllGenerateOverlapEventsComponents", "",
+		"FU.Editor.PrintAllGenerateOverlapEventsComponentsFromAssets", "",
 		{
-			FU::Utils::FFUMessageBuilder Builder;
-			GetAllGenerateOverlapEventsComponents(Builder);
-			FU_LOG_STemp_W("GetAllGenerateOverlapEventsComponents:\n{0}", *Builder.GetMessage());
+			PrintAllGenerateOverlapEventsComponentsFromAssets();
 		}
 	);
 	
-	FU_CMD_RUNLAMBDA(GetAllGenerateOverlapEventsComponentsForCurrentWorldCmd, 
-		"FU.Editor.GetAllGenerateOverlapEventsComponentsForCurrentWorld", "",
+	FU_CMD_RUNLAMBDA(PrintAllGenerateOverlapEventsComponentsFromWorldCmd, 
+		"FU.Editor.PrintAllGenerateOverlapEventsComponentsFromCurrentWorld", "",
 		{
-			FU::Utils::FFUMessageBuilder Builder;
-			GetAllGenerateOverlapEventsComponentsForWorld(Builder, GWorld);
-			FU_LOG_STemp_W("GetAllGenerateOverlapEventsComponentsForCurrentWorld:\n{0}", *Builder.GetMessage());
+			PrintAllGenerateOverlapEventsComponentsFromWorld(GWorld);
+		}
+	); 
+	
+	FU_CMD_RUNLAMBDA_WITHARGS(PrintAllGenerateOverlapEventsComponentsFromPathCmd, 
+		"FU.Editor.PrintAllGenerateOverlapEventsComponentsFromPath", "",
+		{
+			if (Args.IsEmpty())
+			{
+				FU_LOG_STemp_W("Missing path argument (ex: SomeFolder = /Game/SomeFolder");
+			}
+			else
+			{
+				PrintAllGenerateOverlapEventsComponentsFromPath("/Game/" + Args[0]);
+			}
 		}
 	);
-	
 }
 
 

@@ -1,6 +1,8 @@
 ﻿// By hzFishy 2025 - Do whatever you want with it
 
 #include "FishyUtilsEditor.h"
+
+#include "MessageLogModule.h"
 #include "Utility/FUEditorUtilities.h"
 #include "Utility/FUPickers.h"
 #include "Utility/FUPickerSocketCustomization.h"
@@ -19,6 +21,8 @@ void FFishyUtilsEditorModule::StartupModule()
 	FFUEditor::FFUEditorCommands::Register();
 	UToolMenus::RegisterStartupCallback(FSimpleMulticastDelegate::FDelegate::CreateRaw(&FishyEditorInstance, &FFUEditor::RegisterMenuExtensions));
 	
+	FMessageLogModule& MessageLogModule = FModuleManager::LoadModuleChecked<FMessageLogModule>("MessageLog");
+	MessageLogModule.RegisterLogListing("FishyUtils", INVTEXT("Fishy Utils"));
 }
 
 void FFishyUtilsEditorModule::ShutdownModule()
@@ -28,6 +32,9 @@ void FFishyUtilsEditorModule::ShutdownModule()
 
 	FishyEditorInstance.UnregisterMenuExtensions();
 	FFUEditor::FFUEditorCommands::Unregister();
+	
+	FMessageLogModule& MessageLogModule = FModuleManager::LoadModuleChecked<FMessageLogModule>("MessageLog");
+	MessageLogModule.UnregisterLogListing("FishyUtils");
 }
 
 #undef LOCTEXT_NAMESPACE
