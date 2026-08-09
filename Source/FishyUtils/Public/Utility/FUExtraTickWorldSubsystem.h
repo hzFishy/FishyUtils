@@ -48,7 +48,7 @@ struct FFUExtraTickFunction : public FTickFunction
 		Properties
 	----------------------------------------------------------------------------*/
 	UPROPERTY(Transient)
-	UFUExtraTickWorldSubsystem* Target;
+	TObjectPtr<UFUExtraTickWorldSubsystem> Target;
 	
 	ETickingGroup Group;
 	

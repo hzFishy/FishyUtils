@@ -73,14 +73,32 @@ FString FU::Utils::GetObjectDetailedName(const UObject* Object)
 		else if (const auto* Component = Cast<UActorComponent>(Object))
 		{
 			// if we are an actor component we combine to ActorName-ComponentName
-			const AActor* OwningActor = Component->GetOwner();
+			
+			const AActor* OwningActor = nullptr;
+			if (Component->IsTemplate())
+			{
+				if (auto* ActorOuter = Cast<AActor>(Component->GetOuter()))
+				{
+					OwningActor = ActorOuter;
+				}
+				else if (auto* OuterClass = Cast<UClass>(Component->GetOuter()))
+				{
+					OwningActor = GetDefault<AActor>(OuterClass);
+				}
+			}
+			else
+			{
+				OwningActor = Component->GetOwner();
+			}
+			
 			if (OwningActor)
 			{
 				BaseString += OwningActor->GetActorNameOrLabel();
+				BaseString.RemoveFromStart("Default__", ESearchCase::CaseSensitive);
 				BaseString += "-";
 			}
-				
-			BaseString += Object->GetName();
+			
+			BaseString += Object->IsTemplate() ? GetFNameWithoutTemplateSuffix(Object->GetFName()).ToString() :  Object->GetName();
 		}
 		else if (const auto* OwnerActor = Cast<AActor>(Object->GetOuter()))
 		{

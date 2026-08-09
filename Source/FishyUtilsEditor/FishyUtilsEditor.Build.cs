@@ -12,6 +12,7 @@ public class FishyUtilsEditor : ModuleRules
             new string[]
             {
                 "Core", "SceneOutliner", "BlueprintComponentReference",
+                "FishyUtils"
             }
         );
 
