@@ -11,24 +11,6 @@
 
 namespace FU_EditorUtilities
 {
-	enum EFUGenerateOverlapEventsResult
-	{
-		/** GenerateOverlapEvents is disabled */
-		GenerateOverlapDisabled,
-		/** GenerateOverlapEvents is enabled but the profile is set to NoCollision */
-		NoCollision,
-		/** GenerateOverlapEvents is enabled and Overlap is used as a Collision Response */
-		OverlapCollisionResponseUsedOnly,
-		/** GenerateOverlapEvents is enabled, Overlap is used as a Collision Response and Begin/End overlap delegates are bound */
-		OverlapCollisionResponseUsedAndDelegatesBound,
-		/** GenerateOverlapEvents is enabled and Begin/End overlap delegates are bound */
-		DelegatesBoundOnly,
-		/** GenerateOverlapEvents is enabled */
-		GenerateOverlapEnabled
-	};
-	
-	FString GenerateOverlapEventsResultToString(EFUGenerateOverlapEventsResult Result);
-	
 	template<class ActorType>
 	ActorType* GetEditorWorldCounterpartActor(ActorType* PIEActor)
 	{
@@ -65,9 +47,31 @@ namespace FU_EditorUtilities
 	}
 	
 	
+	/*----------------------------------------------------------------------------
+		Overlap detection
+	----------------------------------------------------------------------------*/
+	enum EFUGenerateOverlapEventsResult
+	{
+		/** GenerateOverlapEvents is disabled */
+		GenerateOverlapDisabled,
+		/** GenerateOverlapEvents is enabled but the profile is set to NoCollision */
+		NoCollision,
+		/** GenerateOverlapEvents is enabled and Overlap is used as a Collision Response */
+		OverlapCollisionResponseUsedOnly,
+		/** GenerateOverlapEvents is enabled, Overlap is used as a Collision Response and Begin/End overlap delegates are bound */
+		OverlapCollisionResponseUsedAndDelegatesBound,
+		/** GenerateOverlapEvents is enabled and Begin/End overlap delegates are bound */
+		DelegatesBoundOnly,
+		/** GenerateOverlapEvents is enabled */
+		GenerateOverlapEnabled
+	};
+	
+	FString GenerateOverlapEventsResultToString(EFUGenerateOverlapEventsResult Result);
+	
+	
 	void PrintAllGenerateOverlapEventsComponentsFromAssets();
 	
-	void PrintAllGenerateOverlapEventsComponentsFromWorld(UWorld* World); 
+	void PrintAllGenerateOverlapEventsComponentsFromWorld(UWorld* World);
 	
 	void PrintAllGenerateOverlapEventsComponentsFromPath(const FString& Path);
 	
@@ -104,6 +108,26 @@ namespace FU_EditorUtilities
 			}
 		}
 	);
+	
+	
+	/*----------------------------------------------------------------------------
+		Collision detection
+	----------------------------------------------------------------------------*/
+	void PrintAllCollisionEnabledComponentsFromWorld(UWorld* World, bool bHideActorsWithNoCollision);
+	
+	FU_CMD_RUNLAMBDA_WITHARGS(PrintAllCollisionEnabledComponentsFromWorldCmd, 
+		"FU.Editor.PrintAllCollisionEnabledComponentsFromWorld", "Optionaly 1 to hide actors with no components with collisions enabled",
+		{
+			bool bHideActors = false;
+			if (!Args.IsEmpty())
+			{
+				int32 Param1 = FCString::Atoi(*Args[0]);
+				bHideActors = static_cast<bool>(Param1);
+			}
+			
+			PrintAllCollisionEnabledComponentsFromWorld(GWorld, bHideActors);
+		}
+	); 
 }
 
 

@@ -14,6 +14,10 @@
 
 namespace FU_EditorUtilities
 {
+	
+	/*----------------------------------------------------------------------------
+		Overlap Detection
+	----------------------------------------------------------------------------*/
 	static int32 PrintAllGenerateOverlapEventsComponentsFromAssetsCount = 0;
 	static TMap<FString, int32> PrintAllGenerateOverlapEventsComponentsFromPathCount;
 	static TMap<const UWorld*, int32> PrintAllGenerateOverlapEventsComponentsFromWorldCount;
@@ -132,9 +136,9 @@ namespace FU_EditorUtilities
 					auto* BPAsset = Actor->GetClass()->ClassGeneratedBy.Get();
 					
 					FMessageLog("FishyUtils").Info()
-						->AddText(FText::FromString(FString::Printf(TEXT("[%s] %s - "), *GenerateOverlapEventsResultToString(Result), *FU::Utils::GetObjectDetailedName(Component))))
+						->AddText(FText::FromString(FString::Printf(TEXT("%s for %s - "), *GenerateOverlapEventsResultToString(Result), *FU::Utils::GetObjectDetailedName(Component))))
 						->AddToken(FActorToken::Create(Actor->GetPathName(), Actor->GetActorGuid(), INVTEXT("Focus Actor")))
-						->AddToken(FActionToken::Create(INVTEXT("Open Blueprint"), INVTEXT("Open Blueprint"), FOnActionTokenExecuted::CreateLambda([BPAsset] ()
+						->AddToken(FActionToken::Create(INVTEXT("Open Blueprint"), FText::FromString(IsValid(BPAsset) ? "Open Blueprint" : "No Blueprint asset found"), FOnActionTokenExecuted::CreateLambda([BPAsset] ()
 						{
 							GEditor->GetEditorSubsystem<UAssetEditorSubsystem>()->OpenEditorForAsset(BPAsset);
 						}), FCanExecuteActionToken::CreateLambda([BPAsset] ()
@@ -233,7 +237,7 @@ namespace FU_EditorUtilities
 					}
 				}
 				
-				// TODO: fix
+				// TODO: fix, doesnt detect bound delegate in BP graphs
 				// check if bounds delegates
 				const bool bDelegateBound = Component->OnComponentBeginOverlap.IsBound() || Component->OnComponentEndOverlap.IsBound();
 				
@@ -275,7 +279,7 @@ namespace FU_EditorUtilities
 	void BuildMessageForGenerateOverlapEventsForComponent(const UPrimitiveComponent* Component, const FAssetData& Asset, EFUGenerateOverlapEventsResult Result)
 	{
 		FMessageLog("FishyUtils").Info()
-			->AddText(FText::FromString(FString::Printf(TEXT("[%s] %s - "), *GenerateOverlapEventsResultToString(Result), *FU::Utils::GetObjectDetailedName(Component))))
+			->AddText(FText::FromString(FString::Printf(TEXT("%s for %s - "), *GenerateOverlapEventsResultToString(Result), *FU::Utils::GetObjectDetailedName(Component))))
 			->AddToken(FUObjectToken::Create(Asset.GetAsset(), INVTEXT("Select in Content Browser")))
 			->AddToken(FActionToken::Create(INVTEXT("Open Blueprint"), INVTEXT("Open Blueprint"), FOnActionTokenExecuted::CreateLambda([Asset] ()
 			{
@@ -288,6 +292,74 @@ namespace FU_EditorUtilities
 				MutableComponent->MarkPackageDirty();
 			}), true))
 		;
+	}
+	
+	
+	/*----------------------------------------------------------------------------
+		Collision detection
+	----------------------------------------------------------------------------*/
+	static TMap<const UWorld*, int32> PrintAllCollisionEnabledComponentsFromWorldCount;
+	
+	void PrintAllCollisionEnabledComponentsFromWorld(UWorld* World, bool bHideActorsWithNoCollision)
+	{
+		if (PrintAllCollisionEnabledComponentsFromWorldCount.Contains(World))
+		{
+			PrintAllCollisionEnabledComponentsFromWorldCount[World] += 1;
+		}
+		else
+		{
+			PrintAllCollisionEnabledComponentsFromWorldCount.Add(World, 1);
+		}
+		
+		FMessageLog("FishyUtils").NewPage(FText::FromString(FString::Printf(TEXT("PrintAllCollisionEnabledComponentsFromWorld (%s) (%i)"), 
+			*World->GetName(), PrintAllCollisionEnabledComponentsFromWorldCount[World])));
+		FMessageLog("FishyUtils").Info()
+			->AddText(FText::FromString(FString::Printf(TEXT("All info about Primitive Components with Collision Enabled for all actors in world %s"), *World->GetName())));
+		
+		for (auto It = TActorIterator<AActor>(World, AActor::StaticClass()); It; ++It)
+		{
+			AActor* Actor = *It;
+			TArray<UPrimitiveComponent*> RawComponents;
+			Actor->GetComponents<UPrimitiveComponent>(RawComponents);
+			
+			if (!RawComponents.IsEmpty())
+			{
+				bool bCollisions = false;
+				for (UPrimitiveComponent* Component : RawComponents)
+				{
+					bool bCollisionEnabled = Component->IsCollisionEnabled();
+					
+					if (bCollisionEnabled)
+					{
+						bCollisions = true;
+						auto* BPAsset = Actor->GetClass()->ClassGeneratedBy.Get();
+						
+						FMessageLog("FishyUtils").Info()
+							->AddText(FText::FromString(FString::Printf(TEXT("Collision enabled for %s - "), *FU::Utils::GetObjectDetailedName(Component))))
+							->AddToken(FActorToken::Create(Actor->GetPathName(), Actor->GetActorGuid(), INVTEXT("Focus Actor")))
+							->AddToken(FActionToken::Create(INVTEXT("Open Blueprint"), FText::FromString(IsValid(BPAsset) ? "Open Blueprint" : "No Blueprint asset found"), FOnActionTokenExecuted::CreateLambda([BPAsset] ()
+							{
+								GEditor->GetEditorSubsystem<UAssetEditorSubsystem>()->OpenEditorForAsset(BPAsset);
+							}), FCanExecuteActionToken::CreateLambda([BPAsset] ()
+							{
+								return IsValid(BPAsset);
+							})))
+							->AddToken(FActionToken::Create(INVTEXT("Set profile to NoCollision on instance"), INVTEXT("Set profile to NoCollision on instance"), FOnActionTokenExecuted::CreateLambda([Component] ()
+							{
+								auto* MutableComponent = const_cast<UPrimitiveComponent*>(Component);
+								MutableComponent->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
+								MutableComponent->MarkPackageDirty();
+							}), true))
+						;
+					}
+				}
+				
+				if (!bCollisions && bHideActorsWithNoCollision)
+				{
+					Actor->SetIsTemporarilyHiddenInEditor(true);
+				}
+			}
+		}
 	}
 }
 
