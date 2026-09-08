@@ -385,5 +385,12 @@ namespace FU::Utils
 		OutString += Suffix;
 	}
 	
-	
+	/**
+	 * Copy from ModelingObjectsCreationAPI.h
+	 * 
+	 * Generate a N-letter GUID string that contains only hex digits,
+	 * and contains at least one letter and one number. Used to create _UUID suffixes
+	 * for making asset names unique, etc.
+	 */
+	FString GenerateRandomHexString(int32 NumChars = 8);
 }

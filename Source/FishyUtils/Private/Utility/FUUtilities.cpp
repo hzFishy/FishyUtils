@@ -498,12 +498,49 @@ bool FU::Utils::IsTransformIdentity(const FTransform& Transform)
 	return Transform.GetLocation().IsZero() && Transform.GetRotation().IsIdentity() && Transform.GetScale3D() == FVector::OneVector;
 }
 
+bool FU::Utils::Math::IsPointInSphere(const FVector& Center, float Radius, const FVector& Point)
+{
+	return (Point - Center).Length() < Radius;
+}
+
 void FU::Utils::ArrayToString(const TArray<FString>& Array, FString& OutString, const FString& Separator, const FString& Prefix, const FString& Suffix)
 {
 	ArrayToStringTemplate<FString>(Array, [] (const FString& String) { return String; }, OutString, Separator, Prefix, Suffix);
 }
 
-bool FU::Utils::Math::IsPointInSphere(const FVector& Center, float Radius, const FVector& Point)
+FString FU::Utils::GenerateRandomHexString(int32 NumChars)
 {
-	return (Point - Center).Length() < Radius;
+	int32 FailCount = 0;
+	while (FailCount++ < 10)
+	{
+		FGuid Guid = FGuid::NewGuid();
+		FString GuidString = Guid.ToString(EGuidFormats::UniqueObjectGuid).ToUpper();
+		FString Result;
+		int32 Digits = 0, Letters = 0;
+		for (int32 k = 0; k < GuidString.Len(); ++k)
+		{
+			TCHAR Character = GuidString[k];
+			if (FChar::IsHexDigit(Character))
+			{
+				Result.AppendChar(Character);
+				if (FChar::IsDigit(Character))
+				{
+					Digits++;
+				}
+				else
+				{
+					Letters++;
+				}
+			}
+			if (Result.Len() == NumChars)
+			{
+				if (Digits > 0 && Letters > 0)
+				{
+					return Result;
+				}
+				break;		// exit loop
+			}
+		}
+	}
+	return TEXT("BADGUID1");
 }
