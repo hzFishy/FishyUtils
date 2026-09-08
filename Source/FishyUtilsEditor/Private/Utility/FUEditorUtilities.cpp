@@ -4,9 +4,11 @@
 
 #include "Utility/FUEditorUtilities.h"
 #include "EditorCategoryUtils.h"
+#include "EditorModeManager.h"
 #include "EngineUtils.h"
 #include "LevelEditor.h"
 #include "Selection.h"
+#include "Framework/Commands/GenericCommands.h"
 #include "Misc/UObjectToken.h"
 
 #define LOCTEXT_NAMESPACE "FFishyUtilsModule"
@@ -373,33 +375,116 @@ void FFUEditor::RegisterMenuExtensions()
 	// Use the current object as the owner of the menus
 	// This allows us to remove all our custom menus when the module is unloaded
 	FToolMenuOwnerScoped OwnerScoped(this);
- 
-	UToolMenu* SelectionMenu = UToolMenus::Get()->ExtendMenu(
-		"LevelEditor.MainMenu.Select");
 	
-	FToolMenuSection& FishySelectionSection = SelectionMenu->AddSection(
-		"FishyUtilities",
-		INVTEXT("Fishy Utilities")
-	);
-
-	FishySelectionSection.AddMenuEntry(FFUEditorCommands::Get().SelectSameFolderLevel);
-
-	// Bind the commands
-	const FLevelEditorModule& LevelEditor = FModuleManager::GetModuleChecked<FLevelEditorModule>("LevelEditor");
+	auto* ToolMenus = UToolMenus::Get();
+	auto& LevelEditor = FModuleManager::GetModuleChecked<FLevelEditorModule>("LevelEditor");
 	const TSharedRef<FUICommandList> Commands = LevelEditor.GetGlobalLevelEditorActions();
- 
-	Commands->MapAction(
-		FFUEditorCommands::Get().SelectSameFolderLevel,
-		FExecuteAction::CreateRaw(this, &FFUEditor::ExecuteSelectSameFolderLevel)
-	);
+	
+	
+	// Select menu
+	{
+		auto* SelectionMenu = ToolMenus->ExtendMenu("LevelEditor.MainMenu.Select");
+		
+		FToolMenuSection& FishySelectionSection = SelectionMenu->AddSection(
+			"FishyUtilities",
+			INVTEXT("Fishy Utilities")
+		);
+		
+		// SelectSameFolderLevel
+		{
+			FishySelectionSection.AddMenuEntry(FFUEditorCommands::Get().SelectSameFolderLevel);
+			
+			// Bind the command
+			Commands->MapAction(
+				FFUEditorCommands::Get().SelectSameFolderLevel,
+				FExecuteAction::CreateRaw(this, &FFUEditor::ExecuteSelectSameFolderLevel)
+			);
+		}
+	}
+	
+	// Level Editor actor operations
+	{
+		UToolMenu* ActorContextMenu = ToolMenus->ExtendMenu("LevelEditor.ActorContextMenu");
+		
+		FToolMenuSection* ActorOptionsSection = ActorContextMenu->FindSection("ActorOptions");
+		
+		FToolMenuEntry Entry(UToolMenus::Get()->CurrentOwner(), "CopyPasteOperationsSubMenu", EMultiBlockType::MenuEntry);
+		Entry.TutorialHighlightName = NAME_None;
+		Entry.Label = INVTEXT("Copy/Paste Operations");
+		Entry.ToolTip = INVTEXT("");
+		Entry.Icon = FSlateIcon(FAppStyle::GetAppStyleSetName(), "Icons.Transform");
+		Entry.bShouldCloseWindowAfterMenuSelection = true;
+		Entry.SubMenuData.bIsSubMenu = true;
+		Entry.SubMenuData.ConstructMenu = FNewToolMenuDelegate::CreateStatic(&FFUEditor::FillActorOptionsFishyUtilsSubMenu);
+		Entry.SubMenuData.bOpenSubMenuOnClick = false;
+		Entry.InsertPosition = FToolMenuInsert("TransformSubMenu", EToolMenuInsertType::After);
+		
+		ActorOptionsSection->AddEntry(Entry);
+		
+		// Bind the commands
+		Commands->MapAction(
+			FFUEditorCommands::Get().ActorCopyTransform,
+			FExecuteAction::CreateRaw(this, &FFUEditor::ExecuteActorCopyTransform)
+		);
+		Commands->MapAction(
+			FFUEditorCommands::Get().ActorPasteTransform,
+			FExecuteAction::CreateRaw(this, &FFUEditor::ExecuteActorPasteTransform),
+			FCanExecuteAction::CreateRaw(this, &FFUEditor::CanExecuteActorPasteTransform)
+		);
+		
+		Commands->MapAction(
+			FFUEditorCommands::Get().ActorCopyLocation,
+			FExecuteAction::CreateRaw(this, &FFUEditor::ExecuteActorCopyLocation)
+		);
+		Commands->MapAction(
+			FFUEditorCommands::Get().ActorPasteLocation,
+			FExecuteAction::CreateRaw(this, &FFUEditor::ExecuteActorPasteLocation),
+			FCanExecuteAction::CreateRaw(this, &FFUEditor::CanExecuteActorPasteLocation)
+		);
+		
+		Commands->MapAction(
+			FFUEditorCommands::Get().ActorCopyRotation,
+			FExecuteAction::CreateRaw(this, &FFUEditor::ExecuteActorCopyRotation)
+		);
+		Commands->MapAction(
+			FFUEditorCommands::Get().ActorPasteRotation,
+			FExecuteAction::CreateRaw(this, &FFUEditor::ExecuteActorPasteRotation),
+			FCanExecuteAction::CreateRaw(this, &FFUEditor::CanExecuteActorPasteRotation)
+		);
+		
+		Commands->MapAction(
+			FFUEditorCommands::Get().ActorCopyScale,
+			FExecuteAction::CreateRaw(this, &FFUEditor::ExecuteActorCopyScale)
+		);
+		Commands->MapAction(
+			FFUEditorCommands::Get().ActorPasteScale,
+			FExecuteAction::CreateRaw(this, &FFUEditor::ExecuteActorPasteScale),
+			FCanExecuteAction::CreateRaw(this, &FFUEditor::CanExecuteActorPasteScale)
+		);
+	}
 }
 
 void FFUEditor::UnregisterMenuExtensions()
 {
 	UToolMenus::UnRegisterStartupCallback(this);
- 
+	
 	// Unregister all our menu extensions
 	UToolMenus::UnregisterOwner(this);
+}
+
+void FFUEditor::SetEditorGizmoTransform(const FTransform& NewTransform)
+{
+	auto* EditorViewportClient = static_cast<FEditorViewportClient*>(GEditor->GetActiveViewport()->GetClient());
+	FEditorModeTools* ModeTools = EditorViewportClient->GetModeTools();
+	
+	if (ModeTools->AllowWidgetMove())
+	{
+		ModeTools->PivotLocation = NewTransform.GetLocation();
+		ModeTools->SnappedLocation = NewTransform.GetLocation();
+	}
+	
+	ModeTools->TranslateRotateXAxisAngle = NewTransform.Rotator().Yaw;
+	ModeTools->TranslateRotate2DAngle = NewTransform.Rotator().Pitch;
 }
 
 void FFUEditor::ExecuteSelectSameFolderLevel()
@@ -424,12 +509,203 @@ void FFUEditor::ExecuteSelectSameFolderLevel()
 	}
 }
 
+AActor* FFUEditor::GetSelectedActor() const
+{
+	TArray<AActor*> SelectedActors;
+	GEditor->GetSelectedActors()->GetSelectedObjects<AActor>(SelectedActors);
+	
+	if (SelectedActors.IsEmpty())
+	{
+		return nullptr;
+	}
+	else if (SelectedActors.Num() > 1)
+	{
+		FNotificationInfo NotificationInfo(INVTEXT("Get Selected Actor"));
+		NotificationInfo.ExpireDuration = 2;
+		NotificationInfo.Image = FAppStyle::GetBrush("Icons.WarningWithColor");
+		NotificationInfo.SubText = INVTEXT("Action only works with a single actor selected");
+		FSlateNotificationManager::Get().AddNotification(NotificationInfo);
+		return nullptr;
+	}
+	
+	return  SelectedActors[0];
+}
+
+void FFUEditor::ExecuteActorCopyTransform()
+{
+	if (auto* SelectedActor = GetSelectedActor())
+	{
+		FString Value = SelectedActor->GetRootComponent()->GetComponentTransform().ToString();
+		FPropertyEditorClipboard::ClipboardCopy(*Value);
+	}
+}
+
+bool FFUEditor::CanExecuteActorPasteTransform() const
+{
+	FTransform Value;
+	return GetPasteValueAs(Value);
+}
+
+void FFUEditor::ExecuteActorPasteTransform()
+{
+	if (auto* SelectedActor = GetSelectedActor())
+	{
+		FTransform Transform;
+		if (GetPasteValueAs(Transform))
+		{
+			GEngine->BeginTransaction(TEXT("ExecuteActorPasteTransform"), INVTEXT("ExecuteActorPasteTransform"), nullptr);
+			SelectedActor->Modify();
+			SelectedActor->GetRootComponent()->SetWorldTransform(Transform);
+			SetEditorGizmoTransform(Transform);
+			GEngine->EndTransaction();
+		}
+	}
+}
+
+void FFUEditor::ExecuteActorCopyLocation()
+{
+	if (auto* SelectedActor = GetSelectedActor())
+	{
+		FString Value = SelectedActor->GetRootComponent()->GetComponentLocation().ToString();
+		FPropertyEditorClipboard::ClipboardCopy(*Value);
+	}
+}
+
+bool FFUEditor::CanExecuteActorPasteLocation() const
+{
+	FVector Value;
+	return GetPasteValueAs(Value);
+}
+
+void FFUEditor::ExecuteActorPasteLocation()
+{
+	if (auto* SelectedActor = GetSelectedActor())
+	{
+		FVector Location;
+		if (GetPasteValueAs(Location))
+		{
+			GEngine->BeginTransaction(TEXT("ExecuteActorPasteLocation"), INVTEXT("ExecuteActorPasteLocation"), nullptr);
+			SelectedActor->Modify();
+			SelectedActor->GetRootComponent()->SetWorldLocation(Location);
+			SetEditorGizmoTransform(SelectedActor->GetRootComponent()->GetComponentTransform());
+			GEngine->EndTransaction();
+		}
+	}
+}
+
+void FFUEditor::ExecuteActorCopyRotation()
+{
+	if (auto* SelectedActor = GetSelectedActor())
+	{
+		FString Value = SelectedActor->GetRootComponent()->GetComponentRotation().ToString();
+		FPropertyEditorClipboard::ClipboardCopy(*Value);
+	}
+}
+
+bool FFUEditor::CanExecuteActorPasteRotation() const
+{
+	FRotator Value;
+	return GetPasteValueAs(Value);
+}
+
+void FFUEditor::ExecuteActorPasteRotation()
+{
+	if (auto* SelectedActor = GetSelectedActor())
+	{
+		FRotator Rotation;
+		if (GetPasteValueAs(Rotation))
+		{
+			GEngine->BeginTransaction(TEXT("ExecuteActorPasteRotation"), INVTEXT("ExecuteActorPasteRotation"), nullptr);
+			SelectedActor->Modify();
+			SelectedActor->GetRootComponent()->SetWorldRotation(Rotation);
+			GEngine->EndTransaction();
+		}
+	}
+}
+
+void FFUEditor::ExecuteActorCopyScale()
+{
+	if (auto* SelectedActor = GetSelectedActor())
+	{
+		FString Value = SelectedActor->GetRootComponent()->GetComponentScale().ToString();
+		FPropertyEditorClipboard::ClipboardCopy(*Value);
+	}
+}
+
+bool FFUEditor::CanExecuteActorPasteScale() const
+{
+	FVector Value;
+	return GetPasteValueAs(Value);
+}
+
+void FFUEditor::ExecuteActorPasteScale()
+{
+	if (auto* SelectedActor = GetSelectedActor())
+	{
+		FVector Scale;
+		if (GetPasteValueAs(Scale))
+		{
+			GEngine->BeginTransaction(TEXT("ExecuteActorPasteScale"), INVTEXT("ExecuteActorPasteScale"), nullptr);
+			SelectedActor->Modify();
+			SelectedActor->GetRootComponent()->SetWorldScale3D(Scale);
+			GEngine->EndTransaction();
+		}
+	}
+}
+
+void FFUEditor::FillActorOptionsFishyUtilsSubMenu(UToolMenu* Menu)
+{
+	auto& TransformSection = Menu->AddSection("Transform", INVTEXT("Transform"));
+	TransformSection.AddMenuEntry(FFUEditorCommands::Get().ActorCopyTransform, TAttribute<FText>(), TAttribute<FText>(), FGenericCommands::Get().Copy->GetIcon());
+	TransformSection.AddMenuEntry(FFUEditorCommands::Get().ActorPasteTransform, TAttribute<FText>(), TAttribute<FText>(), FGenericCommands::Get().Paste->GetIcon());
+	
+	auto& LocationSection = Menu->AddSection("Location", INVTEXT("Location"));
+	LocationSection.AddMenuEntry(FFUEditorCommands::Get().ActorCopyLocation, TAttribute<FText>(), TAttribute<FText>(), FGenericCommands::Get().Copy->GetIcon());
+	LocationSection.AddMenuEntry(FFUEditorCommands::Get().ActorPasteLocation, TAttribute<FText>(), TAttribute<FText>(), FGenericCommands::Get().Paste->GetIcon());
+	
+	auto& RotationSection = Menu->AddSection("Rotation", INVTEXT("Rotation"));
+	RotationSection.AddMenuEntry(FFUEditorCommands::Get().ActorCopyRotation, TAttribute<FText>(), TAttribute<FText>(), FGenericCommands::Get().Copy->GetIcon());
+	RotationSection.AddMenuEntry(FFUEditorCommands::Get().ActorPasteRotation, TAttribute<FText>(), TAttribute<FText>(), FGenericCommands::Get().Paste->GetIcon());
+	
+	auto& ScaleSection = Menu->AddSection("Scale", INVTEXT("Scale"));
+	ScaleSection.AddMenuEntry(FFUEditorCommands::Get().ActorCopyScale, TAttribute<FText>(), TAttribute<FText>(), FGenericCommands::Get().Copy->GetIcon());
+	ScaleSection.AddMenuEntry(FFUEditorCommands::Get().ActorPasteScale, TAttribute<FText>(), TAttribute<FText>(), FGenericCommands::Get().Paste->GetIcon());
+}
+
 void FFUEditor::FFUEditorCommands::RegisterCommands()
 {
 	UI_COMMAND(SelectSameFolderLevel,
 		"Select All In Folder",
 		"Selects all other actors that are in the same root folder than the current selection (if multiple actors are selected the first selection will be used as reference)",
 		EUserInterfaceActionType::Button, FInputChord(EKeys::S, EModifierKey::Shift | EModifierKey::Alt)
+	);
+	
+	UI_COMMAND(ActorCopyTransform,
+		"Copy Actor Transform", "Copy the transform of the selected actor", EUserInterfaceActionType::Button, FInputChord()
+	);
+	UI_COMMAND(ActorPasteTransform,
+		"Paste Actor Transform", "Paste the cached transform on the selected actor", EUserInterfaceActionType::Button, FInputChord()
+	);
+	
+	UI_COMMAND(ActorCopyLocation,
+		"Copy Actor Location", "Copy the location of the selected actor", EUserInterfaceActionType::Button, FInputChord()
+	);
+	UI_COMMAND(ActorPasteLocation,
+		"Paste Actor Location", "Paste the cached location on the selected actor", EUserInterfaceActionType::Button, FInputChord()
+	);
+	
+	UI_COMMAND(ActorCopyRotation,
+		"Copy Actor Rotation", "Copy the rotation of the selected actor", EUserInterfaceActionType::Button, FInputChord()
+	);
+	UI_COMMAND(ActorPasteRotation,
+		"Paste Actor Rotation", "Paste the cached rotation on the selected actor", EUserInterfaceActionType::Button, FInputChord()
+	);
+	
+	UI_COMMAND(ActorCopyScale,
+		"Copy Actor Scale", "Copy the scale of the selected actor", EUserInterfaceActionType::Button, FInputChord()
+	);
+	UI_COMMAND(ActorPasteScale,
+		"Paste Actor Scale", "Paste the cached scaled on the selected actor", EUserInterfaceActionType::Button, FInputChord()
 	);
 }
 

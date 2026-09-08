@@ -3,6 +3,7 @@
 #pragma once
 
 #include "EngineUtils.h"
+#include "PropertyEditorClipboard.h"
 #include "Console/FUConsole.h"
 #include "Framework/Commands/Commands.h"
 #include "Logging/FULogging.h"
@@ -146,7 +147,19 @@ public:
 		{}
 
 		TSharedPtr<FUICommandInfo> SelectSameFolderLevel;
-
+		
+		TSharedPtr<FUICommandInfo> ActorCopyTransform;
+		TSharedPtr<FUICommandInfo> ActorPasteTransform;
+		
+		TSharedPtr<FUICommandInfo> ActorCopyLocation;
+		TSharedPtr<FUICommandInfo> ActorPasteLocation;
+		
+		TSharedPtr<FUICommandInfo> ActorCopyRotation;
+		TSharedPtr<FUICommandInfo> ActorPasteRotation;
+		
+		TSharedPtr<FUICommandInfo> ActorCopyScale;
+		TSharedPtr<FUICommandInfo> ActorPasteScale;
+		
 		virtual void RegisterCommands() override;
 	};
 	
@@ -157,8 +170,51 @@ public:
 	void RegisterMenuExtensions();
 	
 	void UnregisterMenuExtensions();
-
+	
+	void SetEditorGizmoTransform(const FTransform& NewTransform);
+	
 protected:
 	void ExecuteSelectSameFolderLevel();
+	
+	AActor* GetSelectedActor() const;
+	
+	template <typename T>
+	bool GetPasteValueAs(T& OutValue) const
+	{
+		FString Value;
+		FPropertyEditorClipboard::ClipboardPaste(Value);
+		
+		if (!Value.IsEmpty())
+		{
+			T TypeValue;
+			const bool ParseResult = TypeValue.InitFromString(Value);
+			
+			if (ParseResult && !TypeValue.ContainsNaN())
+			{
+				OutValue = TypeValue;
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	void ExecuteActorCopyTransform();
+	bool CanExecuteActorPasteTransform() const;
+	void ExecuteActorPasteTransform();
+	
+	void ExecuteActorCopyLocation();
+	bool CanExecuteActorPasteLocation() const;
+	void ExecuteActorPasteLocation();
+	
+	void ExecuteActorCopyRotation();
+	bool CanExecuteActorPasteRotation() const;
+	void ExecuteActorPasteRotation();
+	
+	void ExecuteActorCopyScale();
+	bool CanExecuteActorPasteScale() const;
+	void ExecuteActorPasteScale();
+	
+	static void FillActorOptionsFishyUtilsSubMenu(UToolMenu* Menu);
 };
 
