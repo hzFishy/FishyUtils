@@ -7,6 +7,7 @@
 #include "EditorModeManager.h"
 #include "EngineUtils.h"
 #include "LevelEditor.h"
+#include "LevelEditorActions.h"
 #include "Selection.h"
 #include "Framework/Commands/GenericCommands.h"
 #include "Misc/UObjectToken.h"
