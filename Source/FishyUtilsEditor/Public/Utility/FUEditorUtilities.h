@@ -10,7 +10,7 @@
 #include "Utility/FUUtilities.h"
 
 
-namespace FU_EditorUtilities
+namespace FU::EditorUtilities
 {
 	template<class ActorType>
 	ActorType* GetEditorWorldCounterpartActor(ActorType* PIEActor)

@@ -15,7 +15,7 @@
 #define LOCTEXT_NAMESPACE "FFishyUtilsModule"
 
 
-namespace FU_EditorUtilities
+namespace FU::EditorUtilities
 {
 	
 	/*----------------------------------------------------------------------------
@@ -98,7 +98,7 @@ namespace FU_EditorUtilities
 		}
 	}
 	
-	void FU_EditorUtilities::PrintAllGenerateOverlapEventsComponentsFromWorld(UWorld* World)
+	void PrintAllGenerateOverlapEventsComponentsFromWorld(UWorld* World)
 	{
 		if (PrintAllGenerateOverlapEventsComponentsFromWorldCount.Contains(World))
 		{
@@ -160,7 +160,7 @@ namespace FU_EditorUtilities
 		}
 	}
 
-	void FU_EditorUtilities::PrintAllGenerateOverlapEventsComponentsFromPath(const FString& Path)
+	void PrintAllGenerateOverlapEventsComponentsFromPath(const FString& Path)
 	{
 		if (PrintAllGenerateOverlapEventsComponentsFromPathCount.Contains(Path))
 		{
