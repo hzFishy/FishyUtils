@@ -1,6 +1,7 @@
 // By hzFishy - 2026 - Do whatever you want with it.
 
 #pragma once
+
 #include "FUConsole.h"
 #include "Logging/FULogging.h"
 #include "Utility/FUUtilities.h"

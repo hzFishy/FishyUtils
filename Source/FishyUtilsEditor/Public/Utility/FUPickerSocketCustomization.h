@@ -8,6 +8,8 @@
 class FISHYUTILSEDITOR_API FFUPickerSocketCustomization : public IPropertyTypeCustomization
 {
 public:
+	FFUPickerSocketCustomization();
+	
 	virtual ~FFUPickerSocketCustomization() override;
 	
 	static TSharedRef<IPropertyTypeCustomization> MakeInstance();
@@ -18,18 +20,18 @@ public:
 protected:
 	void RequestSocketRefresh();
 	
-	TSharedPtr<SComboBox<TSharedPtr<FName>>> SocketPicker = nullptr;
-	TSharedPtr<STextBlock> SocketPickerText = nullptr;
-	TSharedPtr<IPropertyHandle> ComponentReferenceProp = nullptr;
-	TSharedPtr<IPropertyHandle> SocketTypeProp = nullptr;
-	TSharedPtr<IPropertyHandle> ComponentNameProp = nullptr;
-	TSharedPtr<IPropertyHandle> SocketNameProp = nullptr;
+	TSharedPtr<SComboBox<TSharedPtr<FName>>> SocketPicker;
+	TSharedPtr<STextBlock> SocketPickerText;
+	TSharedPtr<IPropertyHandle> ComponentReferenceProp;
+	TSharedPtr<IPropertyHandle> SocketTypeProp;
+	TSharedPtr<IPropertyHandle> ComponentNameProp;
+	TSharedPtr<IPropertyHandle> SocketNameProp;
 
-	AActor* OuterActor = nullptr;
-	UClass* OuterActorClass = nullptr;
+	AActor* OuterActor;
+	UClass* OuterActorClass;
 	FBlueprintComponentReference ComponentReference;
 	TArray<TSharedPtr<FName>> ComponentSockets;
-	uint8 SocketFilterFlags = 0;
+	uint8 SocketFilterFlags;
 	FName SelectedSocketName;
 
 	TSharedPtr<FName> GetDefaultSelected() const;

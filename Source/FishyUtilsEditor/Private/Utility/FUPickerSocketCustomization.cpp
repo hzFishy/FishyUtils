@@ -9,6 +9,12 @@
 #include "Utility/FUPickers.h"
 
 
+FFUPickerSocketCustomization::FFUPickerSocketCustomization(): 
+	OuterActor(nullptr), 
+	OuterActorClass(nullptr), 
+	SocketFilterFlags(0)
+{}
+
 FFUPickerSocketCustomization::~FFUPickerSocketCustomization()
 {
 	SocketPicker.Reset();
