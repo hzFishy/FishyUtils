@@ -99,7 +99,7 @@ public:
 	
 	virtual uint32 GetMemoryFootprint(void) const override;
 	
-	uint32 GetAllocatedSize( void ) const;
+	uint32 GetAllocatedSize(void) const;
 	
 protected:
 	virtual void GetDynamicMeshElementsForView(const FSceneView* View, const int32 ViewIndex, const FSceneViewFamily& ViewFamily, const uint32 VisibilityMap, FMeshElementCollector& Collector, FMaterialCache& DefaultMaterialCache, FMaterialCache& SolidMeshMaterialCache) const override;

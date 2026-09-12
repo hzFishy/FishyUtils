@@ -25,9 +25,9 @@ namespace FU::Utils
 		FFUOrientedBox(const UPrimitiveComponent* PrimitiveComponent, const FTransform* OverrideTransform = nullptr);
 
 		
-		void DrawDebug(const UWorld* World, FColor Color, float LifeTime, float Thickness = 2, uint8 DepthPriority = 0);
-		void DrawDebugFrame(const UWorld* World, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
-		void DrawDebugFrame(FPrimitiveDrawInterface* PDI, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
+		void DrawDebug(const UWorld* World, FColor Color, float LifeTime, float Thickness = 2, uint8 DepthPriority = 0) const;
+		void DrawDebugFrame(const UWorld* World, FColor Color, float Thickness = 2, uint8 DepthPriority = 0) const;
+		void DrawDebugFrame(FPrimitiveDrawInterface* PDI, FColor Color, float Thickness = 2, uint8 DepthPriority = 0) const;
 
 		
 		FVector Center = FVector::ZeroVector;

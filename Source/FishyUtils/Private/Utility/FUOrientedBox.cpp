@@ -5,17 +5,16 @@
 
 #include "Draw/FUDraw.h"
 
+
 namespace FU::Utils
 {
 	FFUOrientedBox::FFUOrientedBox()
-	{
-		
-	}
+	{}
 
 	FFUOrientedBox::FFUOrientedBox(const AActor* Actor, bool bNonColliding, TArray<const UClass*> CustomIgnore, const FTransform* OverrideTransform)
 	{
 		if (!IsValid(Actor)) { return; }
-
+		
 		const bool bUseOverrideTransform = OverrideTransform != nullptr;
 		const FTransform UsedTransform = bUseOverrideTransform ? *OverrideTransform : Actor->GetTransform();
 		
@@ -36,24 +35,24 @@ namespace FU::Utils
 				Box += InPrimComp->CalcBounds(ComponentToActor).GetBox();
 			}
 		});
-
+		
 		
 		// Get World space Location.
 		Center = UsedTransform.TransformPosition(Box.GetCenter());
- 
+		
 		// And World space extent
 		const FVector Extent = Box.GetExtent();
 		Forward = UsedTransform.TransformVector(FVector::ForwardVector * Extent.X);
 		Right = UsedTransform.TransformVector(FVector::RightVector * Extent.Y);
 		Up = UsedTransform.TransformVector(FVector::UpVector * Extent.Z);
- 
+		
 		// Now you have an oriented bounding box represented by a Center and three extent vectors.
 	}
 
 	FFUOrientedBox::FFUOrientedBox(const UPrimitiveComponent* PrimitiveComponent, const FTransform* OverrideTransform)
 	{
 		if (!IsValid(PrimitiveComponent)) { return; }
-
+		
 		const FTransform ComponentTransform = OverrideTransform ? *OverrideTransform : PrimitiveComponent->GetComponentTransform();
 		
 		FBox Box(ForceInit);
@@ -61,7 +60,7 @@ namespace FU::Utils
 		const FTransform WorldToActor = ActorToWorld.Inverse();
 		const FTransform ComponentToActor = ComponentTransform * WorldToActor;
 		Box = PrimitiveComponent->CalcBounds(ComponentToActor).GetBox();
- 
+		
 		Center = ComponentTransform.TransformPosition(Box.GetCenter());
 		const FVector Extent = Box.GetExtent();
 		Forward = ComponentTransform.TransformVector(FVector::ForwardVector * Extent.X);
@@ -69,12 +68,12 @@ namespace FU::Utils
 		Up = ComponentTransform.TransformVector(FVector::UpVector * Extent.Z);
 	}
 
-	void FFUOrientedBox::DrawDebug(const UWorld* World, FColor Color, float LifeTime, float Thickness, uint8 DepthPriority)
+	void FFUOrientedBox::DrawDebug(const UWorld* World, FColor Color, float LifeTime, float Thickness, uint8 DepthPriority) const
 	{
 		const FVector ExtentsX = Right;
 		const FVector ExtentsY = Up;
 		const FVector ExtentsZ = Forward;
- 
+		
 		const FVector Corner1 = Center + ExtentsX + ExtentsY + ExtentsZ;
 		const FVector Corner2 = Center + ExtentsX - ExtentsY + ExtentsZ;
 		const FVector Corner3 = Center - ExtentsX - ExtentsY + ExtentsZ;
@@ -83,29 +82,29 @@ namespace FU::Utils
 		const FVector Corner6 = Center + ExtentsX - ExtentsY - ExtentsZ;
 		const FVector Corner7 = Center - ExtentsX - ExtentsY - ExtentsZ;
 		const FVector Corner8 = Center - ExtentsX + ExtentsY - ExtentsZ;
-
+		
 		FU::Draw::DrawDebugLine(World, Corner1, Corner2, Color, LifeTime, Thickness, DepthPriority);
 		FU::Draw::DrawDebugLine(World, Corner2, Corner3, Color, LifeTime, Thickness, DepthPriority);
 		FU::Draw::DrawDebugLine(World, Corner3, Corner4, Color, LifeTime, Thickness, DepthPriority);
 		FU::Draw::DrawDebugLine(World, Corner4, Corner1, Color, LifeTime, Thickness, DepthPriority);
- 
+		
 		FU::Draw::DrawDebugLine(World, Corner5, Corner6, Color, LifeTime, Thickness, DepthPriority);
 		FU::Draw::DrawDebugLine(World, Corner6, Corner7, Color, LifeTime, Thickness, DepthPriority);
 		FU::Draw::DrawDebugLine(World, Corner7, Corner8, Color, LifeTime, Thickness, DepthPriority);
 		FU::Draw::DrawDebugLine(World, Corner8, Corner5, Color, LifeTime, Thickness, DepthPriority);
- 
+		
 		FU::Draw::DrawDebugLine(World, Corner1, Corner5, Color, LifeTime, Thickness, DepthPriority);
 		FU::Draw::DrawDebugLine(World, Corner2, Corner6, Color, LifeTime, Thickness, DepthPriority);
 		FU::Draw::DrawDebugLine(World, Corner3, Corner7, Color, LifeTime, Thickness, DepthPriority);
 		FU::Draw::DrawDebugLine(World, Corner4, Corner8, Color, LifeTime, Thickness, DepthPriority);
 	}
 
-	void FFUOrientedBox::DrawDebugFrame(const UWorld* World, FColor Color, float Thickness, uint8 DepthPriority)
+	void FFUOrientedBox::DrawDebugFrame(const UWorld* World, FColor Color, float Thickness, uint8 DepthPriority) const
 	{
 		DrawDebug(World, Color, 0, Thickness, DepthPriority);
 	}
 
-	void FFUOrientedBox::DrawDebugFrame(FPrimitiveDrawInterface* PDI, FColor Color, float Thickness, uint8 DepthPriority)
+	void FFUOrientedBox::DrawDebugFrame(FPrimitiveDrawInterface* PDI, FColor Color, float Thickness, uint8 DepthPriority) const
 	{
 		const FVector ExtentsX = Right;
 		const FVector ExtentsY = Up;

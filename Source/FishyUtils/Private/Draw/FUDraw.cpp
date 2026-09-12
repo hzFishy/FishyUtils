@@ -581,7 +581,7 @@ void FU::Draw::DrawDebugRectanglesFrame(const UWorld* World, const TArray<FFURec
 }
 
 
-void FU::Draw::DrawDebugPloygon(const UWorld* World, const FFUPolygon& Polygon, FColor Color, float Time, float Thickness, uint8 DepthPriority, uint32 BatchID)
+void FU::Draw::DrawDebugPolygon(const UWorld* World, const FFUPolygon& Polygon, FColor Color, float Time, float Thickness, uint8 DepthPriority, uint32 BatchID)
 {
 	if (ULineBatchComponent* const LineBatcher = GetDebugLineBatcher(World, Time, (DepthPriority == SDPG_Foreground)))
 	{
@@ -605,18 +605,18 @@ void FU::Draw::DrawDebugPloygon(const UWorld* World, const FFUPolygon& Polygon, 
 
 void FU::Draw::DrawDebugPolygonFrame(const UWorld* World, const FFUPolygon& Polygon, FColor Color, float Thickness, uint8 DepthPriority, uint32 BatchID)
 {
-	DrawDebugPloygon(World, Polygon, Color, 0, Thickness, DepthPriority, BatchID);
+	DrawDebugPolygon(World, Polygon, Color, 0, Thickness, DepthPriority, BatchID);
 }
 
-void FU::Draw::DrawDebugPloygons(const UWorld* World, const TArray<FFUPolygon>& Polygons, FColor Color, float Time, float Thickness, uint8 DepthPriority, uint32 BatchID)
+void FU::Draw::DrawDebugPolygons(const UWorld* World, const TArray<FFUPolygon>& Polygons, FColor Color, float Time, float Thickness, uint8 DepthPriority, uint32 BatchID)
 {
 	for (auto& Polygon : Polygons)
 	{
-		DrawDebugPloygon(World, Polygon, Color, Time, Thickness, DepthPriority, BatchID);
+		DrawDebugPolygon(World, Polygon, Color, Time, Thickness, DepthPriority, BatchID);
 	}
 }
 
 void FU::Draw::DrawDebugPolygonsFrame(const UWorld* World, const TArray<FFUPolygon>& Polygons, FColor Color, float Thickness, uint8 DepthPriority, uint32 BatchID)
 {
-	DrawDebugPloygons(World, Polygons, Color, 0, Thickness, DepthPriority, BatchID);
+	DrawDebugPolygons(World, Polygons, Color, 0, Thickness, DepthPriority, BatchID);
 }

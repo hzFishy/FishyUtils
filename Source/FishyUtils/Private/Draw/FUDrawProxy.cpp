@@ -95,7 +95,7 @@ uint32 FFUDrawProxySceneProxy::GetMemoryFootprint() const
 	return(sizeof(*this) + GetAllocatedSize());
 }
 
-uint32 FFUDrawProxySceneProxy::GetAllocatedSize() const
+uint32 FFUDrawProxySceneProxy::GetAllocatedSize(void) const
 {
 	return FDebugRenderSceneProxy::GetAllocatedSize() + 
 		AdvancedSolidLines.GetAllocatedSize() +

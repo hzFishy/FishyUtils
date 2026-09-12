@@ -32,7 +32,7 @@ namespace FU::Draw
 	
 	/** Be sure to make your BatchID unique across all line batches type */
 	FISHYUTILS_API void ClearDrawDebugGroup(const UWorld* World, uint32 BatchID);
-
+	
 	/** Use advanced debug primitive scene proxy */
 	namespace Advanced
 	{
@@ -204,12 +204,12 @@ namespace FU::Draw
 	FISHYUTILS_API void DrawDebugRectanglesFrame(const UWorld* World, const TArray<FFURectangle>& Rectangles, FColor Color, 
 		float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	
-	FISHYUTILS_API void DrawDebugPloygon(const UWorld* World, const FFUPolygon& Polygon, FColor Color, float Time, 
+	FISHYUTILS_API void DrawDebugPolygon(const UWorld* World, const FFUPolygon& Polygon, FColor Color, float Time, 
 		float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	FISHYUTILS_API void DrawDebugPolygonFrame(const UWorld* World, const FFUPolygon& Polygon, FColor Color, 
 		float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	
-	FISHYUTILS_API void DrawDebugPloygons(const UWorld* World, const TArray<FFUPolygon>& Polygons, FColor Color, float Time, 
+	FISHYUTILS_API void DrawDebugPolygons(const UWorld* World, const TArray<FFUPolygon>& Polygons, FColor Color, float Time, 
 		float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	FISHYUTILS_API void DrawDebugPolygonsFrame(const UWorld* World, const TArray<FFUPolygon>& Polygons, FColor Color, 
 		float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
