@@ -11,6 +11,8 @@ namespace FU::Utils
 {
 	/** Wrap with WITH_EDITOR */
 	#define FU_UTILS_EDITOR_RETURN_NOTGAMEWORLD if (!IsValid(GetWorld()) || !GetWorld()->IsGameWorld()) { return; }
+	
+	#define FU_UTILS_EDITOR_ISGAMEWORLD (IsValid(GetWorld()) && GetWorld()->IsGameWorld())
 
 	template<std::derived_from<UActorComponent> ActorComponentType>
 	ActorComponentType* SpawnRuntimeComponentForActor(AActor* Actor, TSubclassOf<ActorComponentType> ComponentClass = ActorComponentType::StaticClass(), EObjectFlags Flags = RF_Transient) 
