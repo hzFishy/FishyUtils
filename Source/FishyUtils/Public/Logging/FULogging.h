@@ -6,6 +6,7 @@
 #include "Utility/FUUtilities.h"
 
 FISHYUTILS_API DECLARE_LOG_CATEGORY_EXTERN(LogFUTemp, Log, All);
+FISHYUTILS_API DECLARE_LOG_CATEGORY_EXTERN(LogFUCmd, Log, All);
 
 
 #define FU_WITH_LOGGING KEEP_DBG_LOG
@@ -75,6 +76,11 @@ FISHYUTILS_API DECLARE_LOG_CATEGORY_EXTERN(LogFUTemp, Log, All);
 #define FU_LOG_Temp_W(FORMAT, ...)										  _FU_LOG_OBJECT_W(LogFUTemp, FORMAT, ##__VA_ARGS__)
 #define FU_LOG_STemp_D(FORMAT, ...)										  _FU_LOG_STATIC_D(LogFUTemp, FORMAT, ##__VA_ARGS__)
 #define FU_LOG_STemp_W(FORMAT, ...)										  _FU_LOG_STATIC_W(LogFUTemp, FORMAT, ##__VA_ARGS__)
+
+#define FU_LOG_Cmd_D(FORMAT, ...)										  _FU_LOG_OBJECT_D(LogFUCmd, FORMAT, ##__VA_ARGS__)
+#define FU_LOG_Cmd_W(FORMAT, ...)										  _FU_LOG_OBJECT_W(LogFUCmd, FORMAT, ##__VA_ARGS__)
+#define FU_LOG_SCmd_D(FORMAT, ...)										  _FU_LOG_STATIC_D(LogFUCmd, FORMAT, ##__VA_ARGS__)
+#define FU_LOG_SCmd_W(FORMAT, ...)										  _FU_LOG_STATIC_W(LogFUCmd, FORMAT, ##__VA_ARGS__)
 
 #define FU_LOG_Validation_E(CATEGORY, FORMAT, ...)						  _FU_LOG_OBJECT_E(CATEGORY, FORMAT, ##__VA_ARGS__)
 #define FU_LOG_SValidation_E(CATEGORY, FORMAT, ...)						  _FU_LOG_STATIC_E(CATEGORY, FORMAT, ##__VA_ARGS__)
