@@ -6,12 +6,6 @@
 
 namespace FU::Colors
 {
-	/** 
-	 * Pick a random colors (excluded white, black and in betweens).
-	 * Cannot return same colors twice in a row.
-	 */
-	FISHYUTILS_API FColor PickRandomColor();
-	
 	// Basics
 	inline constexpr FColor Black       			= FColor(0, 0, 0, 255);
 	inline constexpr FColor White       			= FColor(255, 255, 255, 255);
@@ -112,4 +106,80 @@ namespace FU::Colors
 	inline constexpr FColor AshenGray        		= FColor(105, 105, 105, 255);
 	inline constexpr FColor SteampunkBronze  		= FColor(205, 127, 50, 255);
 	inline constexpr FColor ToxicSlime       		= FColor(173, 255, 47, 255);
+	
+	
+	inline TArray<FColor> StaticColors = {
+		Red,
+		Tomato,
+		LightCoral,
+		Orange,
+		Coral,
+		TomatoOrange,
+		Apricot,
+		Yellow,
+		Lemon,
+		Green,
+		ForestGreen,
+		Olive,
+		PaleGreen,
+		SeaGreen,
+		SpringGreen,
+		Blue,
+		SteelBlue,
+		LightBlue,
+		MidnightBlue,
+		Cyan,
+		Purple,
+		Plum ,
+		Magenta,
+		DarkViolet,
+		Indigo,
+		Pink,
+		DeepPink,
+		Fuchsia,
+		PastelBlue,
+		PastelGreen,
+		PastelPurple,
+		PastelRed,
+		PastelYellow,
+		PastelOrange,
+		NightSky,
+		MidnightFog,
+		BloodMoon,
+		ToxicGreen,
+		PlasmaPurple,
+		CyberBlue,
+		AshenGray,
+		SteampunkBronze,
+		ToxicSlime
+	};
+	
+	
+	/** 
+	 * Pick a random colors (excluded white, black and in betweens).
+	 * Cannot return same colors twice in a row.
+	 */
+	FISHYUTILS_API FColor PickRandomColor();
+	
+	
+	struct FISHYUTILS_API FFUUniqueColorManager
+	{
+	public:
+		FFUUniqueColorManager();
+		
+		void Init (const TArray<FColor>& InitColors);
+		
+		/** 
+		 *  Will get a free color, if none are left we reset the free colors
+		 */
+		FColor PickRandomColor();
+		
+	protected:
+		TArray<FColor> FreeColors;
+		TArray<FColor> UsedColors;
+	};
+	
+	FISHYUTILS_API void MakeUniqueColorManager(FFUUniqueColorManager& Ref, bool bReset = false);
+	/** Same but allows the user to give a custom array of colors to pick from */
+	FISHYUTILS_API void MakeUniqueColorManagerWithColors(FFUUniqueColorManager& Ref, const TArray<FColor>& Colors);
 }

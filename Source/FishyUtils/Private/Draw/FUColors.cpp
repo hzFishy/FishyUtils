@@ -8,62 +8,56 @@ FColor FU::Colors::PickRandomColor()
 {
 	static int32 LastIndex = -1;
 	
-	static TArray<FColor, TInlineAllocator<80>> Colors = {
-		Red,
-		Tomato,
-		LightCoral,
-		Orange,
-		Coral,
-		TomatoOrange,
-		Apricot,
-		Yellow,
-		Lemon,
-		Green,
-		ForestGreen,
-		Olive,
-		PaleGreen,
-		SeaGreen,
-		SpringGreen,
-		Blue,
-		SteelBlue,
-		LightBlue,
-		MidnightBlue,
-		Cyan,
-		Purple,
-		Plum ,
-		Magenta,
-		DarkViolet,
-		Indigo,
-		Pink,
-		DeepPink,
-		Fuchsia,
-		PastelBlue,
-		PastelGreen,
-		PastelPurple,
-		PastelRed,
-		PastelYellow,
-		PastelOrange,
-		NightSky,
-		MidnightFog,
-		BloodMoon,
-		ToxicGreen,
-		PlasmaPurple,
-		CyberBlue,
-		AshenGray,
-		SteampunkBronze,
-		ToxicSlime
-	};
-	
-	const int32 RandIndex = FMath::RandRange(0, Colors.Num() - 1);
+	const int32 RandIndex = FMath::RandRange(0, StaticColors.Num() - 1);
 	
 	if (RandIndex != LastIndex)
 	{
 		LastIndex = RandIndex;
-		return Colors[LastIndex];
+		return StaticColors[LastIndex];
 	}
 	else
 	{
 		// reroll
 		return PickRandomColor();
 	}
+}
+
+FU::Colors::FFUUniqueColorManager::FFUUniqueColorManager()
+{}
+
+void FU::Colors::FFUUniqueColorManager::Init(const TArray<FColor>& InitColors)
+{
+	FreeColors = InitColors;
+	UsedColors.Reserve(UsedColors.Num());
+}
+
+FColor FU::Colors::FFUUniqueColorManager::PickRandomColor()
+{
+	if (FreeColors.IsEmpty())
+	{
+		// reset
+		FreeColors = UsedColors;
+		UsedColors.Empty();
+	}
+	
+	const int32 RandIndex = FMath::RandRange(0, FreeColors.Num() - 1);
+	const FColor PickedColor = FreeColors[RandIndex];
+	FreeColors.RemoveAt(RandIndex);
+	UsedColors.Add(PickedColor);
+	return PickedColor;
+}
+
+void FU::Colors::MakeUniqueColorManager(FFUUniqueColorManager& Ref, bool bReset)
+{
+	if (bReset)
+	{
+		Ref = FFUUniqueColorManager();
+	}
+	Ref.Init(StaticColors);
+}
+
+void FU::Colors::MakeUniqueColorManagerWithColors(FFUUniqueColorManager& Ref, const TArray<FColor>& Colors)
+{
+	Ref = FFUUniqueColorManager();
+	Ref.Init(Colors);
 }
