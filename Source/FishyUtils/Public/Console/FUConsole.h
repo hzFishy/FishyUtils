@@ -49,6 +49,12 @@ namespace FU_Console
 	};
 
 	
+#define FU_CMD_ARGS_GET_INT32(Index) FCString::Atoi(*Args[Index])
+#define FU_CMD_ARGS_GET_INT64(Index) FCString::Atoi64(*Args[Index])
+#define FU_CMD_ARGS_GET_FLOAT(Index) FCString::Atof(*Args[Index])
+#define FU_CMD_ARGS_GET_DOUBLE(Index) FCString::Atod(*Args[Index])
+	
+	
 /**
  * Declares a boolean var and a float var.
  * Use the command as 'My.Console.Command <opt float>', this will toggle the boolean and optionally change the float value
@@ -61,7 +67,7 @@ namespace FU_Console
 			{ \
 				/* if no time arg, toggle */ \
 				/* if enabled and time arg, keep enabled and change time */ \
-				const float Newtime = !Args.IsEmpty() ? FCString::Atof(*Args[0]) : DefaultFloatVarValue; \
+				const float Newtime = !Args.IsEmpty() ? FU_CMD_ARGS_GET_FLOAT(0) : DefaultFloatVarValue; \
 				if (!BoolVar) \
 				{ \
 					BoolVar = true; FloatVar = Newtime; \
@@ -89,7 +95,7 @@ namespace FU_Console
 			{ \
 				/* if no time arg, toggle */ \
 				/* if enabled and time arg, keep enabled and change time */ \
-				const float Newtime = !Args.IsEmpty() ? FCString::Atof(*Args[0]) : DefaultFloatVarValue; \
+				const float Newtime = !Args.IsEmpty() ? FU_CMD_ARGS_GET_FLOAT(0) : DefaultFloatVarValue; \
 				if (!BoolVar) \
 				{ \
 					BoolVar = true; FloatVar = Newtime; \
@@ -268,7 +274,7 @@ namespace FU_Console
 		FConsoleCommandWithWorldAndArgsDelegate::CreateLambda([] (const TArray<FString>& Args, UWorld* World) \
 		{ \
 			if (Args.IsEmpty()) { return; } \
-			float Float0 = FCString::Atof(*Args[0]); \
+			float Float0 = FU_CMD_ARGS_GET_FLOAT(0); \
 			LambdaBody \
 		}) \
 	); \
