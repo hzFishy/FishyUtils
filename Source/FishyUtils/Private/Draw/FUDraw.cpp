@@ -96,61 +96,61 @@ void FU::Draw::Advanced::ClearAll(const UWorld* World)
 }
 
 void FU::Draw::Advanced::DrawDebugText(const UWorld* World, const FVector& Location, const FString& Text,
-	FColor Color, float Time, float InTextSize, uint32 Id)
+	FColor Color, float Time, float InTextSize, uint8 DepthPriority, uint32 Id)
 {
 	if (auto* DrawProxy = GetProxyComponent(World))
 	{
-		DrawProxy->DrawDebugText(Location, Text, Color, Time, InTextSize, Id);
+		DrawProxy->DrawDebugText(Location, Text, Color, Time, InTextSize, DepthPriority, Id);
 	}
 }
 void FU::Draw::Advanced::DrawDebugTextFrame(const UWorld* World, const FVector& Location, const FString& Text,
-	FColor Color, float InTextSize, uint32 Id)
+	FColor Color, float InTextSize, uint8 DepthPriority, uint32 Id)
 {
-	FU::Draw::Advanced::DrawDebugText(World, Location, Text, Color, 0, InTextSize, Id);
+	FU::Draw::Advanced::DrawDebugText(World, Location, Text, Color, 0, InTextSize, DepthPriority, Id);
 }
 
 void FU::Draw::Advanced::DrawDebugSolidLine(const UWorld* World, const FVector& StartLocation, const FVector& EndLocation,
-	FColor Color, float Time, float Thickness, uint32 Id)
+	FColor Color, float Time, float Thickness, uint8 DepthPriority, uint32 Id)
 {
 	if (auto* DrawProxy = GetProxyComponent(World))
 	{
-		DrawProxy->DrawDebugSolidLine(StartLocation, EndLocation, Color, Time, Thickness, Id);
+		DrawProxy->DrawDebugSolidLine(StartLocation, EndLocation, Color, Time, Thickness, DepthPriority, Id);
 	}
 }
 void FU::Draw::Advanced::DrawDebugSolidLineFrame(const UWorld* World, const FVector& StartLocation,
-	const FVector& EndLocation, FColor Color, float Thickness, uint32 Id)
+	const FVector& EndLocation, FColor Color, float Thickness, uint8 DepthPriority, uint32 Id)
 {
-	FU::Draw::Advanced::DrawDebugSolidLine(World, StartLocation, EndLocation, Color, 0, Thickness, Id);
+	FU::Draw::Advanced::DrawDebugSolidLine(World, StartLocation, EndLocation, Color, 0, Thickness, DepthPriority, Id);
 }
 
 void FU::Draw::Advanced::DrawDebugSphere(const UWorld* World, const FVector& Location, float Radius, FColor Color,
-	float Time, float Thickness, FDebugRenderSceneProxy::EDrawType InDrawTypeOverride, uint32 Id)
+	float Time, float Thickness, FDebugRenderSceneProxy::EDrawType InDrawTypeOverride, uint8 DepthPriority, uint32 Id)
 {
 	if (auto* DrawProxy = GetProxyComponent(World))
 	{
-		DrawProxy->DrawDebugSphere(Location, Radius, Color, Time, Thickness, InDrawTypeOverride, Id);
+		DrawProxy->DrawDebugSphere(Location, Radius, Color, Time, Thickness, InDrawTypeOverride, DepthPriority, Id);
 	}
 }
 
 void FU::Draw::Advanced::DrawDebugSphereFrame(const UWorld* World, const FVector& Location, float Radius, FColor Color,
-	float Thickness, FDebugRenderSceneProxy::EDrawType InDrawTypeOverride, uint32 Id)
+	float Thickness, FDebugRenderSceneProxy::EDrawType InDrawTypeOverride, uint8 DepthPriority, uint32 Id)
 {
-	FU::Draw::Advanced::DrawDebugSphere(World, Location, Radius, Color, 0, Thickness, InDrawTypeOverride, Id);
+	FU::Draw::Advanced::DrawDebugSphere(World, Location, Radius, Color, 0, Thickness, InDrawTypeOverride, DepthPriority, Id);
 }
 
 void FU::Draw::Advanced::DrawDebugDirectionalArrow(const UWorld* World, const FVector& StartLocation,
-	const FVector& EndLocation, FColor Color, float Time, float ArrowSize, float Thickness, uint8 Id)
+	const FVector& EndLocation, FColor Color, float Time, float ArrowSize, float Thickness, uint8 DepthPriority, uint8 Id)
 {
 	if (auto* DrawProxy = GetProxyComponent(World))
 	{
-		DrawProxy->DrawDebugDirectionalArrow(StartLocation, EndLocation, Color, Time, ArrowSize, Thickness, Id);
+		DrawProxy->DrawDebugDirectionalArrow(StartLocation, EndLocation, Color, Time, ArrowSize, Thickness, DepthPriority, Id);
 	}
 }
 void FU::Draw::Advanced::DrawDebugDirectionalArrowFrame(const UWorld* World, const FVector& StartLocation,
-	const FVector& EndLocation, FColor Color, float ArrowSize, float Thickness, uint8 Id)
+	const FVector& EndLocation, FColor Color, float ArrowSize, float Thickness, uint8 DepthPriority, uint8 Id)
 {
 	FU::Draw::Advanced::DrawDebugDirectionalArrow(World, StartLocation, EndLocation, Color, 0, ArrowSize, 
-		Thickness, Id);
+		Thickness, DepthPriority, Id);
 }
 
 

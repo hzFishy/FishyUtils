@@ -162,16 +162,16 @@ public:
 	
 	void ClearAll();
 	
-	void DrawDebugText(const FVector& Location, const FString& Text, FColor Color, float Time, float InTextSize = 1, uint32 Id = 0);
+	void DrawDebugText(const FVector& Location, const FString& Text, FColor Color, float Time, float InTextSize = 1, uint8 DepthPriority = 0, uint32 Id = 0);
 	
 	void DrawDebugSolidLine(const FVector& StartLocation, const FVector& EndLocation, FColor Color, float Time, 
-		float Thickness = 2, uint32 Id = 0);
+		float Thickness = 2, uint8 DepthPriority = 0, uint32 Id = 0);
 
 	void DrawDebugSphere(const FVector& Location, float Radius, FColor Color, float Time, float Thickness = 2, 
-		FDebugRenderSceneProxy::EDrawType InDrawTypeOverride = FDebugRenderSceneProxy::EDrawType::Invalid, uint32 Id = 0);
+		FDebugRenderSceneProxy::EDrawType InDrawTypeOverride = FDebugRenderSceneProxy::EDrawType::Invalid, uint8 DepthPriority = 0, uint32 Id = 0);
 	
 	void DrawDebugDirectionalArrow(const FVector& StartLocation, const FVector& EndLocation, FColor Color, float Time,
-		float ArrowSize = 2, float Thickness = 2, uint8 Id = 0);
+		float ArrowSize = 2, float Thickness = 2, uint8 DepthPriority = 0, uint8 Id = 0);
 };
 
 

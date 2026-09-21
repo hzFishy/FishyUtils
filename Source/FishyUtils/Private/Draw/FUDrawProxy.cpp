@@ -503,33 +503,33 @@ void UFUDrawComponent::ClearAll()
 	MarkRenderStateDirty();
 }
 
-void UFUDrawComponent::DrawDebugText(const FVector& Location, const FString& Text, FColor Color, float Time, float InTextSize, uint32 Id)
+void UFUDrawComponent::DrawDebugText(const FVector& Location, const FString& Text, FColor Color, float Time, float InTextSize, uint8 DepthPriority, uint32 Id)
 {
-	Texts.Emplace(Location, Text, Color, Time, InTextSize, Id);
+	Texts.Emplace(Location, Text, Color, Time, InTextSize, DepthPriority, Id);
 	
 	MarkRenderStateDirty();
 }
 
 void UFUDrawComponent::DrawDebugSolidLine(const FVector& StartLocation, const FVector& EndLocation, FColor Color,
-	float Time, float Thickness, uint32 Id)
+	float Time, float Thickness, uint8 DepthPriority, uint32 Id)
 {
-	SolidLines.Emplace(StartLocation, EndLocation, Color, Time, Thickness, Id);
+	SolidLines.Emplace(StartLocation, EndLocation, Color, Time, Thickness, DepthPriority, Id);
 	
 	MarkRenderStateDirty();
 }
 
 void UFUDrawComponent::DrawDebugSphere(const FVector& Location, float Radius, FColor Color, float Time, float Thickness,
-	FDebugRenderSceneProxy::EDrawType InDrawTypeOverride, uint32 Id)
+	FDebugRenderSceneProxy::EDrawType InDrawTypeOverride, uint8 DepthPriority, uint32 Id)
 {
-	Spheres.Emplace(Location, Radius, Color, Time, Thickness, InDrawTypeOverride, Id);
+	Spheres.Emplace(Location, Radius, Color, Time, Thickness, InDrawTypeOverride, DepthPriority, Id);
 	
 	MarkRenderStateDirty();
 }
 
 void UFUDrawComponent::DrawDebugDirectionalArrow(const FVector& StartLocation, const FVector& EndLocation, FColor Color, 
-	float Time, float ArrowSize, float Thickness, uint8 Id)
+	float Time, float ArrowSize, float Thickness, uint8 DepthPriority, uint8 Id)
 {
-	Arrows.Emplace(StartLocation, EndLocation, Color, Time, Thickness, ArrowSize, Id);
+	Arrows.Emplace(StartLocation, EndLocation, Color, Time, Thickness, ArrowSize, DepthPriority, Id);
 	
 	MarkRenderStateDirty();
 }
