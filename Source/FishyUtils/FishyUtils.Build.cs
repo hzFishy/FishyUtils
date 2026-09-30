@@ -12,7 +12,7 @@ public class FishyUtils : ModuleRules
 			new string[]
 			{
 				"Core", "CoreUObject",
-				"BlueprintComponentReference",
+				"BCR",
 				"DeveloperSettings", 
 				"UMG", 
 				"StateTreeModule"

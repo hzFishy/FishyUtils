@@ -32,7 +32,7 @@
 	],
 	"Plugins": [
 		{
-			"Name": "BlueprintComponentReferencePlugin",
+			"Name": "BCRP",
 			"Enabled": true
 		},
 		{

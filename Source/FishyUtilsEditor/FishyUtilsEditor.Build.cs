@@ -11,9 +11,8 @@ public class FishyUtilsEditor : ModuleRules
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
-                "Core", "SceneOutliner", "BlueprintComponentReference",
-                "FishyUtils",
-                "EditorSubsystem"
+                "Core", "SceneOutliner", "BCR", "EditorSubsystem",
+                "FishyUtils"
             }
         );
 

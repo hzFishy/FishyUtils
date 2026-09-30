@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "BlueprintComponentReference.h"
+#include "BCR.h"
 
 
 class FISHYUTILSEDITOR_API FFUPickerSocketCustomization : public IPropertyTypeCustomization

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "BlueprintComponentReference.h"
+#include "BCR.h"
 #include "FUPickers.generated.h"
 
 
@@ -37,7 +37,6 @@ struct FISHYUTILS_API FFUPickerSocket
 	FName SelectedSocket = NAME_None;
 
 #if WITH_EDITORONLY_DATA
-	
 	UPROPERTY(EditAnywhere, meta=(AllowedClasses="/Script/Engine.PrimitiveComponent"))
 	FBlueprintComponentReference ComponentReference;
 	
