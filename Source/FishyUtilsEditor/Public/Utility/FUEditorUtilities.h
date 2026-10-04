@@ -82,53 +82,11 @@ namespace FU::EditorUtilities
 	
 	void BuildMessageForGenerateOverlapEventsForComponent(const UPrimitiveComponent* Component, const FAssetData& Asset, EFUGenerateOverlapEventsResult Result);
 	
-	FU_CMD_RUNLAMBDA(GetAllGenerateOverlapEventsComponentsCmd, 
-		"FU.Editor.PrintAllGenerateOverlapEventsComponentsFromAssets", "",
-		{
-			PrintAllGenerateOverlapEventsComponentsFromAssets();
-		}
-	);
-	
-	FU_CMD_RUNLAMBDA(PrintAllGenerateOverlapEventsComponentsFromWorldCmd, 
-		"FU.Editor.PrintAllGenerateOverlapEventsComponentsFromCurrentWorld", "",
-		{
-			PrintAllGenerateOverlapEventsComponentsFromWorld(GWorld);
-		}
-	); 
-	
-	FU_CMD_RUNLAMBDA_WITHARGS(PrintAllGenerateOverlapEventsComponentsFromPathCmd, 
-		"FU.Editor.PrintAllGenerateOverlapEventsComponentsFromPath", "",
-		{
-			if (Args.IsEmpty())
-			{
-				FU_LOG_STemp_W("Missing path argument (ex: SomeFolder = /Game/SomeFolder");
-			}
-			else
-			{
-				PrintAllGenerateOverlapEventsComponentsFromPath("/Game/" + Args[0]);
-			}
-		}
-	);
-	
 	
 	/*----------------------------------------------------------------------------
 		Collision detection
 	----------------------------------------------------------------------------*/
 	void PrintAllCollisionEnabledComponentsFromWorld(UWorld* World, bool bHideActorsWithNoCollision);
-	
-	FU_CMD_RUNLAMBDA_WITHARGS(PrintAllCollisionEnabledComponentsFromWorldCmd, 
-		"FU.Editor.PrintAllCollisionEnabledComponentsFromWorld", "Optionaly 1 to hide actors with no components with collisions enabled",
-		{
-			bool bHideActors = false;
-			if (!Args.IsEmpty())
-			{
-				int32 Param1 = FCString::Atoi(*Args[0]);
-				bHideActors = static_cast<bool>(Param1);
-			}
-			
-			PrintAllCollisionEnabledComponentsFromWorld(GWorld, bHideActors);
-		}
-	); 
 }
 
 
