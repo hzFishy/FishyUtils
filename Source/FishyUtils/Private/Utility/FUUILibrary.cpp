@@ -3,6 +3,7 @@
 
 #include "Utility/FUUILibrary.h"
 
+#include "Blueprint/SlateBlueprintLibrary.h"
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 
@@ -135,4 +136,29 @@ void UFUUILibrary::SetGameAndUIInputMode(APlayerController* PlayerController, bo
 		InputMode.SetWidgetToFocus(WidgetToFocus->GetCachedWidget());
 	}
 	PlayerController->SetInputMode(InputMode);
+}
+
+bool UFUUILibrary::AreWidgetsOverlapping(UWidget* WidgetA, UWidget* WidgetB)
+{
+	const auto& WidgetAGeometry = WidgetA->GetCachedGeometry();
+	const auto& WidgetBGeometry = WidgetB->GetCachedGeometry();
+	
+	// here we get the Top Left pixel position
+	FVector2D WidgetAPixelPosition;
+	FVector2D WidgetAViewportPosition;
+	USlateBlueprintLibrary::LocalToViewport(WidgetA, WidgetAGeometry, FVector2D(0, 0), WidgetAPixelPosition, WidgetAViewportPosition);
+	
+	FVector2D WidgetBPixelPosition;
+	FVector2D WidgetBViewportPosition;
+	USlateBlueprintLibrary::LocalToViewport(WidgetB, WidgetBGeometry, FVector2D(0, 0), WidgetBPixelPosition, WidgetBViewportPosition);
+	
+	auto WidgetASize = WidgetAGeometry.GetAbsoluteSize();
+	auto WidgetBSize = WidgetBGeometry.GetAbsoluteSize();
+	
+	bool bWidgetALeftUnderBRight = WidgetAPixelPosition.X < (WidgetBPixelPosition.X + WidgetBSize.X);
+	bool bWidgetARightOverBLeft = (WidgetAPixelPosition.X + WidgetASize.X) > WidgetBPixelPosition.X;
+	bool bWidgetATopUnderBBottom = WidgetAPixelPosition.Y < (WidgetBPixelPosition.Y + WidgetBSize.Y);
+	bool bWidgetABottomOverBTop = (WidgetAPixelPosition.Y + WidgetASize.Y) > WidgetBPixelPosition.Y;
+	
+	return bWidgetALeftUnderBRight && bWidgetARightOverBLeft && bWidgetATopUnderBBottom && bWidgetABottomOverBTop;
 }

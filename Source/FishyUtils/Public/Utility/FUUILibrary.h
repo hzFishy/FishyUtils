@@ -27,7 +27,7 @@ enum class EFUNewMouseVisibility : uint8
 /**
  * 
  */
-UCLASS()
+UCLASS(DisplayName="Fishy Utils UI Library")
 class FISHYUTILS_API UFUUILibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
@@ -51,4 +51,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI", meta=(DefaultToSelf=PlayerController, HideSelfPin))
 	static void SetGameAndUIInputMode(APlayerController* PlayerController, bool bHideCursorDuringCapture = true, EMouseLockMode LockMouse = EMouseLockMode::DoNotLock, UUserWidget* WidgetToFocus = nullptr);
+
+	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI")
+	static bool AreWidgetsOverlapping(UWidget* WidgetA, UWidget* WidgetB);
 };
