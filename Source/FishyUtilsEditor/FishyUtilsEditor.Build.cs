@@ -21,8 +21,7 @@ public class FishyUtilsEditor : ModuleRules
             {
                 "CoreUObject",
                 "Engine",
-                "Slate", "SlateCore", "UMG", "InputCore",
-                "FishyUtils", "PropertyEditor",
+                "Slate", "SlateCore", "UMG", "InputCore", "PropertyEditor",
                 "SceneOutliner",
                 "ToolMenus", "UnrealEd", "MessageLog", "LevelEditor"
             }
