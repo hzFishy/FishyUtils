@@ -137,7 +137,7 @@ namespace FU_Console
 /** Uses FAutoConsoleVariableRef */
 #define FU_CMD_AUTOVAR(Id, Cmd, CmdHelp, VarType, VarName, DefaultVarValue) \
 	VarType VarName = DefaultVarValue; \
-	FAutoConsoleVariableRef Id( \
+	FAutoConsoleVariableRef C##Id( \
 		TEXT(Cmd), \
 		VarName, \
 		TEXT(CmdHelp) \
@@ -146,7 +146,7 @@ namespace FU_Console
 /** Same as FU_CMD_AUTOVAR but VarName is expected to be declared as extern in the header */
 #define FU_CMD_AUTOVAR_EXTERN(Id, Cmd, CmdHelp, VarType, VarName, DefaultVarValue) \
 	VarType VarName = DefaultVarValue; \
-	FAutoConsoleVariableRef Id( \
+	FAutoConsoleVariableRef C##Id( \
 		TEXT(Cmd), \
 		VarName, \
 		TEXT(CmdHelp) \
