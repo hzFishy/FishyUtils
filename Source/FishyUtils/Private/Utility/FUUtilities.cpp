@@ -472,6 +472,11 @@ FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::Reset(FString Text)
 	return *this;
 }
 
+bool FU::Utils::FFUMessageBuilder::IsEmpty() const
+{
+	return Message.IsEmpty();
+}
+
 FU::Utils::FFUMessageBuilder& FU::Utils::FFUMessageBuilder::NewLine(FString Text, bool bIgnoreIfEmpty)
 {
 	if (bIgnoreIfEmpty && Message.IsEmpty())

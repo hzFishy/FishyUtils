@@ -130,6 +130,8 @@ namespace FU::Utils
 		
 		FFUMessageBuilder& Reset(FString Text);
 		
+		bool IsEmpty() const;
+		
 #if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 6, 0)
 		template <typename... Types>
 		FFUMessageBuilder& Resetf(UE::Core::TCheckedFormatString<FString::FmtCharType, Types...> Fmt, Types... Args)
