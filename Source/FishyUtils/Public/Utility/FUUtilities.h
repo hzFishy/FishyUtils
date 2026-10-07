@@ -343,7 +343,8 @@ namespace FU::Utils
 	{
 		FISHYUTILS_API bool IsPointInSphere(const FVector& Center, float Radius, const FVector& Point);
 	}
-
+	
+	
 	FISHYUTILS_API void ArrayToString(const TArray<FString>& Array, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]");
 	
 	/** 
@@ -372,10 +373,10 @@ namespace FU::Utils
 	 * Convert function uses a const ref.
 	 * 
 	 * Example:
-	 * FU::Utils::ArrayToStringTemplate<FTransform>(MyArray, [] (const FTransform& MyElement) { return MyElement.ToString(); }, MyArrayString);
+	 * FU::Utils::ArrayToStringTemplateConstRef<FTransform>(MyArray, [] (const FTransform& MyElement) { return MyElement.ToString(); }, MyArrayString);
 	 */
 	template<typename T>
-	void ArrayToStringTemplateRef(const TArray<T>& Array, TFunction<FString(const T&)> ToStringFunc, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]")
+	void ArrayToStringTemplateConstRef(const TArray<T>& Array, TFunction<FString(const T&)> ToStringFunc, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]")
 	{
 		OutString = Prefix;
 		for (int32 i = 0; i < Array.Num(); i++)
@@ -388,6 +389,71 @@ namespace FU::Utils
 		}
 		OutString += Suffix;
 	}
+	
+	/** 
+	 * Convert function uses a mutable ref.
+	 * 
+	 * Example:
+	 * FU::Utils::ArrayToStringTemplateMutableRef<FTransform>(MyArray, [] (FTransform& MyElement) { return MyElement.ToString(); }, MyArrayString);
+	 */
+	template<typename T>
+	void ArrayToStringTemplateMutableRef(const TArray<T>& Array, TFunction<FString(T&)> ToStringFunc, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]")
+	{
+		OutString = Prefix;
+		for (int32 i = 0; i < Array.Num(); i++)
+		{
+			OutString += ToStringFunc(Array[i]);
+			if (i != Array.Num() - 1)
+			{
+				OutString += Separator;
+			}
+		}
+		OutString += Suffix;
+	}
+	
+	
+	/** 
+	 * Convert function uses a const ptr.
+	 * 
+	 * Example:
+	 * FU::Utils::ArrayToStringTemplateConstPtr<FTransform>(MyArray, [] (const FTransform* MyElement) { return MyElement->ToString(); }, MyArrayString);
+	 */
+	template<typename T>
+	void ArrayToStringTemplateConstPtr(const TArray<T*>& Array, TFunction<FString(const T*)> ToStringFunc, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]")
+	{
+		OutString = Prefix;
+		for (int32 i = 0; i < Array.Num(); i++)
+		{
+			OutString += ToStringFunc(Array[i]);
+			if (i != Array.Num() - 1)
+			{
+				OutString += Separator;
+			}
+		}
+		OutString += Suffix;
+	}
+	
+	/** 
+	 * Convert function uses a mutable ptr.
+	 * 
+	 * Example:
+	 * FU::Utils::ArrayToStringTemplateMutablePtr<FTransform>(MyArray, [] (FTransform* MyElement) { return MyElement.ToString(); }, MyArrayString);
+	 */
+	template<typename T>
+	void ArrayToStringTemplateMutablePtr(const TArray<T*>& Array, TFunction<FString(T*)> ToStringFunc, FString& OutString, const FString& Separator = ", ", const FString& Prefix = "[", const FString& Suffix = "]")
+	{
+		OutString = Prefix;
+		for (int32 i = 0; i < Array.Num(); i++)
+		{
+			OutString += ToStringFunc(Array[i]);
+			if (i != Array.Num() - 1)
+			{
+				OutString += Separator;
+			}
+		}
+		OutString += Suffix;
+	}
+	
 	
 	/**
 	 * Copy from ModelingObjectsCreationAPI.h

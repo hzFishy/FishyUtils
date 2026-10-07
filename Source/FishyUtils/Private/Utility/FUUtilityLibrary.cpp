@@ -128,5 +128,5 @@ void UFUUtilityLibrary::RotatorArrayToString(const TArray<FRotator>& Array, FStr
 
 void UFUUtilityLibrary::TransformArrayToString(const TArray<FTransform>& Array, FString& OutString, const FString& Separator, const FString& Prefix, const FString& Suffix)
 {
-	FU::Utils::ArrayToStringTemplateRef<FTransform>(Array, [] (const FTransform& Item) { return Item.ToString(); }, OutString, Separator, Prefix, Suffix);
+	FU::Utils::ArrayToStringTemplateConstRef<FTransform>(Array, [] (const FTransform& Item) { return Item.ToString(); }, OutString, Separator, Prefix, Suffix);
 }
