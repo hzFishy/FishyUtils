@@ -5,9 +5,9 @@
 #include "Engine/Canvas.h"
 
 inline const TCHAR* TargetShowFlagName = TEXT("FU_Draw");  
-inline TCustomShowFlag<EShowFlagShippingValue::ForceDisabled> TargetShowFlag(TargetShowFlagName, true, SFG_Advanced, INVTEXT("FishyUtils: Advanced Draw"));
+inline TCustomShowFlag<EShowFlagShippingValue::Dynamic> TargetShowFlag(TargetShowFlagName, true, SFG_Advanced, INVTEXT("FishyUtils: Advanced Draw"));
 
-		
+	
 	/*----------------------------------------------------------------------------
 		Proxy Element
 	----------------------------------------------------------------------------*/

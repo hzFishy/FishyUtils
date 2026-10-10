@@ -5,9 +5,15 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
+
 class FFishyUtilsModule : public IModuleInterface
 {
-
+	/*----------------------------------------------------------------------------
+		Properties
+	----------------------------------------------------------------------------*/
+protected:
+	FDelegateHandle DebugDrawServiceDelegateHandle;
+	
 	
 	/*----------------------------------------------------------------------------
 		Defaults

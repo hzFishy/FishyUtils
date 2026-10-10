@@ -2,10 +2,29 @@
 
 
 #include "Utility/FUUILibrary.h"
-
 #include "Blueprint/SlateBlueprintLibrary.h"
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
+#include "Console/FUConsole.h"
+#include "Draw/FUDraw.h"
+
+namespace FU::UI
+{
+#if FU_WITH_CONSOLE
+	namespace Debug
+	{
+		FU_CMD_AUTOVAR(DebugAreWidgetsOverlapping,
+			"FU.UI.DebugAreWidgetsOverlapping", "0: Disable, 1: Enable",
+			int32, DebugAreWidgetsOverlapping, 0
+		);
+		
+		FU_CMD_AUTOVAR(DebugAreWidgetsOverlappingTime,
+			"FU.UI.DebugAreWidgetsOverlappingTime", "Default: 5",
+			float, DebugAreWidgetsOverlappingTime, 5
+		);
+	}
+#endif
+}
 
 
 void UFUUILibrary::SetInputModeAndMouseVisibility(APlayerController* PlayerController, EFUInputMode NewInputMode,
@@ -17,7 +36,7 @@ void UFUUILibrary::SetInputModeAndMouseVisibility(APlayerController* PlayerContr
 	{
 		case EFUInputMode::DontChange:
 			{
-					
+				
 			}
 			break;
 		case EFUInputMode::GameOnly:
@@ -138,10 +157,17 @@ void UFUUILibrary::SetGameAndUIInputMode(APlayerController* PlayerController, bo
 	PlayerController->SetInputMode(InputMode);
 }
 
-bool UFUUILibrary::AreWidgetsOverlapping(UWidget* WidgetA, UWidget* WidgetB)
+EFUWidgetOverlappingResult UFUUILibrary::AreWidgetsOverlapping(UWidget* WidgetA, UWidget* WidgetB)
 {
+	if (!IsValid(WidgetA) || !IsValid(WidgetB)) { return EFUWidgetOverlappingResult::Invalid; }
+	
 	const auto& WidgetAGeometry = WidgetA->GetCachedGeometry();
 	const auto& WidgetBGeometry = WidgetB->GetCachedGeometry();
+	
+	const bool bWidgetAHasTicked = WidgetAGeometry.GetAbsoluteSize().IsZero();
+	const bool bWidgetBHasTicked = WidgetBGeometry.GetAbsoluteSize().IsZero();
+	
+	if (!bWidgetAHasTicked || !bWidgetBHasTicked) { return EFUWidgetOverlappingResult::Invalid; }
 	
 	// here we get the Top Left pixel position
 	FVector2D WidgetAPixelPosition;
@@ -160,5 +186,15 @@ bool UFUUILibrary::AreWidgetsOverlapping(UWidget* WidgetA, UWidget* WidgetB)
 	bool bWidgetATopUnderBBottom = WidgetAPixelPosition.Y < (WidgetBPixelPosition.Y + WidgetBSize.Y);
 	bool bWidgetABottomOverBTop = (WidgetAPixelPosition.Y + WidgetASize.Y) > WidgetBPixelPosition.Y;
 	
-	return bWidgetALeftUnderBRight && bWidgetARightOverBLeft && bWidgetATopUnderBBottom && bWidgetABottomOverBTop;
+#if FU_WITH_CONSOLE
+	if (FU::UI::Debug::DebugAreWidgetsOverlapping)
+	{
+		constexpr FColor TransRed = FColor(FColor::Red.R, 0, 0, 255/2);
+		constexpr FColor TransBlue = FColor(0, 0, FColor::Blue.B, 255/2);
+		FU::Draw::Screen2D::DrawWidgetBorder(WidgetA, TransRed, FU::UI::Debug::DebugAreWidgetsOverlappingTime);
+		FU::Draw::Screen2D::DrawWidgetBorder(WidgetB, TransBlue, FU::UI::Debug::DebugAreWidgetsOverlappingTime);
+	}
+#endif
+	
+	return (bWidgetALeftUnderBRight && bWidgetARightOverBLeft && bWidgetATopUnderBBottom && bWidgetABottomOverBTop) ? EFUWidgetOverlappingResult::Overlapping : EFUWidgetOverlappingResult::NotOverlapping;
 }

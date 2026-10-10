@@ -2,12 +2,19 @@
 
 
 #include "Draw/FUDraw.h"
+#include "CanvasItem.h"
 #include "EngineUtils.h"
+#include "Blueprint/SlateBlueprintLibrary.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
+#include "Blueprint/WidgetTree.h"
 #include "Components/BillboardComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/LineBatchComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Components/Widget.h"
+#include "Draw/FUCanvasDraw.h"
 #include "Draw/FUDrawProxy.h"
+#include "GameFramework/HUD.h"
 #include "Utility/FUOrientedBox.h"
 
 
@@ -55,6 +62,37 @@ void FU::Draw::ClearDrawDebugGroup(const UWorld* World, uint32 BatchID)
 	World->GetLineBatcher(UWorld::ELineBatcherType::WorldPersistent)->ClearBatch(BatchID);
 	World->GetLineBatcher(UWorld::ELineBatcherType::Foreground)->ClearBatch(BatchID);
 	World->GetLineBatcher(UWorld::ELineBatcherType::World)->ClearBatch(BatchID);
+}
+
+void FU::Draw::Screen2D::DrawLine(float StartScreenX, float StartScreenY, float EndScreenX, float EndScreenY, FColor Color, float Duration, float LineThickness)
+{
+	FCanvasLineItem LineItem(FVector2D(StartScreenX, StartScreenY), FVector2D(EndScreenX, EndScreenY));
+	LineItem.SetColor(Color);
+	LineItem.LineThickness = LineThickness;
+	FFUCanvasDrawService::AppendDrawItem(LineItem, Duration);
+}
+
+void FU::Draw::Screen2D::DrawRect(float ScreenX, float ScreenY, float ScreenW, float ScreenH, FColor Color, float Duration)
+{
+	FCanvasTileItem TileItem(FVector2D(ScreenX, ScreenY), GWhiteTexture, FVector2D(ScreenW, ScreenH), Color);
+	TileItem.BlendMode = SE_BLEND_Translucent;
+	FFUCanvasDrawService::AppendDrawItem(TileItem, Duration);
+}
+
+void FU::Draw::Screen2D::DrawWidgetBorder(const UWidget* Widget, FColor Color, float Duration)
+{
+	const auto& WidgetGeometry = Widget->GetCachedGeometry();
+	
+	FVector2D WidgetSize = WidgetGeometry.GetAbsoluteSize();
+	
+	// here we get the Top Left pixel position
+	FVector2D WidgetPixelPosition = FVector2D(-1, -1);
+	FVector2D WidgetViewportPosition = FVector2D(-1, -1);
+	USlateBlueprintLibrary::LocalToViewport(Widget->GetWorld(), WidgetGeometry, FVector2D(0, 0), WidgetPixelPosition, WidgetViewportPosition);
+	
+	FCanvasTileItem TileItem(WidgetPixelPosition, GWhiteTexture, WidgetSize, Color);
+	TileItem.BlendMode = SE_BLEND_Translucent;
+	FFUCanvasDrawService::AppendDrawItem(TileItem, Duration);
 }
 
 

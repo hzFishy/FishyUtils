@@ -24,6 +24,15 @@ enum class EFUNewMouseVisibility : uint8
 };
 
 
+UENUM(BlueprintType)
+enum class EFUWidgetOverlappingResult : uint8
+{
+	Overlapping,
+	NotOverlapping,
+	Invalid,
+};
+
+
 /**
  * 
  */
@@ -53,5 +62,5 @@ public:
 	static void SetGameAndUIInputMode(APlayerController* PlayerController, bool bHideCursorDuringCapture = true, EMouseLockMode LockMouse = EMouseLockMode::DoNotLock, UUserWidget* WidgetToFocus = nullptr);
 
 	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI")
-	static bool AreWidgetsOverlapping(UWidget* WidgetA, UWidget* WidgetB);
+	static EFUWidgetOverlappingResult AreWidgetsOverlapping(UWidget* WidgetA, UWidget* WidgetB);
 };

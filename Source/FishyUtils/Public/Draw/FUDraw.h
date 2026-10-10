@@ -3,6 +3,7 @@
 #pragma once
 
 #include "DebugRenderSceneProxy.h"
+class UWidget;
 class UFUDrawComponent;
 class UCapsuleComponent;
 
@@ -64,6 +65,13 @@ namespace FU::Draw
 			uint8 DepthPriority = 0, uint8 Id = 0);
 		FISHYUTILS_API void DrawDebugDirectionalArrowFrame(const UWorld* World, const FVector& StartLocation,
 			const FVector& EndLocation, FColor Color, float ArrowSize = 2, float Thickness = 2, uint8 DepthPriority = 0, uint8 Id = 0);
+	}
+	
+	namespace Screen2D
+	{
+		FISHYUTILS_API void DrawLine(float StartScreenX, float StartScreenY, float EndScreenX, float EndScreenY, FColor Color, float Duration = -1, float LineThickness = 0.f);
+		FISHYUTILS_API void DrawRect(float ScreenX, float ScreenY, float ScreenW, float ScreenH, FColor Color, float Duration = -1);
+		FISHYUTILS_API void DrawWidgetBorder(const UWidget* Widget, FColor Color, float Duration = -1);
 	}
 	
 	FISHYUTILS_API void DrawDebugSphere(const UWorld* World, const FVector& Location, float Radius, FColor Color,
