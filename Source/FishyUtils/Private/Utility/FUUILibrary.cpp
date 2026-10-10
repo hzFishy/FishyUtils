@@ -198,3 +198,19 @@ EFUWidgetOverlappingResult UFUUILibrary::AreWidgetsOverlapping(UWidget* WidgetA,
 	
 	return (bWidgetALeftUnderBRight && bWidgetARightOverBLeft && bWidgetATopUnderBBottom && bWidgetABottomOverBTop) ? EFUWidgetOverlappingResult::Overlapping : EFUWidgetOverlappingResult::NotOverlapping;
 }
+
+EFUWidgetOverlappingResult UFUUILibrary::IsWidgetOverlappingWithWidgets(UWidget* Widget, const TArray<UWidget*>& Widgets)
+{
+	if (!IsValid(Widget)) { return EFUWidgetOverlappingResult::Invalid; }
+	if (Widgets.IsEmpty()) { return EFUWidgetOverlappingResult::Invalid; }
+	
+	for (auto* WidgetEntry : Widgets)
+	{
+		if (AreWidgetsOverlapping(Widget, WidgetEntry) == EFUWidgetOverlappingResult::Overlapping)
+		{
+			return EFUWidgetOverlappingResult::Overlapping;
+		}
+	}
+	
+	return EFUWidgetOverlappingResult::NotOverlapping;
+}

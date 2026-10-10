@@ -63,4 +63,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI")
 	static EFUWidgetOverlappingResult AreWidgetsOverlapping(UWidget* WidgetA, UWidget* WidgetB);
+	
+	UFUNCTION(BlueprintCallable, Category="FishyUtils|Utility|UI")
+	static EFUWidgetOverlappingResult IsWidgetOverlappingWithWidgets(UWidget* Widget, const TArray<UWidget*>& Widgets);
 };
