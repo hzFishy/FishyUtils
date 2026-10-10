@@ -189,8 +189,8 @@ EFUWidgetOverlappingResult UFUUILibrary::AreWidgetsOverlapping(UWidget* WidgetA,
 #if FU_WITH_CONSOLE
 	if (FU::UI::Debug::DebugAreWidgetsOverlapping)
 	{
-		constexpr FColor TransRed = FColor(FColor::Red.R, 0, 0, 255/2);
-		constexpr FColor TransBlue = FColor(0, 0, FColor::Blue.B, 255/2);
+		const FColor TransRed = FColor(FColor::Red.R, 0, 0, 255/2);
+		const FColor TransBlue = FColor(0, 0, FColor::Blue.B, 255/2);
 		FU::Draw::Screen2D::DrawWidgetBorder(WidgetA, TransRed, FU::UI::Debug::DebugAreWidgetsOverlappingTime);
 		FU::Draw::Screen2D::DrawWidgetBorder(WidgetB, TransBlue, FU::UI::Debug::DebugAreWidgetsOverlappingTime);
 	}
