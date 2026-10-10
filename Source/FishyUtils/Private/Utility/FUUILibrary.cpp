@@ -164,8 +164,8 @@ EFUWidgetOverlappingResult UFUUILibrary::AreWidgetsOverlapping(UWidget* WidgetA,
 	const auto& WidgetAGeometry = WidgetA->GetCachedGeometry();
 	const auto& WidgetBGeometry = WidgetB->GetCachedGeometry();
 	
-	const bool bWidgetAHasTicked = WidgetAGeometry.GetAbsoluteSize().IsZero();
-	const bool bWidgetBHasTicked = WidgetBGeometry.GetAbsoluteSize().IsZero();
+	const bool bWidgetAHasTicked = !WidgetAGeometry.GetAbsoluteSize().IsZero();
+	const bool bWidgetBHasTicked = !WidgetBGeometry.GetAbsoluteSize().IsZero();
 	
 	if (!bWidgetAHasTicked || !bWidgetBHasTicked) { return EFUWidgetOverlappingResult::Invalid; }
 	
