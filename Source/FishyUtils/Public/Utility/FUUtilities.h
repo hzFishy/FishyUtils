@@ -227,6 +227,42 @@ namespace FU::Utils
 	
 	namespace Loading
 	{
+		/** 
+		 * Sync load object path.
+		 * This will return nullptr if the Path is null and if its not already loaded we use the AssetManager StreamableManager to load it.
+		 */
+		template <typename T>
+		T* SyncLoadObjectPath(const FSoftObjectPath& Path)
+		{
+			if (Path.IsNull()) { return nullptr; }
+			if (Path.IsValid()) { return Path.ResolveObject(); }
+			return UAssetManager::GetStreamableManager().RequestSyncLoad(Path)->GetLoadedAsset<T>();
+		}
+		
+		/** 
+		 * Sync load object.
+		 * This will return nullptr if the Path is null and if its not already loaded we use the AssetManager StreamableManager to load it.
+		 */
+		template <typename T>
+		T* SyncLoadObject(const TSoftObjectPtr<T>& SoftObject)
+		{
+			if (SoftObject.IsNull()) { return nullptr; }
+			if (SoftObject.IsValid()) { return SoftObject.Get(); }
+			return UAssetManager::GetStreamableManager().RequestSyncLoad(SoftObject.ToSoftObjectPath())->template GetLoadedAsset<T>();
+		}
+		
+		/** 
+		 * Sync load class.
+		 * This will return nullptr if the Path is null and if its not already loaded we use the AssetManager StreamableManager to load it.
+		 */
+		template <typename T>
+		T* SyncLoadClass(const TSoftClassPtr<T>& SoftClass)
+		{
+			if (SoftClass.IsNull()) { return nullptr; }
+			if (SoftClass.IsValid()) { return SoftClass.Get(); }
+			return UAssetManager::GetStreamableManager().RequestSyncLoad(SoftClass.ToSoftObjectPath())->template GetLoadedAsset<T>();
+		}
+		
 		/**
 		 * Use with FU_UTILS_ASYNCLOAD inside the callback to know if the UObject that requested the async load is still valid
 		 */
