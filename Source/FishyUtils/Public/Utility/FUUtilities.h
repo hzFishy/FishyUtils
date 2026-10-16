@@ -498,5 +498,5 @@ namespace FU::Utils
 	 * and contains at least one letter and one number. Used to create _UUID suffixes
 	 * for making asset names unique, etc.
 	 */
-	FString GenerateRandomHexString(int32 NumChars = 8);
+	FISHYUTILS_API FString GenerateRandomHexString(int32 NumChars = 8);
 }
