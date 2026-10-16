@@ -256,11 +256,11 @@ namespace FU::Utils
 		 * This will return nullptr if the Path is null and if its not already loaded we use the AssetManager StreamableManager to load it.
 		 */
 		template <typename T>
-		T* SyncLoadClass(const TSoftClassPtr<T>& SoftClass)
+		UClass* SyncLoadClass(const TSoftClassPtr<T>& SoftClass)
 		{
 			if (SoftClass.IsNull()) { return nullptr; }
 			if (SoftClass.IsValid()) { return SoftClass.Get(); }
-			return UAssetManager::GetStreamableManager().RequestSyncLoad(SoftClass.ToSoftObjectPath())->template GetLoadedAsset<T>();
+			return UAssetManager::GetStreamableManager().RequestSyncLoad(SoftClass.ToSoftObjectPath())->template GetLoadedAsset<UClass>();
 		}
 		
 		/**
