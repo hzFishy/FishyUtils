@@ -96,14 +96,24 @@ void UFUExtraTickWorldSubsystem::Deinitialize()
 	/*----------------------------------------------------------------------------
 		Core
 	----------------------------------------------------------------------------*/
-void UFUExtraTickWorldSubsystem::K2_RegisterCallback(FFUExtraTickDynamicDelegate NewRegistrant, EFUExtraTickGroup TickGroup)
+void UFUExtraTickWorldSubsystem::RegisterDynamicCallback(FFUExtraTickDynamicDelegate Delegate, EFUExtraTickGroup TickGroup)
 {
-	GetTicker(GetEngineTickGroup(TickGroup)).DynamicDelegate.Add(NewRegistrant);
+	GetTicker(GetEngineTickGroup(TickGroup)).DynamicDelegate.Add(Delegate);
 }
 
-void UFUExtraTickWorldSubsystem::RegisterCallback(FFUExtraTickDelegate NewRegistrant, EFUExtraTickGroup TickGroup)
+void UFUExtraTickWorldSubsystem::UnRegisterDynamicCallback(EFUExtraTickGroup TickGroup, FFUExtraTickDynamicDelegate Delegate)
 {
-	GetTicker(GetEngineTickGroup(TickGroup)).NativeDelegate.Add(NewRegistrant);
+	GetTicker(GetEngineTickGroup(TickGroup)).DynamicDelegate.Remove(Delegate);
+}
+
+FDelegateHandle UFUExtraTickWorldSubsystem::RegisterCallback(EFUExtraTickGroup TickGroup, FFUExtraTickDelegate Delegate)
+{
+	return GetTicker(GetEngineTickGroup(TickGroup)).NativeDelegate.Add(Delegate);
+}
+
+void UFUExtraTickWorldSubsystem::UnRegisterCallback(EFUExtraTickGroup TickGroup, FDelegateHandle Handle)
+{
+	GetTicker(GetEngineTickGroup(TickGroup)).NativeDelegate.Remove(Handle);
 }
 
 void UFUExtraTickWorldSubsystem::HandleTick(float DeltaTime, ETickingGroup Group)

@@ -121,13 +121,15 @@ public:
 		Core
 	----------------------------------------------------------------------------*/
 public:
-	UFUNCTION(BlueprintCallable, DisplayName="Register Callback", Category="FishyUtils|ExtraTick")
-	void K2_RegisterCallback(FFUExtraTickDynamicDelegate NewRegistrant, EFUExtraTickGroup TickGroup);
+	UFUNCTION(BlueprintCallable, Category="FishyUtils|ExtraTick")
+	void RegisterDynamicCallback(FFUExtraTickDynamicDelegate Delegate, EFUExtraTickGroup TickGroup);
 
-	/** 
-	 *  Warning: This will crash if the subsystem wasn't initialized.
-	 */
-	void RegisterCallback(FFUExtraTickDelegate NewRegistrant, EFUExtraTickGroup TickGroup);
+	UFUNCTION(BlueprintCallable, Category="FishyUtils|ExtraTick")
+	void UnRegisterDynamicCallback(EFUExtraTickGroup TickGroup, FFUExtraTickDynamicDelegate Delegate);
+	
+	FDelegateHandle RegisterCallback(EFUExtraTickGroup TickGroup, FFUExtraTickDelegate Delegate);
+	
+	void UnRegisterCallback(EFUExtraTickGroup TickGroup, FDelegateHandle Handle);
 
 protected:
 	void HandleTick(float DeltaTime, ETickingGroup Group);
