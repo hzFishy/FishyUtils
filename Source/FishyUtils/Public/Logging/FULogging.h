@@ -15,7 +15,7 @@ FISHYUTILS_API DECLARE_LOG_CATEGORY_EXTERN(LogFUCmd, Log, All);
 	/*----------------------------------------------------------------------------
 		REQUIREMENTS
 
-		You must give the Log verbosity to default and compile time level, example: DECLARE_LOG_CATEGORY_EXTERN(LogBPGValidator, Log, All);
+		You must give proper verbosity to default and compile time level, example: DECLARE_LOG_CATEGORY_EXTERN(LogBPGValidator, Log, All);
 		You may experience compiling errors if you dont use "Log" as runtime level and "All" as compile level.
 	----------------------------------------------------------------------------*/
 
@@ -63,10 +63,12 @@ FISHYUTILS_API DECLARE_LOG_CATEGORY_EXTERN(LogFUCmd, Log, All);
 
 // the rest defined here so its always available for any build mode
 #define _FU_LOG_OBJECT_D(CATEGORY, FORMAT, ...) _FU_LOG_SET_DISPLAY_COLOR _FU_LOG_OBJECT(CATEGORY, Display, FORMAT, ##__VA_ARGS__)	_FU_LOG_CLEAR_WARN_COLOR
+#define _FU_LOG_OBJECT_L(CATEGORY, FORMAT, ...)							  _FU_LOG_OBJECT(CATEGORY, Log, FORMAT, ##__VA_ARGS__)
 #define _FU_LOG_OBJECT_W(CATEGORY, FORMAT, ...)							  _FU_LOG_OBJECT(CATEGORY, Warning, FORMAT, ##__VA_ARGS__)
 #define _FU_LOG_OBJECT_E(CATEGORY, FORMAT, ...)							  _FU_LOG_OBJECT(CATEGORY, Error, FORMAT, ##__VA_ARGS__)
 #define _FU_LOG_OBJECT_S(CATEGORY, FORMAT, ...) _FU_LOG_SET_SUCCESS_COLOR _FU_LOG_OBJECT(CATEGORY, Display, FORMAT, ##__VA_ARGS__)	_FU_LOG_CLEAR_WARN_COLOR
 
+#define _FU_LOG_STATIC_L(CATEGORY, FORMAT, ...)							  _FU_LOG_STATIC(CATEGORY, Log, FORMAT, ##__VA_ARGS__)
 #define _FU_LOG_STATIC_D(CATEGORY, FORMAT, ...) _FU_LOG_SET_DISPLAY_COLOR _FU_LOG_STATIC(CATEGORY, Display, FORMAT, ##__VA_ARGS__)	_FU_LOG_CLEAR_WARN_COLOR
 #define _FU_LOG_STATIC_W(CATEGORY, FORMAT, ...)							  _FU_LOG_STATIC(CATEGORY, Warning, FORMAT, ##__VA_ARGS__)
 #define _FU_LOG_STATIC_E(CATEGORY, FORMAT, ...)							  _FU_LOG_STATIC(CATEGORY, Error, FORMAT, ##__VA_ARGS__)
