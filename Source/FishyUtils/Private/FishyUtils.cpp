@@ -7,8 +7,8 @@
 #include "Utility/FUVisualLogger.h"
 
 
-inline const TCHAR* TargetShowFlagName = TEXT("FU_CanvasDraw");  
-inline TCustomShowFlag<EShowFlagShippingValue::Dynamic> TargetShowFlag(TargetShowFlagName, true, SFG_Normal, INVTEXT("FishyUtils: Canvas Draw"));
+inline const TCHAR* TargetShowFlagName_CanvasDraw = TEXT("FU_CanvasDraw");  
+inline TCustomShowFlag<EShowFlagShippingValue::Dynamic> TargetShowFlag_CanvasDraw(TargetShowFlagName_CanvasDraw, true, SFG_Normal, INVTEXT("FishyUtils: Canvas Draw"));
  
 
 #define LOCTEXT_NAMESPACE "FFishyUtilsModule"
@@ -18,8 +18,6 @@ void FFishyUtilsModule::StartupModule()
 #if ENABLE_VISUAL_LOG
 	FFUVisualLoggerManager::Initialize();
 #endif
-	
-	DebugDrawServiceDelegateHandle = UDebugDrawService::Register(TargetShowFlagName, FDebugDrawDelegate::CreateStatic(&FFUCanvasDrawService::DebugDraw_Global));
 }
 
 void FFishyUtilsModule::ShutdownModule()

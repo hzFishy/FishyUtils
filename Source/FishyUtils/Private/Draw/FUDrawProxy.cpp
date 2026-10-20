@@ -4,8 +4,8 @@
 #include "Draw/FUDrawProxy.h"
 #include "Engine/Canvas.h"
 
-inline const TCHAR* TargetShowFlagName = TEXT("FU_Draw");  
-inline TCustomShowFlag<EShowFlagShippingValue::Dynamic> TargetShowFlag(TargetShowFlagName, true, SFG_Advanced, INVTEXT("FishyUtils: Advanced Draw"));
+inline const TCHAR* TargetShowFlagName_Draw = TEXT("FU_Draw");  
+inline TCustomShowFlag<EShowFlagShippingValue::Dynamic> TargetShowFlag_Draw(TargetShowFlagName_Draw, true, SFG_Advanced, INVTEXT("FishyUtils: Advanced Draw"));
 
 	
 	/*----------------------------------------------------------------------------
@@ -79,7 +79,7 @@ FFUDrawProxySceneProxy::FFUDrawProxySceneProxy(const UFUDrawComponent* InCompone
 	AdvancedArrows(InComponent->Arrows)
 {
 	bWillEverBeLit = false;
-	ViewFlagName = TargetShowFlagName;
+	ViewFlagName = TargetShowFlagName_Draw;
 }
 
 FPrimitiveViewRelevance FFUDrawProxySceneProxy::GetViewRelevance(const FSceneView* View) const
