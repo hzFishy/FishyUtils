@@ -19,8 +19,7 @@ public class FishyUtilsEditor : ModuleRules
         PrivateDependencyModuleNames.AddRange(
             new string[]
             {
-                "CoreUObject",
-                "Engine",
+                "CoreUObject", "Engine", "DeveloperSettings",
                 "Slate", "SlateCore", "UMG", "InputCore", "PropertyEditor",
                 "SceneOutliner",
                 "ToolMenus", "UnrealEd", "MessageLog", "LevelEditor"

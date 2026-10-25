@@ -4,6 +4,7 @@
 
 #include "EditorSubsystem.h"
 #include "FUUtilityEditorSubsystem.generated.h"
+class UFUEditorSettings;
 
 
 UCLASS()
@@ -37,6 +38,9 @@ protected:
 	EFUMirrorType HandledMirrorType;
 	TArray<FFUMirrorEntry> HandledMirrorEntries;
 	TSharedPtr<SWidget> LastTickHoveredWidget;
+	
+	UPROPERTY()
+	TObjectPtr<const UFUEditorSettings> EditorSettings;
 	
 	
 	/*----------------------------------------------------------------------------

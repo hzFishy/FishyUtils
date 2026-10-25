@@ -3,6 +3,7 @@
 
 #include "Utility/FUUtilityEditorSubsystem.h"
 #include "Selection.h"
+#include "Core/FUEditorSettings.h"
 #include "Utility/FUEditorUtilities.h"
 
 
@@ -14,15 +15,23 @@ UFUUtilityEditorSubsystem::FFUMirrorEntry::FFUMirrorEntry(AActor* InActor):
 void UFUUtilityEditorSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-		
-	TickHandle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &ThisClass::Tick), 0);
+	
+	EditorSettings = GetDefault<UFUEditorSettings>();
+	
+	if (EditorSettings->bEnableMirrorPreview)
+	{
+		TickHandle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &ThisClass::Tick), 0);
+	}
 }
 
 void UFUUtilityEditorSubsystem::Deinitialize()
 {
 	Super::Deinitialize();
 	
-	FTSTicker::GetCoreTicker().RemoveTicker(TickHandle);
+	if (TickHandle.IsValid())
+	{
+		FTSTicker::GetCoreTicker().RemoveTicker(TickHandle);
+	}
 }
 
 bool UFUUtilityEditorSubsystem::Exec_Editor(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar)
