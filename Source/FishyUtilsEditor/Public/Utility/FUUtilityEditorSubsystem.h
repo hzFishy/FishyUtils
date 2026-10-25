@@ -57,6 +57,7 @@ public:
 	/*----------------------------------------------------------------------------
 		Core
 	----------------------------------------------------------------------------*/
+protected:
 	bool Tick(float DeltaTime);
 	
 	
@@ -67,4 +68,11 @@ protected:
 	void StartMirrorType(EFUMirrorType Type);
 	
 	void StopCurrentMirrorType(bool bRestore);
+	
+	
+	/*----------------------------------------------------------------------------
+		Coloration
+	----------------------------------------------------------------------------*/
+protected:
+	FLinearColor GetColorVariation() const;
 };
