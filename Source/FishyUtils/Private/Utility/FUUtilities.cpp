@@ -43,6 +43,11 @@ FString FU::Utils::PrintCompactVector(FVector Value)
 	return FString::Printf(TEXT("(X=%.1f, Y=%.1f, Z=%.1f)"), Value.X, Value.Y, Value.Z);
 }
 
+FString FU::Utils::PrintCompactVector(FVector2f Value)
+{
+	return FString::Printf(TEXT("(X=%.1f, Y=%.1f)"), Value.X, Value.Y);
+}
+
 FString FU::Utils::PrintCompactRotator(FRotator Value)
 {
 	return FString::Printf(TEXT("(R/X=%.1f, P/Y=%.1f, Y/Z=%.1f)"), Value.Roll, Value.Pitch, Value.Yaw);

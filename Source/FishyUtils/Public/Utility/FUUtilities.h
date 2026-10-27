@@ -44,6 +44,8 @@ namespace FU::Utils
 	FISHYUTILS_API FString PrintCompactFloat(const float* Value);
 	
 	FISHYUTILS_API FString PrintCompactVector(FVector Value);
+	
+	FISHYUTILS_API FString PrintCompactVector(FVector2f Value);
 
 	FISHYUTILS_API FString PrintCompactRotator(FRotator Value);
 
