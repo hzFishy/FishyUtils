@@ -9,6 +9,7 @@
 #include "LevelEditor.h"
 #include "LevelEditorActions.h"
 #include "Selection.h"
+#include "Engine/StaticMeshActor.h"
 #include "Framework/Commands/GenericCommands.h"
 #include "Misc/UObjectToken.h"
 
@@ -409,6 +410,45 @@ namespace FU::EditorUtilities
 }
 
 
+void FFUEditor::FFUEditorCommands::RegisterCommands()
+{
+	UI_COMMAND(SelectSameFolderLevel,
+		"Select All In Folder",
+		"Selects all other actors that are in the same root folder than the current selection (if multiple actors are selected the first selection will be used as reference)",
+		EUserInterfaceActionType::Button, FInputChord(EKeys::S, EModifierKey::Shift | EModifierKey::Alt)
+	);
+	
+	UI_COMMAND(ActorCopyTransform,
+		"Copy Actor Transform", "Copy the transform of the selected actor", EUserInterfaceActionType::Button, FInputChord()
+	);
+	UI_COMMAND(ActorPasteTransform,
+		"Paste Actor Transform", "Paste the cached transform on the selected actor", EUserInterfaceActionType::Button, FInputChord()
+	);
+	
+	UI_COMMAND(ActorCopyLocation,
+		"Copy Actor Location", "Copy the location of the selected actor", EUserInterfaceActionType::Button, FInputChord()
+	);
+	UI_COMMAND(ActorPasteLocation,
+		"Paste Actor Location", "Paste the cached location on the selected actor", EUserInterfaceActionType::Button, FInputChord()
+	);
+	
+	UI_COMMAND(ActorCopyRotation,
+		"Copy Actor Rotation", "Copy the rotation of the selected actor", EUserInterfaceActionType::Button, FInputChord()
+	);
+	UI_COMMAND(ActorPasteRotation,
+		"Paste Actor Rotation", "Paste the cached rotation on the selected actor", EUserInterfaceActionType::Button, FInputChord()
+	);
+	
+	UI_COMMAND(ActorCopyScale,
+		"Copy Actor Scale", "Copy the scale of the selected actor", EUserInterfaceActionType::Button, FInputChord()
+	);
+	UI_COMMAND(ActorPasteScale,
+		"Paste Actor Scale", "Paste the cached scaled on the selected actor", EUserInterfaceActionType::Button, FInputChord()
+	);
+}
+
+
+
 FFUEditor::FFUEditor() {}
 
 FFUEditor::~FFUEditor() {}
@@ -504,6 +544,28 @@ void FFUEditor::RegisterMenuExtensions()
 			FExecuteAction::CreateRaw(this, &FFUEditor::ExecuteActorPasteScale),
 			FCanExecuteAction::CreateRaw(this, &FFUEditor::CanExecuteActorPasteScale)
 		);
+	}
+	
+	// Tools menu
+	{
+		auto* ToolsMenu = ToolMenus->ExtendMenu("LevelEditor.MainMenu.Tools");
+		
+		FToolMenuSection& FishyToolsSection = ToolsMenu->AddSection(
+			"FishyUtilities",
+			INVTEXT("Fishy Utilities"),
+			FToolMenuInsert("Tools", EToolMenuInsertType::After)
+		);
+		
+		FToolMenuEntry Entry(UToolMenus::Get()->CurrentOwner(), "PackingSubMenu", EMultiBlockType::MenuEntry);
+		Entry.TutorialHighlightName = NAME_None;
+		Entry.Label = INVTEXT("Packing Operations");
+		Entry.ToolTip = INVTEXT("");
+		Entry.Icon = FSlateIcon(FAppStyle::GetAppStyleSetName(), "MergeActors.TabIcon");
+		Entry.bShouldCloseWindowAfterMenuSelection = true;
+		Entry.SubMenuData.bIsSubMenu = true;
+		Entry.SubMenuData.ConstructMenu = FNewToolMenuDelegate::CreateStatic(&FFUEditor::FillToolsFishyUtilsSubMenu);
+		Entry.SubMenuData.bOpenSubMenuOnClick = false;
+		FishyToolsSection.AddEntry(Entry);
 	}
 }
 
@@ -715,41 +777,108 @@ void FFUEditor::FillActorOptionsFishyUtilsSubMenu(UToolMenu* Menu)
 	ScaleSection.AddMenuEntry(FFUEditorCommands::Get().ActorPasteScale, TAttribute<FText>(), TAttribute<FText>(), FGenericCommands::Get().Paste->GetIcon());
 }
 
-void FFUEditor::FFUEditorCommands::RegisterCommands()
+void FFUEditor::FillToolsFishyUtilsSubMenu(UToolMenu* Menu)
 {
-	UI_COMMAND(SelectSameFolderLevel,
-		"Select All In Folder",
-		"Selects all other actors that are in the same root folder than the current selection (if multiple actors are selected the first selection will be used as reference)",
-		EUserInterfaceActionType::Button, FInputChord(EKeys::S, EModifierKey::Shift | EModifierKey::Alt)
+	auto& ChildActorSection = Menu->AddSection("Child Actor", INVTEXT("Child Actor"));
+	ChildActorSection.AddMenuEntry(
+		"UnpackageChildActorComponents", 
+		INVTEXT("Unpackage Selected Child Actors"), 
+		INVTEXT(""), 
+		FSlateIcon(FAppStyle::GetAppStyleSetName(), 
+			"MergeActors.TabIcon"), 
+			FToolUIActionChoice(FExecuteAction::CreateStatic(&FFUEditor::ExecUnpackChildActorComponents))
 	);
+	// const FName InName, const TAttribute<FText>& InLabel, const TAttribute<FText>& InToolTip, const TAttribute<FSlateIcon>& InIcon, const FToolUIActionChoice& InAction
+}
+
+void FFUEditor::ExecUnpackChildActorComponents()
+{
+	TArray<AActor*> SelectedActors;
+	GEditor->GetSelectedActors()->GetSelectedObjects(SelectedActors);
 	
-	UI_COMMAND(ActorCopyTransform,
-		"Copy Actor Transform", "Copy the transform of the selected actor", EUserInterfaceActionType::Button, FInputChord()
-	);
-	UI_COMMAND(ActorPasteTransform,
-		"Paste Actor Transform", "Paste the cached transform on the selected actor", EUserInterfaceActionType::Button, FInputChord()
-	);
+	if (SelectedActors.IsEmpty()) { return; }
 	
-	UI_COMMAND(ActorCopyLocation,
-		"Copy Actor Location", "Copy the location of the selected actor", EUserInterfaceActionType::Button, FInputChord()
-	);
-	UI_COMMAND(ActorPasteLocation,
-		"Paste Actor Location", "Paste the cached location on the selected actor", EUserInterfaceActionType::Button, FInputChord()
-	);
+	struct FFUResultUnpackComponent
+	{
+		// Source
+		const UChildActorComponent* SourceCAC = nullptr;
+		
+		AActor* SpawnedActor = nullptr;
+	};
 	
-	UI_COMMAND(ActorCopyRotation,
-		"Copy Actor Rotation", "Copy the rotation of the selected actor", EUserInterfaceActionType::Button, FInputChord()
-	);
-	UI_COMMAND(ActorPasteRotation,
-		"Paste Actor Rotation", "Paste the cached rotation on the selected actor", EUserInterfaceActionType::Button, FInputChord()
-	);
+	struct FFUResultUnpack
+	{
+		const AActor* SourceActor = nullptr;
+		
+		TArray<FFUResultUnpackComponent> Results;
+	};
 	
-	UI_COMMAND(ActorCopyScale,
-		"Copy Actor Scale", "Copy the scale of the selected actor", EUserInterfaceActionType::Button, FInputChord()
-	);
-	UI_COMMAND(ActorPasteScale,
-		"Paste Actor Scale", "Paste the cached scaled on the selected actor", EUserInterfaceActionType::Button, FInputChord()
-	);
+	TArray<FFUResultUnpack> ValidEntries;
+	ValidEntries.Reserve(SelectedActors.Num());
+	
+	GEditor->SelectNone(false, true, false);
+	
+	GEditor->BeginTransaction(INVTEXT("ExecUnpackChildActorComponents"));
+	
+	for (auto* SelectedActor : SelectedActors)
+	{
+		// check if any CACs
+		TArray<const UChildActorComponent*> CACs;
+		AActor::GetActorClassDefaultComponents<UChildActorComponent>(SelectedActor->GetClass(), CACs);
+		
+		if (CACs.IsEmpty()) { continue; }
+		
+		// save source data
+		auto& ResultPerActor = ValidEntries.Emplace_GetRef();
+		ResultPerActor.SourceActor = SelectedActor;
+		
+		// get data per CAC
+		for (auto* CAC : CACs)
+		{
+			auto& ResultPerComponent = ResultPerActor.Results.Emplace_GetRef();
+			ResultPerComponent.SourceCAC = CAC;
+			UClass* ChildActorClass = CAC->GetChildActorClass();
+			auto* ChildActorTemplate = CAC->GetChildActorTemplate();
+			auto CachedInstanceDataWrap = CAC->GetComponentInstanceData();
+			FChildActorComponentInstanceData* CachedInstanceData = CachedInstanceDataWrap.Cast<FChildActorComponentInstanceData>();
+			
+			// spawn
+			FActorSpawnParameters Params;
+			Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			Params.Template = ChildActorTemplate;
+			Params.bDeferConstruction = true;
+			
+			if (ChildActorClass->IsChildOf<AStaticMeshActor>())
+			{
+				auto* SM = Cast<AStaticMeshActor>(ChildActorTemplate)->GetStaticMeshComponent()->GetStaticMesh().Get();
+				FName Name = IsValid(SM) ? SM->GetFName() : ChildActorClass->GetFName();
+				Params.Name = FActorSpawnUtils::MakeUniqueActorName(
+					ResultPerActor.SourceActor->GetLevel(), 
+					Params.Template->GetClass(), 
+					FActorSpawnUtils::GetBaseName(Name), 
+					true
+				);
+			}
+			
+			// get CAC transform
+			const_cast<UChildActorComponent*>(ResultPerComponent.SourceCAC)->ConditionalUpdateComponentToWorld();
+			FTransform Transform = ResultPerComponent.SourceCAC->GetComponentTransform();
+			
+			// Transform around owner
+			Transform *= ResultPerActor.SourceActor->GetActorTransform();
+			
+			ResultPerComponent.SpawnedActor = GWorld->SpawnActor<AActor>(ChildActorClass, Transform, Params);
+			
+			const FComponentInstanceDataCache* ComponentInstanceData = (CachedInstanceData ? CachedInstanceData->ComponentInstanceData.Get() : nullptr);
+			ResultPerComponent.SpawnedActor->FinishSpawning(Transform, false, ComponentInstanceData);
+			
+			ResultPerComponent.SpawnedActor->Modify();
+			
+			GEditor->GetSelectedActors()->Select(ResultPerComponent.SpawnedActor);
+		}
+	}
+	
+	GEditor->EndTransaction();
 }
 
 #undef LOCTEXT_NAMESPACE

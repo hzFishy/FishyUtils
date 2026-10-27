@@ -174,5 +174,8 @@ protected:
 	void ExecuteActorPasteScale();
 	
 	static void FillActorOptionsFishyUtilsSubMenu(UToolMenu* Menu);
+	
+	static void FillToolsFishyUtilsSubMenu(UToolMenu* Menu);
+	static void ExecUnpackChildActorComponents();
 };
 
