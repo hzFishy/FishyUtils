@@ -4,10 +4,7 @@
 
 #include "EngineUtils.h"
 #include "PropertyEditorClipboard.h"
-#include "Console/FUConsole.h"
 #include "Framework/Commands/Commands.h"
-#include "Logging/FULogging.h"
-#include "Utility/FUUtilities.h"
 
 
 namespace FU::EditorUtilities

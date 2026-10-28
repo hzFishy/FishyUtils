@@ -14,6 +14,8 @@ static FName NAME_FarShadowColor(TEXT("FarShadowColor"));
 static FName NAME_NegativeScaleColor(TEXT("NegativeScaleColor"));
 static FName NAME_TwoSidedColor(TEXT("TwoSidedColor"));
 static FName NAME_DetailModeColor(TEXT("DetailModeColor"));
+static FName NAME_CollisionEnabled(TEXT("CollisionEnabled"));
+static FName NAME_GenerateOverlapEnabled(TEXT("GenerateOverlapEnabled"));
 #endif
 
 
@@ -36,7 +38,7 @@ void UFUUtilityEditorSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 #if ENABLE_ACTOR_PRIMITIVE_COLOR_HANDLER
 	FActorPrimitiveColorHandler::Get().RegisterPrimitiveColorHandler(
 		NAME_MobilityColor,
-		INVTEXT("Mobility"),
+		INVTEXT("FU: Mobility"),
 		[this] (const UPrimitiveComponent* InPrimitiveComponent) -> FLinearColor 
 		{
 			FLinearColor OutColor = FLinearColor::Gray;
@@ -64,7 +66,7 @@ void UFUUtilityEditorSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	
 	FActorPrimitiveColorHandler::Get().RegisterPrimitiveColorHandler(
 		NAME_FarShadowColor,
-		INVTEXT("Far Shadows"),
+		INVTEXT("FU: Far Shadows"),
 		[this] (const UPrimitiveComponent* InPrimitiveComponent) -> FLinearColor 
 		{
 			FLinearColor OutColor = InPrimitiveComponent->bCastFarShadow ? FLinearColor::Green : FLinearColor::Gray;
@@ -77,7 +79,7 @@ void UFUUtilityEditorSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	
 	FActorPrimitiveColorHandler::Get().RegisterPrimitiveColorHandler(
 		NAME_NegativeScaleColor,
-		INVTEXT("Negative Scale"),
+		INVTEXT("FU: Negative Scale"),
 		[this] (const UPrimitiveComponent* InPrimitiveComponent) -> FLinearColor 
 		{
 			const FVector Scale = InPrimitiveComponent->GetComponentScale();
@@ -93,7 +95,7 @@ void UFUUtilityEditorSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	
 	FActorPrimitiveColorHandler::Get().RegisterPrimitiveColorHandler(
 		NAME_TwoSidedColor,
-		INVTEXT("Two Sided"),
+		INVTEXT("FU: Two Sided"),
 		[this] (const UPrimitiveComponent* InPrimitiveComponent) -> FLinearColor 
 		{
 			FLinearColor OutColor = FLinearColor::Gray;
@@ -101,7 +103,7 @@ void UFUUtilityEditorSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 			InPrimitiveComponent->GetUsedMaterials(UsedMaterials);
 			for (const UMaterialInterface* Material : UsedMaterials)
 			{
-				if (!Material)
+				if (!IsValid(Material))
 				{
 					continue;
 				}
@@ -119,7 +121,7 @@ void UFUUtilityEditorSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	FActorPrimitiveColorHandler::Get().RegisterPrimitiveColorHandler(
 		NAME_DetailModeColor,
-		INVTEXT("Detail Mode"),
+		INVTEXT("FU: Detail Mode"),
 		[this] (const UPrimitiveComponent* InPrimitiveComponent) -> FLinearColor 
 		{
 			FLinearColor OutColor = FLinearColor::Gray;
@@ -142,7 +144,75 @@ void UFUUtilityEditorSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 			"Visualizes the detail modes assigned to primitives.\nGray primitives are always visible. \nGreen "
 			"primitives are visible at medium settings and higher \nYellow primitives are visible at high settings and "
 			"higher \nRed primitives are visible at epic settings and higher")
-		);
+	);
+	
+	FActorPrimitiveColorHandler::Get().RegisterPrimitiveColorHandler(
+		NAME_CollisionEnabled,
+		INVTEXT("FU: Collision Enabled"),
+		[this] (const UPrimitiveComponent* InPrimitiveComponent) -> FLinearColor 
+		{
+			FLinearColor OutColor = InPrimitiveComponent->IsCollisionEnabled() ? FLinearColor::Red : FLinearColor::Gray;
+			return OutColor + GetColorVariation();
+		},
+	[]() {},
+	INVTEXT("Colorize primitives depening on Collision Enabled. Gray = Disabled, Red = Enabled.")
+	);
+	
+	FActorPrimitiveColorHandler::Get().RegisterPrimitiveColorHandler(
+		NAME_GenerateOverlapEnabled,
+		INVTEXT("FU: Generate Overlap Enabled"),
+		[this] (const UPrimitiveComponent* InPrimitiveComponent) -> FLinearColor 
+		{
+			if (FU::EditorUtilities::ShouldGenerateOverlapEventsComponentBeIgnored(InPrimitiveComponent))
+			{
+				return FLinearColor::Gray + GetColorVariation();
+			}
+
+			FLinearColor OutColor;
+			switch (FU::EditorUtilities::GetGenerateOverlapEventsInfoForComponent(InPrimitiveComponent))
+			{
+				case FU::EditorUtilities::GenerateOverlapDisabled:
+					{
+						OutColor = FLinearColor::Gray;
+						break;
+					}
+				case FU::EditorUtilities::NoCollision:
+					{
+						OutColor = FLinearColor::Blue;
+						break;
+					}
+				case FU::EditorUtilities::OverlapCollisionResponseUsedOnly:
+					{
+						OutColor = FLinearColor::Yellow;
+						break;
+					}
+				case FU::EditorUtilities::OverlapCollisionResponseUsedAndDelegatesBound:
+					{
+						OutColor = FLinearColor::Yellow;
+						break;
+					}
+				case FU::EditorUtilities::DelegatesBoundOnly:
+					{
+						OutColor = FLinearColor::Red;
+						break;
+					}
+				case FU::EditorUtilities::GenerateOverlapEnabled:
+					{
+						OutColor = FLinearColor::Red;
+						break;
+					}
+				default: ;
+			}
+			
+			return OutColor + GetColorVariation();
+		},
+	[]() {},
+	INVTEXT("Colorize primitives depening on their \"Generate Overlap Events\" state.\n"
+		 "Gray: GenerateOverlapEvents is disabled or it isn't considered.\n"
+		 "Blue: GenerateOverlapEvents is enabled but the profile is set to NoCollision\n"
+		 "Yellow: GenerateOverlapEvents is enabled and Overlap is used as a Collision Response\n"
+		 "Red: GenerateOverlapEnabled is enabled")
+	);
 #endif
 }
 
@@ -161,6 +231,8 @@ void UFUUtilityEditorSubsystem::Deinitialize()
 	FActorPrimitiveColorHandler::Get().UnregisterPrimitiveColorHandler(NAME_NegativeScaleColor);
 	FActorPrimitiveColorHandler::Get().UnregisterPrimitiveColorHandler(NAME_TwoSidedColor);
 	FActorPrimitiveColorHandler::Get().UnregisterPrimitiveColorHandler(NAME_DetailModeColor);
+	FActorPrimitiveColorHandler::Get().UnregisterPrimitiveColorHandler(NAME_CollisionEnabled);
+	FActorPrimitiveColorHandler::Get().UnregisterPrimitiveColorHandler(NAME_GenerateOverlapEnabled);
 #endif
 }
 

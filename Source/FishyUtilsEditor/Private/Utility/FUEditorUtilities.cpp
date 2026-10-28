@@ -7,11 +7,14 @@
 #include "EditorModeManager.h"
 #include "EngineUtils.h"
 #include "LevelEditor.h"
-#include "LevelEditorActions.h"
 #include "Selection.h"
 #include "Engine/StaticMeshActor.h"
 #include "Framework/Commands/GenericCommands.h"
 #include "Misc/UObjectToken.h"
+#include "Utility/FUUtilities.h"
+#include "Console/FUConsole.h"
+#include "Logging/FULogging.h"
+
 
 #define LOCTEXT_NAMESPACE "FFishyUtilsModule"
 
@@ -271,7 +274,7 @@ namespace FU::EditorUtilities
 	{
 		TArray<FString> HideCategoriesArray;
 		FEditorCategoryUtils::GetClassHideCategories(Component->GetClass(), HideCategoriesArray);
-							
+		
 		// ignore the component if its collision properties are hidden
 		if (!HideCategoriesArray.IsEmpty() && (HideCategoriesArray.Contains("Collision") || HideCategoriesArray.Contains("Physics")))
 		{
