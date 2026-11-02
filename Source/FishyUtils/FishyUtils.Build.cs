@@ -14,7 +14,7 @@ public class FishyUtils : ModuleRules
 				"Core", "CoreUObject",
 				"BCR",
 				"DeveloperSettings", 
-				"UMG", 
+				"UMG", "SlateIM",
 				"StateTreeModule"
 			}
 		);

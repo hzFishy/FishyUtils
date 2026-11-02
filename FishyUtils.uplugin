@@ -38,6 +38,10 @@
 		{
 			"Name": "StateTree",
 			"Enabled": true
+		},
+		{
+			"Name": "SlateIM",
+			"Enabled": true
 		}
 	]
 }
