@@ -3,10 +3,12 @@
 #pragma once
 
 #include "SlateIMWidgetBase.h"
+#include "Misc/EngineVersionComparison.h"
 
 
 namespace FU::SlateIM
 {
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 8, 0)
 	class FFUNomadTab : public FSlateIMNomadTabBase
 	{
 	public:
@@ -16,4 +18,5 @@ namespace FU::SlateIM
 		/** Override this to draw your widget */
 		virtual void DrawContent(float DeltaTime) override {};
 	};
+#endif
 }
