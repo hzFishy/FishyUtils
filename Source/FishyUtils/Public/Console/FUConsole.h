@@ -279,5 +279,15 @@ namespace FU_Console
 		}) \
 	); \
 	
+#define FU_CMD_RUNLAMBDA_WORLD_INT320(Id, Cmd, CmdHelp, LambdaBody) \
+	FU_Console::FFUAutoConsoleCommandWithWorldAndArgs C##Id(Cmd, CmdHelp, \
+		FConsoleCommandWithWorldAndArgsDelegate::CreateLambda([] (const TArray<FString>& Args, UWorld* World) \
+		{ \
+			if (Args.IsEmpty()) { return; } \
+			float Int320 = FU_CMD_ARGS_GET_INT32(0); \
+			LambdaBody \
+		}) \
+	); \
+	
 #endif
 }
