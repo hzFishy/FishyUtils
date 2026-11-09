@@ -8,6 +8,7 @@
 
 namespace FU::Utils::Command
 {
+#if FU_WITH_CONSOLE
 	FU_CMD_RUNLAMBDA_WITHARGS(GenerateRandomHexStringCmd,
 		"FU.Misc.GenerateRandomHexString", "Optional param: length of the generated unique id (default: 8, min: 2, max: 32)",
 		{
@@ -23,4 +24,5 @@ namespace FU::Utils::Command
 			FU_LOG_STemp_W("GenerateRandomHexString result of length {0}: {1}", Length, GeneratedString);
 		}
 	);
+#endif
 }
