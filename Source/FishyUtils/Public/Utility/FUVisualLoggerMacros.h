@@ -243,7 +243,7 @@ namespace FU::VisualLogger
 
 
 /* 
- * TODO: next targets
+ * TODO: BOXES
  * 
  * 
 #define UE_VLOG_BOX(LogOwner, CategoryName, Verbosity, Box, Color, Format, ...)
@@ -254,7 +254,22 @@ namespace FU::VisualLogger
 */
 
 
+	/*----------------------------------------------------------------------------
+		Collision Query
+	----------------------------------------------------------------------------*/
+#define FU_VLOG_SWEEP_SPHERE(LogOwner, CategoryName, Verbosity, StartLocation, EndLocation, Radius, Color) \
+	{ \
+		const FVector TraceVec = EndLocation - StartLocation; \
+		const float Dist = TraceVec.Size(); \
+		const FVector Center = StartLocation + TraceVec * 0.5f; \
+		const float HalfHeight = (Dist * 0.5f) + Radius; \
+		const FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat(); \
+		FU_VLOG_CAPSULE(LogOwner, CategoryName, Verbosity, Center, HalfHeight, Radius, CapsuleRot, Color)\
+	} \
 
+	/*----------------------------------------------------------------------------
+		Concat shapes
+	----------------------------------------------------------------------------*/
 /** 
  *  Draw a wired sphere of the given radius and a smaller sphere acting like the center of it.
  *  No text.

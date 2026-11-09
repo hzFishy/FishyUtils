@@ -142,14 +142,14 @@ namespace FU::Draw
 
 	
 	FISHYUTILS_API void DrawDebugCapsule(const UWorld* World, const FVector& Location, const FQuat& Rotation,
-		float Radius, float HalfHeight, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0);
+		float Radius, float HalfHeight, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	FISHYUTILS_API void DrawDebugCapsuleFrame(const UWorld* World, const FVector& Location, const FQuat& Rotation,
-		float Radius, float HalfHeight, FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
+		float Radius, float HalfHeight, FColor Color, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	
 	FISHYUTILS_API void DrawDebugCapsule(const UWorld* World, const UCapsuleComponent* CapsuleComponent,
-		FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0);
+		FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	FISHYUTILS_API void DrawDebugCapsuleFrame(const UWorld* World, const UCapsuleComponent* CapsuleComponent,
-		FColor Color, float Thickness = 2, uint8 DepthPriority = 0);
+		FColor Color, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 
 	
 	FISHYUTILS_API void DrawDebugBodyInstance(const UWorld* World, const FBodyInstance& BodyInstance, FColor Color,
@@ -221,4 +221,9 @@ namespace FU::Draw
 		float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 	FISHYUTILS_API void DrawDebugPolygonsFrame(const UWorld* World, const TArray<FFUPolygon>& Polygons, FColor Color, 
 		float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
+	
+	FISHYUTILS_API void DrawDebugSweptSphere(const UWorld* World, const FVector& StartLocation, const FVector& EndLocation, 
+		float Radius, FColor Color, float Time, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
+	FISHYUTILS_API void DrawDebugSweptSphereFrame(const UWorld* World, const FVector& StartLocation, const FVector& EndLocation, 
+		float Radius, FColor Color, float Thickness = 2, uint8 DepthPriority = 0, uint32 BatchID = 0);
 }

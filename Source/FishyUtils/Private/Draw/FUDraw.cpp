@@ -5,8 +5,6 @@
 #include "CanvasItem.h"
 #include "EngineUtils.h"
 #include "Blueprint/SlateBlueprintLibrary.h"
-#include "Blueprint/WidgetLayoutLibrary.h"
-#include "Blueprint/WidgetTree.h"
 #include "Components/BillboardComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/LineBatchComponent.h"
@@ -14,7 +12,6 @@
 #include "Components/Widget.h"
 #include "Draw/FUCanvasDraw.h"
 #include "Draw/FUDrawProxy.h"
-#include "GameFramework/HUD.h"
 #include "Utility/FUOrientedBox.h"
 
 
@@ -390,25 +387,34 @@ void FU::Draw::DrawDebugActorBoundsFrame(const UWorld* World, const AActor* Acto
 
 
 void FU::Draw::DrawDebugCapsule(const UWorld* World, const FVector& Location, const FQuat& Rotation,
-	float Radius, float HalfHeight, FColor Color, float Time, float Thickness, uint8 DepthPriority)
+	float Radius, float HalfHeight, FColor Color, float Time, float Thickness, uint8 DepthPriority, uint32 BatchID)
 {
-	DrawDebugCapsule(World, Location, HalfHeight, Radius, Rotation, Color, false, Time, DepthPriority, Thickness);
+	if (ULineBatchComponent* const LineBatcher = GetDebugLineBatcher(World, Time, (DepthPriority == SDPG_Foreground)))
+	{
+		LineBatcher->DrawCapsule(Location, HalfHeight, Radius, Rotation, Color, Time, DepthPriority, Thickness, BatchID);
+	}
 }
 void FU::Draw::DrawDebugCapsuleFrame(const UWorld* World, const FVector& Location, const FQuat& Rotation,
-	float Radius, float HalfHeight, FColor Color, float Thickness, uint8 DepthPriority)
+	float Radius, float HalfHeight, FColor Color, float Thickness, uint8 DepthPriority, uint32 BatchID)
 {
-	FU::Draw::DrawDebugCapsule(World, Location, Rotation, Radius, HalfHeight, Color, 0, Thickness, DepthPriority);
+	FU::Draw::DrawDebugCapsule(World, Location, Rotation, Radius, HalfHeight, Color, 0, Thickness, DepthPriority, BatchID);
 }
 
 void FU::Draw::DrawDebugCapsule(const UWorld* World, const UCapsuleComponent* CapsuleComponent, FColor Color,
-	float Time, float Thickness, uint8 DepthPriority)
+	float Time, float Thickness, uint8 DepthPriority, uint32 BatchID)
 {
-	FU::Draw::DrawDebugCapsule(World, CapsuleComponent->GetComponentLocation(), CapsuleComponent->GetComponentRotation().Quaternion(), CapsuleComponent->GetScaledCapsuleRadius(), CapsuleComponent->GetScaledCapsuleHalfHeight(), Color, Time, Thickness, DepthPriority);
+	FU::Draw::DrawDebugCapsule(
+		World, 
+		CapsuleComponent->GetComponentLocation(), CapsuleComponent->GetComponentRotation().Quaternion(), 
+		CapsuleComponent->GetScaledCapsuleRadius(), CapsuleComponent->GetScaledCapsuleHalfHeight(), 
+		Color, Time, 
+		Thickness, DepthPriority, BatchID
+	);
 }
 void FU::Draw::DrawDebugCapsuleFrame(const UWorld* World, const UCapsuleComponent* CapsuleComponent, FColor Color,
-	float Thickness, uint8 DepthPriority)
+	float Thickness, uint8 DepthPriority, uint32 BatchID)
 {
-	FU::Draw::DrawDebugCapsule(World, CapsuleComponent, Color,  0, Thickness, DepthPriority);
+	FU::Draw::DrawDebugCapsule(World, CapsuleComponent, Color,  0, Thickness, DepthPriority, BatchID);
 }
 
 
@@ -657,4 +663,23 @@ void FU::Draw::DrawDebugPolygons(const UWorld* World, const TArray<FFUPolygon>& 
 void FU::Draw::DrawDebugPolygonsFrame(const UWorld* World, const TArray<FFUPolygon>& Polygons, FColor Color, float Thickness, uint8 DepthPriority, uint32 BatchID)
 {
 	DrawDebugPolygons(World, Polygons, Color, 0, Thickness, DepthPriority, BatchID);
+}
+
+void FU::Draw::DrawDebugSweptSphere(const UWorld* World, const FVector& StartLocation, const FVector& EndLocation, float Radius, FColor Color, 
+	float Time, float Thickness, uint8 DepthPriority, uint32 BatchID)
+{
+	const FVector TraceVec = EndLocation - StartLocation;
+	const float Dist = TraceVec.Size();
+	
+	const FVector Center = StartLocation + TraceVec * 0.5f;
+	const float HalfHeight = (Dist * 0.5f) + Radius;
+	
+	const FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat();
+	FU::Draw::DrawDebugCapsule(World, Center, CapsuleRot, Radius, HalfHeight, Color, Time, Thickness, DepthPriority, BatchID);
+}
+
+void FU::Draw::DrawDebugSweptSphereFrame(const UWorld* World, const FVector& StartLocation, const FVector& EndLocation, float Radius, FColor Color, 
+	float Thickness, uint8 DepthPriority, uint32 BatchID)
+{
+	FU::Draw::DrawDebugSweptSphere(World, StartLocation, EndLocation, Radius, Color, 0, Thickness, DepthPriority, BatchID);
 }
