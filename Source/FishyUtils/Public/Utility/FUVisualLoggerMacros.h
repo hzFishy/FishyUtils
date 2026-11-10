@@ -129,7 +129,6 @@ namespace FU::VisualLogger
 	UE_VLOG_CAPSULE(LogOwner, CategoryName, Verbosity, Center - (HalfHeight * Rotation.GetUpVector()), HalfHeight, Radius, Rotation, Color, TEXT_EMPTY); \
 	FU_VLOG_TEXT(LogOwner, CategoryName, Verbosity, Center + FU::VisualLogger::GetTextLocOffset(TextLocationOffset), Color, Format, ##__VA_ARGS__); \
 
-
 /** Draw capsule with no text using UCapsuleComponent */
 #define UE_VLOG_CAPSULE_WITHCOMPONENT(LogOwner, CategoryName, Verbosity, CapsuleComponent, Color) \
 	{ \
@@ -266,7 +265,18 @@ namespace FU::VisualLogger
 		const FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat(); \
 		FU_VLOG_CAPSULE(LogOwner, CategoryName, Verbosity, Center, HalfHeight, Radius, CapsuleRot, Color)\
 	} \
+	
+#define FU_VLOG_SWEEP_SPHEREWIRED(LogOwner, CategoryName, Verbosity, StartLocation, EndLocation, Radius, Color) \
+	{ \
+		const FVector TraceVec = EndLocation - StartLocation; \
+		const float Dist = TraceVec.Size(); \
+		const FVector Center = StartLocation + TraceVec * 0.5f; \
+		const float HalfHeight = (Dist * 0.5f) + Radius; \
+		const FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat(); \
+		FU_VLOG_CAPSULEWIRED(LogOwner, CategoryName, Verbosity, Center, HalfHeight, Radius, CapsuleRot, Color)\
+	} \
 
+	
 	/*----------------------------------------------------------------------------
 		Concat shapes
 	----------------------------------------------------------------------------*/
