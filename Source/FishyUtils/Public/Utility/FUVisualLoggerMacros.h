@@ -258,20 +258,20 @@ namespace FU::VisualLogger
 	----------------------------------------------------------------------------*/
 #define FU_VLOG_SWEEP_SPHERE(LogOwner, CategoryName, Verbosity, StartLocation, EndLocation, Radius, Color) \
 	{ \
-		const FVector TraceVec = EndLocation - StartLocation; \
+		const FVector TraceVec = (EndLocation) - (StartLocation); \
 		const float Dist = TraceVec.Size(); \
-		const FVector Center = StartLocation + TraceVec * 0.5f; \
+		const FVector Center = (StartLocation) + TraceVec * 0.5f; \
 		const float HalfHeight = (Dist * 0.5f) + Radius; \
 		const FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat(); \
-		FU_VLOG_CAPSULE(LogOwner, CategoryName, Verbosity, Center, HalfHeight, Radius, CapsuleRot, Color)\
+		FU_VLOG_CAPSULE(LogOwner, CategoryName, Verbosity, Center, HalfHeight, (Radius), CapsuleRot, Color)\
 	} \
 	
 #define FU_VLOG_SWEEP_SPHEREWIRED(LogOwner, CategoryName, Verbosity, StartLocation, EndLocation, Radius, Color) \
 	{ \
-		const FVector TraceVec = EndLocation - StartLocation; \
+		const FVector TraceVec = (EndLocation) - (StartLocation); \
 		const float Dist = TraceVec.Size(); \
-		const FVector Center = StartLocation + TraceVec * 0.5f; \
-		const float HalfHeight = (Dist * 0.5f) + Radius; \
+		const FVector Center = (StartLocation) + TraceVec * 0.5f; \
+		const float HalfHeight = (Dist * 0.5f) + (Radius); \
 		const FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat(); \
 		FU_VLOG_CAPSULEWIRED(LogOwner, CategoryName, Verbosity, Center, HalfHeight, Radius, CapsuleRot, Color)\
 	} \
