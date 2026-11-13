@@ -13,4 +13,7 @@ protected:
 public:
     virtual void StartupModule() override;
     virtual void ShutdownModule() override;
+    
+protected:
+    static void OnPIEEnded(UGameInstance* GI);
 };

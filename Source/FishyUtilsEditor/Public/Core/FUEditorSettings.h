@@ -18,4 +18,8 @@ public:
 	/** Need to restart editor */
 	UPROPERTY(Config, EditAnywhere, Category="Misc", meta=(ConfigRestartRequired=true))
 	bool bEnableMirrorPreview;
+	
+	/** Need to restart editor */
+	UPROPERTY(Config, EditAnywhere, Category="Visual Logger", DisplayName="Stop VisualLogger Recording On PIE End", meta=(ConfigRestartRequired=true))
+	bool bStopVisualLoggerRecordingOnPIEEnd;
 };

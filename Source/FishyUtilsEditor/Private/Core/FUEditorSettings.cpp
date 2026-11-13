@@ -6,5 +6,6 @@
 
 UFUEditorSettings::UFUEditorSettings():
 	UFUDeveloperSettings("Plugins"),
-	bEnableMirrorPreview(true)
+	bEnableMirrorPreview(true),
+	bStopVisualLoggerRecordingOnPIEEnd(true)
 {}

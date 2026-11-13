@@ -2,14 +2,20 @@
 
 #include "FishyUtilsEditor.h"
 #include "MessageLogModule.h"
+#include "Core/FUEditorSettings.h"
+#include "Framework/Notifications/NotificationManager.h"
 #include "Utility/FUPickers.h"
 #include "Utility/FUPickerSocketCustomization.h"
+#include "Utility/FUUtilities.h"
+#include "Widgets/Notifications/SNotificationList.h"
 
 
 #define LOCTEXT_NAMESPACE "FFishyUtilsEditorModule"
 
 void FFishyUtilsEditorModule::StartupModule()
 {
+	const auto* EditorSettings = GetDefault<UFUEditorSettings>();
+	
 	FPropertyEditorModule& PropertyModule = FModuleManager::GetModuleChecked<FPropertyEditorModule>("PropertyEditor");
 	PropertyModule.RegisterCustomPropertyTypeLayout(
 		FFUPickerSocket::StaticStruct()->GetFName(),
@@ -21,6 +27,11 @@ void FFishyUtilsEditorModule::StartupModule()
 	
 	FMessageLogModule& MessageLogModule = FModuleManager::LoadModuleChecked<FMessageLogModule>("MessageLog");
 	MessageLogModule.RegisterLogListing("FishyUtils", INVTEXT("Fishy Utils"));
+	
+	if (EditorSettings->bStopVisualLoggerRecordingOnPIEEnd)
+	{
+		FWorldDelegates::OnPIEEnded.AddStatic(&FFishyUtilsEditorModule::OnPIEEnded);
+	}
 }
 
 void FFishyUtilsEditorModule::ShutdownModule()
@@ -33,6 +44,17 @@ void FFishyUtilsEditorModule::ShutdownModule()
 	
 	FMessageLogModule& MessageLogModule = FModuleManager::LoadModuleChecked<FMessageLogModule>("MessageLog");
 	MessageLogModule.UnregisterLogListing("FishyUtils");
+}
+
+void FFishyUtilsEditorModule::OnPIEEnded(UGameInstance* GI)
+{
+	FVisualLogger::Get().SetIsRecording(false);
+	
+	FNotificationInfo NotificationInfo(INVTEXT("Visual Logger Stopped"));
+	NotificationInfo.ExpireDuration = 2;
+	NotificationInfo.Image = FAppStyle::GetBrush("Icons.Info");
+	NotificationInfo.SubText = INVTEXT("To disable this see \"Stop VisualLogger Recording On PIE End\" at \"Fishy Utils Editor Settings\"");
+	FSlateNotificationManager::Get().AddNotification(NotificationInfo);
 }
 
 #undef LOCTEXT_NAMESPACE
