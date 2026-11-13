@@ -28,10 +28,12 @@ void FFishyUtilsEditorModule::StartupModule()
 	FMessageLogModule& MessageLogModule = FModuleManager::LoadModuleChecked<FMessageLogModule>("MessageLog");
 	MessageLogModule.RegisterLogListing("FishyUtils", INVTEXT("Fishy Utils"));
 	
+#if ENABLE_VISUAL_LOG
 	if (EditorSettings->bStopVisualLoggerRecordingOnPIEEnd)
 	{
-		FWorldDelegates::OnPIEEnded.AddStatic(&FFishyUtilsEditorModule::OnPIEEnded);
+		FWorldDelegates::OnPIEEnded.AddStatic(&FFishyUtilsEditorModule::OnPIEEnded_VisualLogger);
 	}
+#endif
 }
 
 void FFishyUtilsEditorModule::ShutdownModule()
@@ -46,16 +48,21 @@ void FFishyUtilsEditorModule::ShutdownModule()
 	MessageLogModule.UnregisterLogListing("FishyUtils");
 }
 
-void FFishyUtilsEditorModule::OnPIEEnded(UGameInstance* GI)
+#if ENABLE_VISUAL_LOG
+void FFishyUtilsEditorModule::OnPIEEnded_VisualLogger(UGameInstance* GI)
 {
-	FVisualLogger::Get().SetIsRecording(false);
-	
-	FNotificationInfo NotificationInfo(INVTEXT("Visual Logger Stopped"));
-	NotificationInfo.ExpireDuration = 2;
-	NotificationInfo.Image = FAppStyle::GetBrush("Icons.Info");
-	NotificationInfo.SubText = INVTEXT("To disable this see \"Stop VisualLogger Recording On PIE End\" at \"Fishy Utils Editor Settings\"");
-	FSlateNotificationManager::Get().AddNotification(NotificationInfo);
+	if (FVisualLogger::Get().IsRecording())
+	{
+		FVisualLogger::Get().SetIsRecording(false);
+		
+		FNotificationInfo NotificationInfo(INVTEXT("Visual Logger Stopped"));
+		NotificationInfo.ExpireDuration = 2;
+		NotificationInfo.Image = FAppStyle::GetBrush("Icons.Info");
+		NotificationInfo.SubText = INVTEXT("To disable this see \"Stop VisualLogger Recording On PIE End\" at \"Fishy Utils Editor Settings\"");
+		FSlateNotificationManager::Get().AddNotification(NotificationInfo);
+	}
 }
+#endif
 
 #undef LOCTEXT_NAMESPACE
     

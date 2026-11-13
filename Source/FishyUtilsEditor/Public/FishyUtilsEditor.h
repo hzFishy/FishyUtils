@@ -15,5 +15,7 @@ public:
     virtual void ShutdownModule() override;
     
 protected:
-    static void OnPIEEnded(UGameInstance* GI);
+#if ENABLE_VISUAL_LOG
+    static void OnPIEEnded_VisualLogger(UGameInstance* GI);
+#endif
 };
